@@ -8,11 +8,11 @@ import java.util.HashMap;
 public class VanillaRarities {
 
 
-    public static Rarity LEGENDARY_ITEM = Rarity.create("LEGENDARY_ITEM", ChatFormatting.GOLD);
-    public static Rarity MYTHIC_ITEM = Rarity.create("MYTHIC_ITEM", ChatFormatting.DARK_PURPLE);
-    public static Rarity UNIQUE_ITEM = Rarity.create("UNIQUE_ITEM", ChatFormatting.RED);
-    public static Rarity RUNED_ITEM = Rarity.create("RUNED_ITEM", ChatFormatting.YELLOW);
-    public static Rarity UNCOMMON_ITEM = Rarity.create("UNCOMMON_ITEM", ChatFormatting.GREEN);
+    public static Rarity LEGENDARY_ITEM = Rarity.EPIC;
+    public static Rarity MYTHIC_ITEM = Rarity.EPIC;
+    public static Rarity UNIQUE_ITEM = Rarity.EPIC;
+    public static Rarity RUNED_ITEM = Rarity.RARE;
+    public static Rarity UNCOMMON_ITEM = Rarity.UNCOMMON;
 
 
     public static HashMap<String, Rarity> MAP = new HashMap<>();

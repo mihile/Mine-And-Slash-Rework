@@ -44,15 +44,14 @@ public class AutoItem implements JsonExileRegistry<AutoItem>, IAutoGson<AutoItem
 
     public static void tryInsertTo(ItemStack stack, Player p) {
         if (!StackSaving.GEARS.has(stack)) {
-            if (!stack.hasTag() || (stack.hasTag() && !stack.getTag().getBoolean("free_souled"))) {
+            if (!stack.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY).copyTag().getBoolean("free_souled")) {
                 var auto = AutoItem.getRandom(stack.getItem());
                 if (auto != null) {
-                    stack.getOrCreateTag().putBoolean("free_souled", true);
+                    stack.update(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY, data -> data.update(tag -> tag.putBoolean("free_souled", true)));
 
                     var data = auto.create(p);
                     var ex = ExileStack.of(stack);
                     data.apply(ex);
-                    stack.setTag(ex.getStack().getTag()); // todo this needs rework after 1.21
                 }
             }
         }
@@ -66,7 +65,7 @@ public class AutoItem implements JsonExileRegistry<AutoItem>, IAutoGson<AutoItem
         HashMap<Item, List<AutoItem>> map = new HashMap<>();
 
         for (AutoItem auto : ExileDB.AutoItems().getList()) {
-            var item = VanillaUTIL.REGISTRY.items().get(new ResourceLocation(auto.item_id));
+            var item = VanillaUTIL.REGISTRY.items().get(ResourceLocation.parse(auto.item_id));
             if (item != Items.AIR) {
                 if (!map.containsKey(item)) {
                     map.put(item, new ArrayList<>());

@@ -43,9 +43,6 @@ public class AutoAimingProj extends AbstractHurtingProjectile {
                     flag = entity.hurt(this.damageSources().mobAttack(en), 8.0F);
                     if (flag) {
                         if (entity.isAlive()) {
-                            this.doEnchantDamageEffects(livingentity, entity);
-                        } else {
-                            // livingentity.heal(5.0F);
                         }
                     }
                 } else {

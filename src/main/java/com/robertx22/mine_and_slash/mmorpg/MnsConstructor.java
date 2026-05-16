@@ -22,7 +22,7 @@ import com.robertx22.mine_and_slash.database.holders.MnsRelicTypes;
 import com.robertx22.mine_and_slash.database.registrators.StatsRegister;
 import com.robertx22.mine_and_slash.database.registry.ExileDBInit;
 import com.robertx22.mine_and_slash.mmorpg.registers.deferred_wrapper.SlashDeferred;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.neoforged.bus.api.IEventBus;
 
 import java.util.Arrays;
 import java.util.List;

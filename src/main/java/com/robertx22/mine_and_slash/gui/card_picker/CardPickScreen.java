@@ -40,7 +40,7 @@ public class CardPickScreen extends BaseScreen implements INamedScreen {
 
     @Override
     public ResourceLocation iconLocation() {
-        return new ResourceLocation(SlashRef.MODID, "textures/gui/main_hub/icons/" + icon + ".png");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/" + icon + ".png");
     }
 
     @Override

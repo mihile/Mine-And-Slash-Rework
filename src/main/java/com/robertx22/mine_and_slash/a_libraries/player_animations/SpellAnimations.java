@@ -9,7 +9,7 @@ public class SpellAnimations {
 
     public static HashMap<String, AnimationHolder> MAP = new HashMap<>();
 
-    public static ResourceLocation ANIMATION_RESOURCE = new ResourceLocation(SlashRef.MODID, "animation");
+    public static ResourceLocation ANIMATION_RESOURCE = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "animation");
 
     // mine
     public static final AnimationHolder SPIN = of("sword_spin");

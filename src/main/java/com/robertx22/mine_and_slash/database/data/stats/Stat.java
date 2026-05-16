@@ -237,11 +237,11 @@ public abstract class Stat implements IGUID, IAutoLocName, IWeighted, IAutoLocDe
         return ExileRegistryTypes.STAT;
     }
 
-    public static ResourceLocation MISSING_ICON = new ResourceLocation(SlashRef.MODID, "textures/gui/stat_icons/missing.png");
-    public static ResourceLocation DEFAULT_ICON = new ResourceLocation(SlashRef.MODID, "textures/gui/stat_icons/default.png");
+    public static ResourceLocation MISSING_ICON = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/stat_icons/missing.png");
+    public static ResourceLocation DEFAULT_ICON = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/stat_icons/default.png");
 
     public ResourceLocation getIconLocation() {
-        return new ResourceLocation(SlashRef.MODID, "textures/gui/stat_icons/" + group.id + "/" + GUID() + ".png");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/stat_icons/" + group.id + "/" + GUID() + ".png");
     }
 
     transient ResourceLocation cachedIcon = null;

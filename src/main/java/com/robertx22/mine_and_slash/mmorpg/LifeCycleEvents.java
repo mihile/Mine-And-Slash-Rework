@@ -5,10 +5,10 @@ import com.robertx22.mine_and_slash.database.registry.ExileDB;
 import com.robertx22.mine_and_slash.mmorpg.registers.server.CommandRegister;
 import com.robertx22.mine_and_slash.uncommon.utilityclasses.LevelUtils;
 import net.minecraft.world.level.GameRules;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.server.ServerStartedEvent;
-import net.minecraftforge.event.server.ServerStoppingEvent;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
 public class LifeCycleEvents {
 

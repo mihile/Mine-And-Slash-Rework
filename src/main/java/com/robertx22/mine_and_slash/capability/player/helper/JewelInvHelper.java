@@ -47,8 +47,7 @@ public class JewelInvHelper implements IStatCtx {
     }
 
     public int getJewelSocketsMaxStat(Player p) {
-        int max = (int) Load.Unit(p).getUnit().getCalculatedStat(JewelSocketStat.getInstance()).getValue();
-        return max;
+        return (int) Load.Unit(p).getUnit().getCalculatedStat(JewelSocketStat.getInstance()).get();
     }
 
     public boolean hasFreeJewelSlots(Player p) {
@@ -72,13 +71,10 @@ public class JewelInvHelper implements IStatCtx {
                 if (!data.canWear(Load.Unit(p))) {
                     unequip(p, i);
                 }
-                if (!data.uniq.id.isEmpty()) {
-                    if (uniques.contains(data.uniq.id)) {
-                        unequip(p, i);
-                    } else {
-                        uniques.add(data.uniq.id);
-                    }
-
+                if (!data.uniq.id.isEmpty() && uniques.contains(data.uniq.id)) {
+                    unequip(p, i);
+                } else if (!data.uniq.id.isEmpty()) {
+                    uniques.add(data.uniq.id);
                 }
                 if (total > max) {
                     ExplainedResultUtil.sendErrorMessage(p, Chats.EQUIP_JEWEL_ERROR, Chats.YOU_LACK_JEWEL_SLOTS);

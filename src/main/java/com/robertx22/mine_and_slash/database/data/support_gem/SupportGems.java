@@ -46,14 +46,6 @@ public class SupportGems {
                         EffectStats.CHANCE_TO_GIVE_CASTER_EFFECT.get(new EffectAndCondition(ModEffects.POWER_CHARGE, EffectAndCondition.Condition.CRIT)).mod(3, 10))
         ).levelReq(10).addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
 
-        /*
-        new SupportGem("endu_on_crit", "Endurance on Crit", PlayStyle.STR, 1.2F,
-                Arrays.asList(
-                        SpellChangeStats.MANA_COST.get().mod(-5, -25),
-                        EffectStats.CHANCE_TO_GIVE_CASTER_EFFECT.get(new EffectAndCondition(ModEffects.ENDURANCE_CHARGE, EffectAndCondition.Condition.CRIT)).mod(3, 10))
-        ).levelReq(10).addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
-                 */
-
         new SupportGem("archmage", "Archmage", PlayStyle.INT, 1.25F,
                 Arrays.asList(
                         OffenseStats.ARCHMAGE_BONUS_MANA_DAMAGE.get().mod(3, 10),

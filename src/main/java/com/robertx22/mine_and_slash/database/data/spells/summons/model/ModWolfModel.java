@@ -85,6 +85,5 @@ public class ModWolfModel<T extends LivingEntity> extends ColorableAgeableListMo
     public void setupAnim(T pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
         this.head.xRot = pHeadPitch * ((float) Math.PI / 180F);
         this.head.yRot = pNetHeadYaw * ((float) Math.PI / 180F);
-        //this.tail.xRot = pAgeInTicks;
     }
 }

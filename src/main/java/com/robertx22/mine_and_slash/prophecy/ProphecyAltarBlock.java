@@ -10,12 +10,12 @@ import com.robertx22.mine_and_slash.uncommon.localization.Chats;
 import com.robertx22.mine_and_slash.uncommon.utilityclasses.AllyOrEnemy;
 import com.robertx22.mine_and_slash.uncommon.utilityclasses.EntityFinder;
 import com.robertx22.mine_and_slash.vanilla_mc.packets.OpenGuiPacket;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
@@ -29,7 +29,12 @@ import net.minecraft.world.phys.BlockHitResult;
 public class ProphecyAltarBlock extends Block {
 
     public ProphecyAltarBlock() {
-        super(BlockBehaviour.Properties.copy(Blocks.LECTERN).noOcclusion());
+        super(BlockBehaviour.Properties.of().strength(2.5F).noOcclusion());
+    }
+
+    @Override
+    protected MapCodec<? extends Block> codec() {
+        return null;
     }
 
     @Override
@@ -42,7 +47,7 @@ public class ProphecyAltarBlock extends Block {
 
 
     @Override
-    public InteractionResult use(BlockState pState, Level level, BlockPos pPos, Player p, InteractionHand pHand, BlockHitResult pHit) {
+    protected InteractionResult useWithoutItem(BlockState pState, Level level, BlockPos pPos, Player p, BlockHitResult pHit) {
 
         if (!level.isClientSide) {
 

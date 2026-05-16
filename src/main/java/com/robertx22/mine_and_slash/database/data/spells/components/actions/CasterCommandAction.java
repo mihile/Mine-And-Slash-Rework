@@ -37,13 +37,6 @@ public class CasterCommandAction extends SpellAction {
             if (entity instanceof Player p) {
                 CommandUtils.execute(p, command);
             }
-            /*
-            ctx.caster
-                .getServer()
-                .getCommands()
-                .performCommand(source, command);
-
-             */
         } catch (Exception e) {
             e.printStackTrace();
         }

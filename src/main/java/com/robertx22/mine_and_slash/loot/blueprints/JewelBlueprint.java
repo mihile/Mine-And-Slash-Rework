@@ -50,7 +50,7 @@ public class JewelBlueprint extends RarityItemBlueprint {
     public JewelItemData createData() {
         JewelItemData data = new JewelItemData();
 
-        PlayStyle style = RandomUtils.randomFromList(Arrays.stream(PlayStyle.values()).toList());
+        PlayStyle style = RandomUtils.randomFromList(Arrays.asList(PlayStyle.values()));
 
         if (isEye) {
             data.style = PlayStyle.INT.id;

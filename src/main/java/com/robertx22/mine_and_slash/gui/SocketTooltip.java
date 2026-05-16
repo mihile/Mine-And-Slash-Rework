@@ -21,7 +21,7 @@ import java.util.List;
 
 public class SocketTooltip implements ClientTooltipComponent {
 
-    public static final ResourceLocation SOCKET = new ResourceLocation(SlashRef.MODID, "textures/gui/socket.png");
+    public static final ResourceLocation SOCKET = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/socket.png");
 
     private final SocketComponent comp;
     private final int spacing = Minecraft.getInstance().font.lineHeight + 2;

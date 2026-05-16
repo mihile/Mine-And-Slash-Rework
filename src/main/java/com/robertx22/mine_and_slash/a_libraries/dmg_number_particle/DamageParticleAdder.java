@@ -6,9 +6,6 @@ import net.minecraft.world.entity.Entity;
 public class DamageParticleAdder {
 
     public static void displayParticle(Entity entity, DmgNumPacket packet) {
-
         DamageParticleRenderer.PARTICLES.add(new DamageParticle(entity, packet));
-
     }
-
 }

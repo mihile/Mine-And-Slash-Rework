@@ -34,7 +34,7 @@ public class ElementalResistEffect extends BaseDamageEffect {
             pene = 0;
         }
 
-        float resist = data.getValue();
+        float resist = data.get();
 
         resist -= pene;
 

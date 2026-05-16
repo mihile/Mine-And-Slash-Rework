@@ -59,7 +59,7 @@ import com.robertx22.mine_and_slash.vanilla_mc.packets.proxies.OpenGuiWrapper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
@@ -75,8 +75,8 @@ import java.util.stream.Collectors;
 
 
 public class MainHubScreen extends BaseScreen implements INamedScreen {
-    private static final ResourceLocation LEFT = new ResourceLocation(SlashRef.MODID, "textures/gui/main_hub/buttons_backwards.png");
-    static ResourceLocation RIGHT = new ResourceLocation(SlashRef.MODID, "textures/gui/main_hub/buttons.png");
+    private static final ResourceLocation LEFT = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/buttons_backwards.png");
+    static ResourceLocation RIGHT = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/buttons.png");
 
     static int sizeX = 256;
     static int sizeY = 219;
@@ -100,7 +100,7 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
 
         public ResourceLocation getIcon() {
 
-            return new ResourceLocation(SlashRef.MODID, "textures/gui/stat_groups/" + id + ".png");
+            return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/stat_groups/" + id + ".png");
         }
     }
 
@@ -136,7 +136,17 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
             }
         }
 
-        var v = Load.Unit(Minecraft.getInstance().player).getUnit().getStats().stats.values().stream()
+        // mc.player가 null이면 실행 불가 (static 초기화 시점에 호출 불가)
+        var mc2 = Minecraft.getInstance();
+        if (mc2 == null || mc2.player == null) {
+            if (!STAT_MAP.containsKey(type)) {
+                STAT_MAP.put(type, new ArrayList<>());
+            }
+            STAT_MAP.get(StatType.MISC).add(new ArrayList<>());
+            return;
+        }
+
+        var v = Load.Unit(mc2.player).getUnit().getStats().stats.values().stream()
                 .filter(x -> x.isNotZero() && x.GetStat() != null && x.GetStat().show_in_gui && !x.GetStat().is_long && list.stream().noneMatch(e -> e.GUID().equals(x.getId())))
                 .map(t -> t.GetStat()).collect(Collectors.toList());
 
@@ -177,7 +187,8 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
         addTo(StatType.RECOVERY, Arrays.asList(ResourceStats.INCREASED_LEECH.get()));
         addTo(StatType.RECOVERY, ResourceStats.LEECH_CAP.getAll());
 
-        addRemaining(StatType.MISC);
+        // addRemaining은 mc.player 필요 -> MainHubScreen.init()에서 lazy 처리
+        // addRemaining(StatType.MISC);
 
         leftStats.add(Arrays.asList(Health.getInstance(), MagicShield.getInstance(), Mana.getInstance(), Energy.getInstance()));
         leftStats.add(Arrays.asList(HealthRegen.getInstance(), MagicShieldRegen.getInstance(), ManaRegen.getInstance(), EnergyRegen.getInstance()));
@@ -187,13 +198,16 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
 
     }
 
+    /** addRemaining이 이미 실행됐는지 추적 */
+    private static boolean remainingStatsAdded = false;
+
     public MainHubScreen() {
         super(sizeX, sizeY);
     }
 
     @Override
     public ResourceLocation iconLocation() {
-        return new ResourceLocation(SlashRef.MODID, "textures/gui/main_hub/icons/stat_overview.png");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/stat_overview.png");
     }
 
     @Override
@@ -215,10 +229,13 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
     public void init() {
         super.init();
 
+        // addRemaining은 mc.player가 있어야 하므로 첫 번째 init() 시점에 lazy 실행
+        if (!remainingStatsAdded && mc.player != null) {
+            addRemaining(StatType.MISC);
+            remainingStatsAdded = true;
+        }
 
         this.clearWidgets();
-
-        //this.children.clear();
 
         // CORE STATS
         int xpos = guiLeft + 75;
@@ -338,7 +355,7 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
 
     }
 
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(SlashRef.MODID, "textures/gui/stats.png");
+    private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/stats.png");
 
     @Override
     public void render(GuiGraphics gui, int x, int y, float ticks) {
@@ -353,7 +370,7 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
         gui.blit(loc, mc.getWindow()
                         .getGuiScaledWidth() / 2 - sizeX / 2,
                 mc.getWindow()
-                        .getGuiScaledHeight() / 2 - sizeY / 2, 0, 0, sizeX, sizeY
+                        .getGuiScaledHeight() / 2 - sizeY / 2, 0, 0, sizeX, sizeY, 256, 256
         );
 
         super.render(gui, x, y, ticks);
@@ -375,23 +392,20 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
     static int PLUS_BUTTON_SIZE_X = 13;
     static int PLUS_BUTTON_SIZE_Y = 13;
 
-    public static class AllocateStatButton extends ImageButton {
+    public static class AllocateStatButton extends OldImageButton {
         static int SIZEX = 18;
         static int SIZEY = 18;
-        static ResourceLocation BUTTON_TEX = new ResourceLocation(SlashRef.MODID, "textures/gui/plus_button.png");
+        static ResourceLocation BUTTON_TEX = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/plus_button.png");
 
         Stat stat;
 
         public AllocateStatButton(String stat, int xPos, int yPos) {
             super(xPos, yPos, SIZEX, SIZEY, 0, 0, SIZEY, BUTTON_TEX, (button) -> {
-                //  Packets.sendToServer(new AllocateStatPacket(ExileDB.Stats()                        .get(stat)));
             });
             this.stat = ExileDB.Stats()
                     .get(stat);
         }
-
-        @Override
-        protected ClientTooltipPositioner createTooltipPositioner() {
+    protected ClientTooltipPositioner createTooltipPositioner() {
             return DefaultTooltipPositioner.INSTANCE;
         }
 
@@ -439,18 +453,18 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
 
 
         @Override
-        public void render(GuiGraphics gui, int x, int y, float f) {
+        public void renderWidget(GuiGraphics gui, int x, int y, float f) {
 
             setTooltipMod();
 
-            super.render(gui, x, y, f);
+            super.renderWidget(gui, x, y, f);
 
             Minecraft mc = Minecraft.getInstance();
 
             String txt = ((int) Load.Unit(mc.player)
                     .getUnit()
                     .getCalculatedStat(stat)
-                    .getValue()) + "";
+                    .get()) + "";
 
             RenderUtils.render16Icon(gui, stat.getIconForRendering(), this.getX() - 17, this.getY() + 1);
 
@@ -467,5 +481,7 @@ public class MainHubScreen extends BaseScreen implements INamedScreen {
 
 
 }
+
+
 
 

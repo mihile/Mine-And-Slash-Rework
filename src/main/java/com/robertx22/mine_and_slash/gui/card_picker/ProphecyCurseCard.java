@@ -35,8 +35,7 @@ public class ProphecyCurseCard implements ICard {
 
     @Override
     public List<MutableComponent> getTooltip(Player p) {
-        List<MutableComponent> list = new ArrayList<>();
-        return list;
+        return new ArrayList<>();
     }
 
     @Override

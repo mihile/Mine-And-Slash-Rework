@@ -97,7 +97,7 @@ public class CreateLangFile {
 
             json += CreateLangFileUtils.comment(entry.getKey());
             for (IAutoLocDesc iauto : entry.getValue()) {
-                if (!iauto.locDescLangFileGUID().isEmpty() && iauto.shouldRegisterLangDesc() && iauto.locDescForLangFile() != null && iauto.locDescForLangFile().isEmpty() == false) {
+                if (!iauto.locDescLangFileGUID().isEmpty() && iauto.shouldRegisterLangDesc() && iauto.locDescForLangFile() != null && !iauto.locDescForLangFile().isEmpty()) {
 
                     if (iauto.locDescForLangFile()
                             .contains("\"")) {
@@ -122,33 +122,7 @@ public class CreateLangFile {
 
         usedGUIDS.clear();
 
-        //   json += "\n}";
-
-        // json = CreateLangFileUtils.replaceLast(json, ",", ""); // removes last , or else json wont work
-
-
         return json;
-/*
-
-        try {
-            //  ExileLog.get().log("Starting to create lang file");
-
-            if (Files.exists(Paths.get(DirUtils.langFilePath())) == false) {
-                Files.createFile(Paths.get(DirUtils.langFilePath()));
-            }
-
-            File file = new File(DirUtils.langFilePath());
-
-            FileWriter fw = new FileWriter(file);
-            fw.write(json);
-            fw.close();
-            //ExileLog.get().log("Saved lang file to " + file.toPath()                    .toString());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
- */
 
     }
 
@@ -210,7 +184,7 @@ public class CreateLangFile {
         for (Map.Entry<IAutoLocName.AutoLocGroup, List<IAutoLocName>> entry : map.entrySet()) {
             List<IAutoLocName> sortedlist = new ArrayList<>(entry.getValue());
             CreateLangFileUtils.sortName(sortedlist);
-            if (sortedlist.size() > 0) {
+            if (!sortedlist.isEmpty()) {
                 sortedMap.put(entry.getValue()
                         .get(0)
                         .getGroupName(), sortedlist);
@@ -259,7 +233,7 @@ public class CreateLangFile {
         for (Map.Entry<IAutoLocName.AutoLocGroup, List<IAutoLocDesc>> entry : map.entrySet()) {
             List<IAutoLocDesc> sortedlist = new ArrayList<>(entry.getValue());
             CreateLangFileUtils.sortDesc(sortedlist);
-            if (sortedlist.size() > 0) {
+            if (!sortedlist.isEmpty()) {
                 sortedMap.put(entry.getValue()
                         .get(0)
                         .getDescGroupName(), sortedlist);

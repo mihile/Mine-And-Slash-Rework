@@ -29,8 +29,8 @@ public class ClientOnly {
 
     public static Entity getEntityByUUID(Level world, UUID id) {
 
-        if (world instanceof ClientLevel) {
-            for (Entity entity : ((ClientLevel) world).entitiesForRendering()) {
+        if (world instanceof ClientLevel clientLevel) {
+            for (Entity entity : clientLevel.entitiesForRendering()) {
                 if (entity.getUUID()
                         .equals(id)) {
 

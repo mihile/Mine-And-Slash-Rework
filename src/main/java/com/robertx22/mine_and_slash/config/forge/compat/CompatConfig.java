@@ -1,13 +1,13 @@
 package com.robertx22.mine_and_slash.config.forge.compat;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
 
 // todo write wiki docs for the new preset
 public class CompatConfig {
-    public static final ForgeConfigSpec spec;
+    public static final ModConfigSpec spec;
     public static final CompatConfig CONTAINER;
 
     public static CompatDummy get() {
@@ -19,7 +19,7 @@ public class CompatConfig {
     }
 
     static {
-        final Pair<CompatConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(b -> new CompatConfig(b));
+        final Pair<CompatConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(b -> new CompatConfig(b));
         spec = specPair.getRight();
         CONTAINER = specPair.getLeft();
     }
@@ -27,10 +27,10 @@ public class CompatConfig {
 
     private HashMap<CompatConfigPreset, CompatData> map = new HashMap<>();
 
-    private ForgeConfigSpec.EnumValue<CompatConfigPreset> COMPATIBILITY_PRESETS;
+    private ModConfigSpec.EnumValue<CompatConfigPreset> COMPATIBILITY_PRESETS;
 
 
-    CompatConfig(ForgeConfigSpec.Builder b) {
+    CompatConfig(ModConfigSpec.Builder b) {
 
 
         b.comment("Compatibility Presets. Unlocked by installing the Compatibility addon");

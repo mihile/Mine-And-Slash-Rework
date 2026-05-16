@@ -44,11 +44,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.Arrays;
 import java.util.List;
@@ -142,7 +142,7 @@ public class GemItem extends BaseGemItem implements IGUID, IAutoModel, IItemAsCu
 
                                     gear.sockets.getSocketed().add(socket);
 
-                                    ctx.player.displayClientMessage(Chats.GEM_SOCKETED.locName(), false);
+                                    // ctx.player.displayClientMessage(Chats.GEM_SOCKETED.locName(), false); // removed to fix duplicate message
 
                                 });
                                 ctx.stack = ex.getStack();
@@ -459,11 +459,9 @@ public class GemItem extends BaseGemItem implements IGUID, IAutoModel, IItemAsCu
 
         return opt.orElse(new Gem());
     }
-
-
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext world, List<Component> tooltip, TooltipFlag context) {
 
         try {
 
@@ -477,3 +475,4 @@ public class GemItem extends BaseGemItem implements IGUID, IAutoModel, IItemAsCu
     }
 
 }
+

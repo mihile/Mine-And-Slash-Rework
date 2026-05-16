@@ -5,6 +5,7 @@ import com.robertx22.mine_and_slash.database.data.spells.map_fields.MapField;
 import com.robertx22.mine_and_slash.database.data.spells.spell_classes.SpellCtx;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 
 import java.util.Arrays;
@@ -17,7 +18,7 @@ public class TargetHasEffectCondition extends EffectCondition {
 
     @Override
     public boolean canActivate(SpellCtx ctx, MapHolder data) {
-        MobEffect potion = BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation(data.get(MapField.POTION_ID)));
+        Holder<MobEffect> potion = BuiltInRegistries.MOB_EFFECT.getHolder(ResourceLocation.parse(data.get(MapField.POTION_ID))).orElseThrow();
         return ctx.target != null && ctx.target.hasEffect(potion);
     }
 

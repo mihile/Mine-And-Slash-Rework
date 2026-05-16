@@ -4,7 +4,9 @@ import com.robertx22.mine_and_slash.aoe_data.database.stats.old.DatapackStats;
 import com.robertx22.mine_and_slash.database.data.stats.StatScaling;
 import com.robertx22.mine_and_slash.database.data.stats.datapacks.base.BaseDatapackStat;
 import com.robertx22.mine_and_slash.saveclasses.unit.StatData;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -20,18 +22,18 @@ public class AttributeStat extends BaseDatapackStat {
 
     public UUID uuid;
     public String attributeId;
-    public Attribute attribute;
-    public AttributeModifier.Operation operation = AttributeModifier.Operation.ADDITION;
+    public Holder<Attribute> attribute;
+    public AttributeModifier.Operation operation = AttributeModifier.Operation.ADD_VALUE;
     public boolean cut_by_hundred = true;
 
-    public AttributeStat(String id, String locname, UUID uuid, Attribute attribute, boolean perc, AttributeModifier.Operation operation, boolean cut) {
+    public AttributeStat(String id, String locname, UUID uuid, Holder<Attribute> attribute, boolean perc, AttributeModifier.Operation operation, boolean cut) {
         super(SER_ID);
         this.id = id;
         this.operation = operation;
         this.locname = locname;
         this.uuid = uuid;
         this.cut_by_hundred = cut;
-        this.attributeId = BuiltInRegistries.ATTRIBUTE.getKey(attribute)
+        this.attributeId = BuiltInRegistries.ATTRIBUTE.getKey(attribute.value())
                 .toString();
         this.attribute = attribute;
         this.is_perc = perc;
@@ -52,23 +54,18 @@ public class AttributeStat extends BaseDatapackStat {
 
     public void addToEntity(LivingEntity en, StatData data) {
 
-        float val = data.getValue();
+        float val = data.get();
         if (cut_by_hundred) {
             val = val / 100F;
         }
 
-        AttributeModifier mod = new AttributeModifier(
-                uuid,
-                attributeId,
-                val,
-                operation
-        );
+        AttributeModifier mod = new AttributeModifier(ResourceLocation.fromNamespaceAndPath("mmorpg", "stat/" + uuid), val, operation);
 
         AttributeInstance atri = en.getAttribute(attribute);
 
         if (atri != null) {
-            if (atri.hasModifier(mod)) {
-                atri.removeModifier(mod); // KEEP THIS OR UPDATE WONT MAKE HP CORRECT!!!
+            if (atri.hasModifier(mod.id())) {
+                atri.removeModifier(mod.id()); // KEEP THIS OR UPDATE WONT MAKE HP CORRECT!!!
             }
             atri.addTransientModifier(mod);
         }

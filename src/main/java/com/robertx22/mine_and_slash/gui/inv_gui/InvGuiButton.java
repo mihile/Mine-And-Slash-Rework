@@ -7,7 +7,7 @@ import com.robertx22.mine_and_slash.uncommon.utilityclasses.ClientOnly;
 import com.robertx22.mine_and_slash.vanilla_mc.packets.InvGuiPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
@@ -17,7 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InvGuiButton extends ImageButton {
+public class InvGuiButton extends OldImageButton {
 
     static ResourceLocation TEX = SlashRef.guiId("inv_gui.png");
 
@@ -39,35 +39,24 @@ public class InvGuiButton extends ImageButton {
         this.data = data;
 
     }
-
-    @Override
     protected ClientTooltipPositioner createTooltipPositioner() {
         return DefaultTooltipPositioner.INSTANCE;
     }
 
     @Override
-    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
+    public void renderWidget(GuiGraphics gui, int pMouseX, int pMouseY, float pPartialTick) {
         if (data.isEmpty()) {
             return;
         }
-
         setModTooltip();
-
-
-        super.render(gui, mouseX, mouseY, delta);
-
-    }
-
-    @Override
-    public void renderWidget(GuiGraphics gui, int pMouseX, int pMouseY, float pPartialTick) {
 
 
         if (data.getAction().getBackGroundIcon() != null) {
             gui.setColor(1.0F, 1.0F, 1.0F, 1.0F);
-            gui.blit(data.getAction().getBackGroundIcon(), getX() + 1, getY() + 1, 16, 16, 16, 16, 16, 16);
+            gui.blit(data.getAction().getBackGroundIcon(), getX() + 1, getY() + 1, 0, 0, 16, 16, 16, 16);
         }
         gui.setColor(1.0F, 1.0F, 1.0F, 1.0F);
-        gui.blit(data.getAction().getIcon(), getX() + 2, getY() + 1, 16, 16, 16, 16, 16, 16);
+        gui.blit(data.getAction().getIcon(), getX() + 2, getY() + 1, 0, 0, 16, 16, 16, 16);
 
     }
 
@@ -88,3 +77,5 @@ public class InvGuiButton extends ImageButton {
 
 
 }
+
+

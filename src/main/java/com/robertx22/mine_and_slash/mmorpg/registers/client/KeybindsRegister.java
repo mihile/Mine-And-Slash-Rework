@@ -3,9 +3,9 @@ package com.robertx22.mine_and_slash.mmorpg.registers.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.robertx22.mine_and_slash.mmorpg.SlashRef;
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.client.settings.KeyConflictContext;
-import net.minecraftforge.client.settings.KeyModifier;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.settings.KeyConflictContext;
+import net.neoforged.neoforge.client.settings.KeyModifier;
 import org.lwjgl.glfw.GLFW;
 
 public class KeybindsRegister {

@@ -10,7 +10,7 @@ import com.robertx22.mine_and_slash.uncommon.datasaving.Load;
 import com.robertx22.mine_and_slash.uncommon.utilityclasses.ClientOnly;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
@@ -20,34 +20,32 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HubStatButton extends ImageButton {
+public class HubStatButton extends OldImageButton {
 
     public static int xSize = 41;
     public static int ySize = 20;
-    public static ResourceLocation LEFT = new ResourceLocation(SlashRef.MODID, "textures/gui/main_hub/hub_stat_button_left.png");
-    public static ResourceLocation RIGHT = new ResourceLocation(SlashRef.MODID, "textures/gui/main_hub/hub_stat_button_right.png");
+    public static ResourceLocation LEFT = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/hub_stat_button_left.png");
+    public static ResourceLocation RIGHT = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/hub_stat_button_right.png");
 
 
     StatData stat;
     boolean right;
 
     public HubStatButton(boolean isright, StatData stat, int xPos, int yPos) {
-        super(xPos, yPos, xSize, ySize, 0, 0, ySize, isright ? RIGHT : LEFT, (button) -> {
+        super(xPos, yPos, xSize, ySize, 0, 0, ySize, isright ? RIGHT : LEFT, xSize, ySize, (button) -> {
 
         });
 
         this.right = isright;
         this.stat = stat;
     }
-
-    @Override
     protected ClientTooltipPositioner createTooltipPositioner() {
         return DefaultTooltipPositioner.INSTANCE;
     }
 
     @Override
-    public void render(GuiGraphics gui, int x, int y, float ticks) {
-        super.render(gui, x, y, ticks);
+    public void renderWidget(GuiGraphics gui, int x, int y, float ticks) {
+        super.renderWidget(gui, x, y, ticks);
 
 
         if (stat == null || stat.GetStat() == null) {
@@ -108,3 +106,5 @@ public class HubStatButton extends ImageButton {
     }
 
 }
+
+

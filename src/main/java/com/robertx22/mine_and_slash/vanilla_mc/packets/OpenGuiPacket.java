@@ -55,7 +55,7 @@ public class OpenGuiPacket extends MyPacket<OpenGuiPacket> {
 
     @Override
     public ResourceLocation getIdentifier() {
-        return new ResourceLocation(SlashRef.MODID, "opengui");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "opengui");
     }
 
 }

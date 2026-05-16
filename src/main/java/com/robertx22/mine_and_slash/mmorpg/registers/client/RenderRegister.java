@@ -10,7 +10,7 @@ import com.robertx22.mine_and_slash.mmorpg.SlashRef;
 import com.robertx22.mine_and_slash.mmorpg.registers.common.SlashEntities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
-import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 
 public class RenderRegister {

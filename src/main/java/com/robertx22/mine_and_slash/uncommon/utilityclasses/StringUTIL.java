@@ -88,10 +88,8 @@ public class StringUTIL {
             }
         }
 
-        int size = Math.max(dynamicArray.size(), strings.length);
-
-        String[] resultArray = new String[size];
-        for (int i = 0; i < size; i++) {
+        String[] resultArray = new String[strings.length];
+        for (int i = 0; i < resultArray.length; i++) {
             if (i < dynamicArray.size()) {
                 resultArray[i] = dynamicArray.get(i);
             } else {

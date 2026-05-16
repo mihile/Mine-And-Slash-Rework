@@ -45,7 +45,7 @@ public abstract class SchemaPart<SELF, RAW, OBJECT> {
         this.holder = holder;
         this.sup = sup;
 
-        if (holder instanceof EMPTY_HOLDER == false) {
+        if (!(holder instanceof EMPTY_HOLDER)) {
             holder.parts.add(this);
         }
     }

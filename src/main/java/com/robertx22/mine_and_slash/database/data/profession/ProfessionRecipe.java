@@ -82,7 +82,7 @@ public class ProfessionRecipe implements JsonExileRegistry<ProfessionRecipe>, IA
     }
 
     public ItemStack toResultStackForJei() {
-        ItemStack stack = new ItemStack(VanillaUTIL.REGISTRY.items().get(new ResourceLocation(result)), result_num);
+        ItemStack stack = new ItemStack(VanillaUTIL.REGISTRY.items().get(ResourceLocation.parse(result)), result_num);
 
         if (set_tier_nbt) {
             LeveledItem.setTier(stack, tier);
@@ -142,7 +142,7 @@ public class ProfessionRecipe implements JsonExileRegistry<ProfessionRecipe>, IA
         }
 
         public ItemStack toStackForJei() {
-            return new ItemStack(VanillaUTIL.REGISTRY.items().get(new ResourceLocation(id)), num);
+            return new ItemStack(VanillaUTIL.REGISTRY.items().get(ResourceLocation.parse(id)), num);
         }
 
 
@@ -219,7 +219,6 @@ public class ProfessionRecipe implements JsonExileRegistry<ProfessionRecipe>, IA
 
             boolean nope = true;
             FailReason reason = FailReason.NO_ITEM;
-            //int needed = mat.num;
             int have = 0;
 
             for (ItemStack stack : stacks) {
@@ -245,13 +244,12 @@ public class ProfessionRecipe implements JsonExileRegistry<ProfessionRecipe>, IA
             return ExplainedResult.failure(msg);
         }
         return ExplainedResult.success();
-        //return mats.stream().allMatch(x -> stacks.stream().anyMatch(e -> x.matches(e)));
     }
 
     public List<ItemStack> craft(Player p, List<ItemStack> stacks) {
         List<ItemStack> list = new ArrayList<>();
 
-        ItemStack stack = new ItemStack(VanillaUTIL.REGISTRY.items().get(new ResourceLocation(result)), result_num);
+        ItemStack stack = new ItemStack(VanillaUTIL.REGISTRY.items().get(ResourceLocation.parse(result)), result_num);
         if (set_tier_nbt) {
             LeveledItem.setTier(stack, tier);
         }

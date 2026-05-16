@@ -21,7 +21,7 @@ public class SyncAreaLevelPacket extends MyPacket<SyncAreaLevelPacket> {
 
     @Override
     public ResourceLocation getIdentifier() {
-        return new ResourceLocation(SlashRef.MODID, "arealvl");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "arealvl");
     }
 
     @Override

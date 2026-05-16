@@ -8,8 +8,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
@@ -17,7 +17,7 @@ import java.util.*;
 // todo wrap these configs into a class and separate them into categories: loot configs, lvl penalty configs, map configs etc
 public class ServerContainer {
 
-    public static final ForgeConfigSpec spec;
+    public static final ModConfigSpec spec;
     public static final ServerContainer CONTAINER;
 
     public static ServerContainer get() {
@@ -25,24 +25,22 @@ public class ServerContainer {
     }
 
     static {
-        final Pair<ServerContainer, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ServerContainer::new);
+        final Pair<ServerContainer, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(ServerContainer::new);
         spec = specPair.getRight();
         CONTAINER = specPair.getLeft();
     }
 
-    public HashMap<PlayerConfigData.Config, ForgeConfigSpec.BooleanValue> defaultFeatureConfigs = new HashMap<>();
+    public HashMap<PlayerConfigData.Config, ModConfigSpec.BooleanValue> defaultFeatureConfigs = new HashMap<>();
 
-    ServerContainer(ForgeConfigSpec.Builder b) {
+    ServerContainer(ModConfigSpec.Builder b) {
         b.comment("General Configs")
                 .push("general");
-
-        //  DO_NOT_DESPAWN_MAP_MOBS = b.define("DO_NOT_DESPAWN_MAP_MOBS", true);
 
         GET_STARTER_ITEMS = b.define("GET_STARTER_ITEMS", true);
         ENABLE_LOOT_ANNOUNCEMENTS = b.define("loot_announcements", true);
         REQUIRE_TEAM_FOR_TEAM_DUNGEONS = b.define("require_team_for_dungeons", true);
         DONT_SYNC_DATA_OF_AMBIENT_MOBS = b.define("dont_sync_ambient_mob_data", true);
-        SCALE_MOB_LEVEL_TO_NEAREST_PLAYER = b.define("SCALE_MOB_LEVEL_TO_NEAREST_PLAYER", true);
+        SCALE_MOB_LEVEL_TO_NEAREST_PLAYER = b.define("SCALE_MOB_LEVEL_TO_NEAREST_PLAYER", false);
         LOG_ERRORS = b.define("log_errors", true);
         STOP_ERROR_SPAM = b.define("stop_error_spam", true);
         STATION_SUCK_NEARBY_CHESTS = b.define("STATION_SUCK_NEARBY_CHESTS", false);
@@ -105,8 +103,6 @@ public class ServerContainer {
         BLOCK_COST = b.defineInRange("block_cost", 0.25D, 0, 1000);
 
 
-        // DONT_MAKE_MAP_MOBS_PERSISTENT_IF_MOB_COUNT_IS_ABOVE = b.defineInRange("DONT_MAKE_MAP_MOBS_PERSISTENT_IF_MOB_COUNT_IS_ABOVE", 25, 0, 10000);
-
         MAP_GEN_MOB_RADIUS = b.defineInRange("MAP_GEN_MOB_RADIUS", 1, 0, 6);
         MAP_GEN_TERRAIN_RADIUS = b.defineInRange("MAP_GEN_TERRAIN_RADIUS", 4, 0, 10);
 
@@ -147,7 +143,6 @@ public class ServerContainer {
 
         SOUL_CLEANER_ITEM_BLACKLIST = b
                 .defineList("SOUL_CLEANER_ITEM_BLACKLIST", Arrays.asList("minecraft:diamond"), x -> {
-                    // String str = (String) x;
                     return true;
                 });
 
@@ -179,8 +174,8 @@ public class ServerContainer {
                     .forEach(x -> {
                         try {
                             String[] array = x.split(":");
-                            ResourceLocation id = new ResourceLocation(array[0], array[1]);
-                            Item item = ForgeRegistries.ITEMS.getValue(id);
+                            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(array[0], array[1]);
+                            Item item = BuiltInRegistries.ITEM.get(id);
 
                             if (item != Items.AIR && item != null) {
                                 if (!ExileDB.GearSlots().isRegistered(array[2])) {
@@ -210,100 +205,98 @@ public class ServerContainer {
     }
 
     public boolean isEntitySummonBlacklisted(LivingEntity entity) {
-        String id = Objects.requireNonNull(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType())).toString();
+        String id = Objects.requireNonNull(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType())).toString();
         return ENTITY_SUMMON_BLACKLIST.get().stream().anyMatch(x -> x.equals(id));
     }
 
-    public ForgeConfigSpec.ConfigValue<List<? extends String>> GEAR_COMPATS;
-    public ForgeConfigSpec.ConfigValue<List<? extends String>> SOUL_CLEANER_ITEM_BLACKLIST;
-    public ForgeConfigSpec.ConfigValue<List<? extends String>> ENTITY_SUMMON_BLACKLIST;
+    public ModConfigSpec.ConfigValue<List<? extends String>> GEAR_COMPATS;
+    public ModConfigSpec.ConfigValue<List<? extends String>> SOUL_CLEANER_ITEM_BLACKLIST;
+    public ModConfigSpec.ConfigValue<List<? extends String>> ENTITY_SUMMON_BLACKLIST;
 
-    //public ForgeConfigSpec.BooleanValue DO_NOT_DESPAWN_MAP_MOBS;
-    public ForgeConfigSpec.BooleanValue GET_STARTER_ITEMS;
-    public ForgeConfigSpec.BooleanValue ENABLE_LOOT_ANNOUNCEMENTS;
-    public ForgeConfigSpec.BooleanValue REQUIRE_TEAM_FOR_TEAM_DUNGEONS;
-    public ForgeConfigSpec.BooleanValue DONT_SYNC_DATA_OF_AMBIENT_MOBS;
-    public ForgeConfigSpec.BooleanValue SCALE_MOB_LEVEL_TO_NEAREST_PLAYER;
-    public ForgeConfigSpec.BooleanValue LOG_ERRORS;
-    public ForgeConfigSpec.BooleanValue STOP_ERROR_SPAM;
-    public ForgeConfigSpec.BooleanValue STATION_SUCK_NEARBY_CHESTS;
-    public ForgeConfigSpec.BooleanValue SKULL_HIDES_LEVEL;
-    public ForgeConfigSpec.BooleanValue REMOVE_ATK_SPEED_COOLDOWN;
-    public ForgeConfigSpec.BooleanValue REMOVE_DRAW_SPEED_COOLDOWN;
+    public ModConfigSpec.BooleanValue GET_STARTER_ITEMS;
+    public ModConfigSpec.BooleanValue ENABLE_LOOT_ANNOUNCEMENTS;
+    public ModConfigSpec.BooleanValue REQUIRE_TEAM_FOR_TEAM_DUNGEONS;
+    public ModConfigSpec.BooleanValue DONT_SYNC_DATA_OF_AMBIENT_MOBS;
+    public ModConfigSpec.BooleanValue SCALE_MOB_LEVEL_TO_NEAREST_PLAYER;
+    public ModConfigSpec.BooleanValue LOG_ERRORS;
+    public ModConfigSpec.BooleanValue STOP_ERROR_SPAM;
+    public ModConfigSpec.BooleanValue STATION_SUCK_NEARBY_CHESTS;
+    public ModConfigSpec.BooleanValue SKULL_HIDES_LEVEL;
+    public ModConfigSpec.BooleanValue REMOVE_ATK_SPEED_COOLDOWN;
+    public ModConfigSpec.BooleanValue REMOVE_DRAW_SPEED_COOLDOWN;
 
-    public ForgeConfigSpec.IntValue MIN_LEVEL_MAP_DROPS;
-    public ForgeConfigSpec.IntValue MIN_SLIME_SIZE_FOR_LOOT;
-    public ForgeConfigSpec.IntValue DEATH_PENALTY_START_LEVEL;
+    public ModConfigSpec.IntValue MIN_LEVEL_MAP_DROPS;
+    public ModConfigSpec.IntValue MIN_SLIME_SIZE_FOR_LOOT;
+    public ModConfigSpec.IntValue DEATH_PENALTY_START_LEVEL;
 
-    public ForgeConfigSpec.IntValue LEVEL_DISTANCE_PENALTY_LEEWAY;
-    public ForgeConfigSpec.IntValue PERC_OFFHAND_WEP_STAT;
-    public ForgeConfigSpec.IntValue LEVEL_DISTANCE_SKULL_SHOW;
-
-    //  public ForgeConfigSpec.IntValue DONT_MAKE_MAP_MOBS_PERSISTENT_IF_MOB_COUNT_IS_ABOVE;
+    public ModConfigSpec.IntValue LEVEL_DISTANCE_PENALTY_LEEWAY;
+    public ModConfigSpec.IntValue PERC_OFFHAND_WEP_STAT;
+    public ModConfigSpec.IntValue LEVEL_DISTANCE_SKULL_SHOW;
 
 
-    public ForgeConfigSpec.DoubleValue REGEN_HUNGER_COST;
-    public ForgeConfigSpec.DoubleValue EXP_LOSS_ON_DEATH;
-    public ForgeConfigSpec.DoubleValue EXP_DEBT_ON_DEATH;
-    public ForgeConfigSpec.DoubleValue MAX_EXP_DEBT_MULTI;
-    public ForgeConfigSpec.DoubleValue EXP_GAIN_MULTI;
-    public ForgeConfigSpec.DoubleValue PARTY_RADIUS;
-    public ForgeConfigSpec.DoubleValue LEVEL_DISTANCE_PENALTY_PER_LVL;
-    public ForgeConfigSpec.DoubleValue LEVEL_DISTANCE_PENALTY_MIN_MULTI;
-    public ForgeConfigSpec.DoubleValue EXTRA_MOB_STATS_PER_LEVEL;
-    public ForgeConfigSpec.DoubleValue VANILLA_MOB_DMG_AS_EXILE_DMG;
-    public ForgeConfigSpec.DoubleValue PVP_DMG_MULTI;
-    public ForgeConfigSpec.DoubleValue MAX_TEAM_DISTANCE;
-    public ForgeConfigSpec.DoubleValue MOB_DESPAWN_DISTANCE_IN_MAPS;
-    public ForgeConfigSpec.DoubleValue MAP_PERCENT_COMPLETE_NEEDED_FOR_BOSS_ARENA;
-    public ForgeConfigSpec.DoubleValue IN_COMBAT_REGEN_MULTI;
-    public ForgeConfigSpec.DoubleValue COMBAT_TO_PROFESSION_RESTED_XP_GENERATION;
-    public ForgeConfigSpec.DoubleValue PROFESSION_TO_COMBAT_RESTED_XP_GENERATION;
-    public ForgeConfigSpec.DoubleValue RESTED_XP_DEATH_PENALTY;
-    public ForgeConfigSpec.DoubleValue PARTY_EXP_BONUS;
-    public ForgeConfigSpec.DoubleValue PARTY_DROP_BONUS;
 
-    public ForgeConfigSpec.DoubleValue UNARMED_ENERGY_COST;
+    public ModConfigSpec.DoubleValue REGEN_HUNGER_COST;
+    public ModConfigSpec.DoubleValue EXP_LOSS_ON_DEATH;
+    public ModConfigSpec.DoubleValue EXP_DEBT_ON_DEATH;
+    public ModConfigSpec.DoubleValue MAX_EXP_DEBT_MULTI;
+    public ModConfigSpec.DoubleValue EXP_GAIN_MULTI;
+    public ModConfigSpec.DoubleValue PARTY_RADIUS;
+    public ModConfigSpec.DoubleValue LEVEL_DISTANCE_PENALTY_PER_LVL;
+    public ModConfigSpec.DoubleValue LEVEL_DISTANCE_PENALTY_MIN_MULTI;
+    public ModConfigSpec.DoubleValue EXTRA_MOB_STATS_PER_LEVEL;
+    public ModConfigSpec.DoubleValue VANILLA_MOB_DMG_AS_EXILE_DMG;
+    public ModConfigSpec.DoubleValue PVP_DMG_MULTI;
+    public ModConfigSpec.DoubleValue MAX_TEAM_DISTANCE;
+    public ModConfigSpec.DoubleValue MOB_DESPAWN_DISTANCE_IN_MAPS;
+    public ModConfigSpec.DoubleValue MAP_PERCENT_COMPLETE_NEEDED_FOR_BOSS_ARENA;
+    public ModConfigSpec.DoubleValue IN_COMBAT_REGEN_MULTI;
+    public ModConfigSpec.DoubleValue COMBAT_TO_PROFESSION_RESTED_XP_GENERATION;
+    public ModConfigSpec.DoubleValue PROFESSION_TO_COMBAT_RESTED_XP_GENERATION;
+    public ModConfigSpec.DoubleValue RESTED_XP_DEATH_PENALTY;
+    public ModConfigSpec.DoubleValue PARTY_EXP_BONUS;
+    public ModConfigSpec.DoubleValue PARTY_DROP_BONUS;
 
-    public ForgeConfigSpec.DoubleValue FAVOR_DEATH_LOSS;
-    public ForgeConfigSpec.DoubleValue FAVOR_CHEST_GAIN;
+    public ModConfigSpec.DoubleValue UNARMED_ENERGY_COST;
 
-    public ForgeConfigSpec.DoubleValue GEAR_DROPRATE;
-    public ForgeConfigSpec.DoubleValue SOUl_DROPRATE;
-    public ForgeConfigSpec.DoubleValue GEM_DROPRATE;
-    public ForgeConfigSpec.DoubleValue SKILL_GEM_DROPRATE;
-    public ForgeConfigSpec.DoubleValue LOOT_CHEST_DROPRATE;
-    public ForgeConfigSpec.DoubleValue SUPP_GEM_DROPRATE;
-    public ForgeConfigSpec.DoubleValue AURA_GEM_DROPRATE;
-    public ForgeConfigSpec.DoubleValue RUNE_DROPRATE;
-    public ForgeConfigSpec.DoubleValue CURRENCY_DROPRATE;
-    public ForgeConfigSpec.DoubleValue JEWEL_DROPRATE;
-    public ForgeConfigSpec.DoubleValue WATCHER_EYE_DROPRATE;
-    public ForgeConfigSpec.DoubleValue PROPHECY_COIN_DROPRATE;
-    public ForgeConfigSpec.DoubleValue OMEN_DROPRATE;
-    public ForgeConfigSpec.DoubleValue MAP_DROPRATE;
+    public ModConfigSpec.DoubleValue FAVOR_DEATH_LOSS;
+    public ModConfigSpec.DoubleValue FAVOR_CHEST_GAIN;
 
-    public ForgeConfigSpec.IntValue PROPHECY_GEAR_TYPE_CHANCE;
-    public ForgeConfigSpec.IntValue PROPHECY_JEWEL_RARITY_CHANCE;
-    public ForgeConfigSpec.IntValue PROPHECY_SKILL_GEM_RARITY_CHANCE;
-    public ForgeConfigSpec.IntValue PROPHECY_GEAR_RARITY;
-    public ForgeConfigSpec.IntValue PROPHECY_SEARCH_RADIUS;
+    public ModConfigSpec.DoubleValue GEAR_DROPRATE;
+    public ModConfigSpec.DoubleValue SOUl_DROPRATE;
+    public ModConfigSpec.DoubleValue GEM_DROPRATE;
+    public ModConfigSpec.DoubleValue SKILL_GEM_DROPRATE;
+    public ModConfigSpec.DoubleValue LOOT_CHEST_DROPRATE;
+    public ModConfigSpec.DoubleValue SUPP_GEM_DROPRATE;
+    public ModConfigSpec.DoubleValue AURA_GEM_DROPRATE;
+    public ModConfigSpec.DoubleValue RUNE_DROPRATE;
+    public ModConfigSpec.DoubleValue CURRENCY_DROPRATE;
+    public ModConfigSpec.DoubleValue JEWEL_DROPRATE;
+    public ModConfigSpec.DoubleValue WATCHER_EYE_DROPRATE;
+    public ModConfigSpec.DoubleValue PROPHECY_COIN_DROPRATE;
+    public ModConfigSpec.DoubleValue OMEN_DROPRATE;
+    public ModConfigSpec.DoubleValue MAP_DROPRATE;
 
-    public ForgeConfigSpec.DoubleValue BLOCK_COST;
+    public ModConfigSpec.IntValue PROPHECY_GEAR_TYPE_CHANCE;
+    public ModConfigSpec.IntValue PROPHECY_JEWEL_RARITY_CHANCE;
+    public ModConfigSpec.IntValue PROPHECY_SKILL_GEM_RARITY_CHANCE;
+    public ModConfigSpec.IntValue PROPHECY_GEAR_RARITY;
+    public ModConfigSpec.IntValue PROPHECY_SEARCH_RADIUS;
 
-    public ForgeConfigSpec.IntValue MAX_POSSIBLE_FAVOR;
-    public ForgeConfigSpec.IntValue MAP_START_COOLDOWN_SECONDS;
+    public ModConfigSpec.DoubleValue BLOCK_COST;
+
+    public ModConfigSpec.IntValue MAX_POSSIBLE_FAVOR;
+    public ModConfigSpec.IntValue MAP_START_COOLDOWN_SECONDS;
 
 
-    public ForgeConfigSpec.IntValue MAP_GEN_TERRAIN_RADIUS;
-    public ForgeConfigSpec.IntValue MAP_GEN_MOB_RADIUS;
+    public ModConfigSpec.IntValue MAP_GEN_TERRAIN_RADIUS;
+    public ModConfigSpec.IntValue MAP_GEN_MOB_RADIUS;
 
-    public ForgeConfigSpec.IntValue PROPHECY_OFFERS_PER_REROLL;
+    public ModConfigSpec.IntValue PROPHECY_OFFERS_PER_REROLL;
 
-    public ForgeConfigSpec.IntValue BONUS_EXP_PERCENT_PER_HIGHER_LVL_CHARACTERS;
+    public ModConfigSpec.IntValue BONUS_EXP_PERCENT_PER_HIGHER_LVL_CHARACTERS;
 
-    public ForgeConfigSpec.IntValue MAX_CHARACTERS;
-    public ForgeConfigSpec.IntValue ITEM_LEVEL_VARIANCE;
-    public ForgeConfigSpec.IntValue MOB_LEVEL_VARIANCE;
+    public ModConfigSpec.IntValue MAX_CHARACTERS;
+    public ModConfigSpec.IntValue ITEM_LEVEL_VARIANCE;
+    public ModConfigSpec.IntValue MOB_LEVEL_VARIANCE;
 
 }

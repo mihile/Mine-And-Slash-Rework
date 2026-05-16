@@ -48,8 +48,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -163,12 +163,6 @@ public class RuneItem extends Item implements IGUID, IAutoModel, IAutoLocName, I
                 return ExplainedResult.failure(Chats.CANT_RUNE_THIS_UNIQUE.locName());
             }
 
-            int runes = (int) data.sockets.getSocketed().stream().filter(x -> x.isRune()).count();
-            if (runes >= data.getRarity().max_runes) {
-                return ExplainedResult.failure(Chats.MAX_RUNES_PER_RARITY.locName(data.getRarity().max_runes, data.getRarity().coloredName()));
-            }
-
-
             Rune rune = ExileDB.Runes().get(RuneItem.this.type.id);
 
             if (rune.getFor(data.GetBaseGearType().family()).isEmpty()) {
@@ -177,14 +171,16 @@ public class RuneItem extends Item implements IGUID, IAutoModel, IAutoLocName, I
 
             var opt = data.sockets.getSocketed().stream().filter(x -> x.isRune() && x.getRune().GUID().equals(RuneItem.this.type.id)).findAny();
             if (opt.isPresent()) {
-                if (opt.get().p >= 100) {
-                    return ExplainedResult.failure(Chats.RUNE_IS_ALREADY_MAXED.locName());
-                }
+                return ExplainedResult.failure(Chats.RUNE_IS_ALREADY_SOCKETED.locName());
+            }
+
+            int runes = (int) data.sockets.getSocketed().stream().filter(x -> x.isRune()).count();
+            if (runes >= data.getRarity().max_runes) {
+                return ExplainedResult.failure(Chats.MAX_RUNES_PER_RARITY.locName(data.getRarity().max_runes, data.getRarity().coloredName()));
             }
 
 
-            int samerunes = (int) data.sockets.getSocketed().stream().filter(x -> x.isRune() && x.getRune().GUID().equals(RuneItem.this.type.id)).count();
-            var can = data.getEmptySockets() > 0 || samerunes == 1;
+            var can = data.getEmptySockets() > 0;
 
             if (!can) {
                 return ExplainedResult.failure(Chats.NEEDS_EMPTY_OR_RUNE.locName());
@@ -275,10 +271,8 @@ public class RuneItem extends Item implements IGUID, IAutoModel, IAutoLocName, I
         return ExileDB.Runes()
                 .get(type.id);
     }
-
-    @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext world, List<Component> tooltip, TooltipFlag context) {
 
         try {
 
@@ -357,3 +351,4 @@ public class RuneItem extends Item implements IGUID, IAutoModel, IAutoLocName, I
         return tooltip;
     }
 }
+

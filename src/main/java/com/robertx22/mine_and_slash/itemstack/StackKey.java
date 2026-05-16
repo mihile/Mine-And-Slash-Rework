@@ -16,11 +16,4 @@ public class StackKey<T> {
         return stack.get(this);
     }
 
-    /*
-    public StackData<T> get(ItemStack stack) {
-
-        return ExileStack.of(stack).get(this);
-    }
-
-     */
 }

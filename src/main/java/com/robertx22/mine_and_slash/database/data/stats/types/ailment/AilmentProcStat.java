@@ -45,7 +45,7 @@ public class AilmentProcStat extends Stat {
 
         @Override
         public boolean canActivate(DamageEvent effect, StatData data, Stat stat) {
-            return effect.getElement() != null && effect.getElement() == ailment.element && (effect.getAttackType().isHit() || effect.getAttackType() == AttackType.bonus_dmg) && RandomUtils.roll(data.getValue());
+            return effect.getElement() != null && effect.getElement() == ailment.element && (effect.getAttackType().isHit() || effect.getAttackType() == AttackType.bonus_dmg) && RandomUtils.roll(data.get());
         }
 
     }

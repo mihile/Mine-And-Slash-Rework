@@ -70,7 +70,7 @@ public enum AllyOrEnemy {
 
         @Override
         public boolean is(Entity caster, LivingEntity target) {
-            return enemies.is(caster, target) == false;
+            return !enemies.is(caster, target);
         }
 
         @Override
@@ -197,17 +197,9 @@ public enum AllyOrEnemy {
                 if (EntityFinder.isTamedByAlly(p, target)) {
                     return false;
                 }
-                if (target.serializeNBT().contains("NoAI")) {
+                if (target.serializeNBT(target.registryAccess()).contains("NoAI")) {
                     return false;
                 }
-                // Check for villagers and other NPCs
-                /*var type = Load.Unit(target).getType();
-                if (type == EntityTypeUtils.EntityClassification.NPC) {
-                    return false;
-                } // failsafe incase mod doesn't use villager class
-                if (target instanceof net.minecraft.world.entity.npc.AbstractVillager) {
-                    return false;
-                }*/
                 if (target instanceof Player) {
                     if (!caster.level().getServer().isPvpAllowed()) {
                         return false;

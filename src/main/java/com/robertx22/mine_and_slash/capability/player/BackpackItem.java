@@ -24,7 +24,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class BackpackItem extends AutoItem implements IAutoLocName, IAutoModel, IShapelessRecipe {
@@ -59,8 +58,7 @@ public class BackpackItem extends AutoItem implements IAutoLocName, IAutoModel, 
 
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level pLevel, List<Component> list, TooltipFlag pIsAdvanced) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext pContext, List<Component> list, TooltipFlag pIsAdvanced) {
 
         list.add(Component.literal(""));
         list.add(Chats.RIGHT_CLICK_OPEN.locName());

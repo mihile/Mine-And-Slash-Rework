@@ -34,10 +34,8 @@ public class SocketedGem {
     public MaxLinks getMaxLinks(Player p) {
         if (getSkillData() == null) {
             return new MaxLinks(0, false, false);
-        } else {
-            return getSkillData().getMaxLinks(p);
-
         }
+        return getSkillData().getMaxLinks(p);
     }
 
     public void removeSupportGemsIfTooMany(Player p) {
@@ -99,10 +97,7 @@ public class SocketedGem {
 
     public Spell getSpell() {
         var data = getSkillData();
-        if (data != null) {
-            return data.getSpell();
-        }
-        return null;
+        return data != null ? data.getSpell() : null;
     }
 
 

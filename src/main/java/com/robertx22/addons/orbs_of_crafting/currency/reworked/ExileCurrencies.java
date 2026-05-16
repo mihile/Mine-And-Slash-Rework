@@ -164,17 +164,6 @@ public class ExileCurrencies extends ExileKeyHolder<ExileCurrency> {
             .weight(CodeCurrency.Weights.RARE)
             .build(this);
 
-/*
-    public ExileKey<ExileCurrency, IdKey> MAP_RARITY_UPGRADE = ExileCurrency.Builder.of("map_rarity_upgrade", "Map Rarity Upgrade Orb", WorksOnBlock.ItemType.MAP)
-            .addRequirement(ItemReqs.INSTANCE.IS_NOT_CORRUPTED)
-            .addRequirement(ItemReqs.INSTANCE.MAP_HAS_HIGHER_RARITY)
-            .rarity(IRarity.EPIC_ID)
-            .addAlwaysUseModification(ItemMods.INSTANCE.UPGRADE_MAP_RARITY)
-            .potentialCost(0)
-            .weight(CodeCurrency.Weights.COMMON)
-            .build(this);
-
- */
 
 
     public ExileKey<ExileCurrency, IdKey> UPGRADE_COMMON_AFFIX = ExileCurrency.Builder.of("upgrade_common_affix", "Orb of Fledgling's Reprieve", ItemReqs.INSTANCE.IS_GEAR)

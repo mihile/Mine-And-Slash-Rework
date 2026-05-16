@@ -13,7 +13,7 @@ public class TellServerToCancelSpellCast extends MyPacket<TellServerToCancelSpel
 
     @Override
     public ResourceLocation getIdentifier() {
-        return new ResourceLocation(SlashRef.MODID, "cancelspell");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "cancelspell");
     }
 
     @Override
@@ -35,10 +35,6 @@ public class TellServerToCancelSpellCast extends MyPacket<TellServerToCancelSpel
         if (spells.spellCastingData
                 .getSpellBeingCast() != null) {
 
-            //SpellCastContext sctx = new SpellCastContext(player, spells.spellCastingData.castTicksDone, spells.spellCastingData
-            //      .getSpellBeingCast());
-
-            //spells.spellCastingData.tryCast(sctx);
             spells.spellCastingData.cancelCast(player);
 
             spells.playerDataSync.setDirty();

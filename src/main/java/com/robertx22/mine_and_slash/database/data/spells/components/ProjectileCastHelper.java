@@ -111,8 +111,6 @@ public class ProjectileCastHelper {
 
             Vector3f finalVel = new Vector3f(x, y, z);
 
-            //posAdd = new MyPosition(finalVel);
-
             AbstractArrow en = (AbstractArrow) projectile.create(world);
             SpellUtils.shootProjectile(pos.add(posAdd), en, ctx.getPositionEntity(), shootSpeed, pitch + randomPitchOffset, yaw + addYaw + randomYawOffset);
             SpellUtils.initSpellEntity(en, caster, data, holder);
@@ -141,8 +139,6 @@ public class ProjectileCastHelper {
                 if (target != null) {
                     Vec3 vel = positionToVelocity(new MyPosition(en.position()), new MyPosition(target.getEyePosition()));
                     vel = vel.multiply(shootSpeed, shootSpeed, shootSpeed);
-                    //en.setDeltaMovement(vel);
-
 
                     en.shoot(vel.x, vel.y, vel.z, 1, 0);
 

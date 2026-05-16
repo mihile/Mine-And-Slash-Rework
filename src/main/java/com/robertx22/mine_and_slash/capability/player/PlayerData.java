@@ -1,6 +1,7 @@
 package com.robertx22.mine_and_slash.capability.player;
 
 import com.robertx22.library_of_exile.components.ICap;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.library_of_exile.packets.SyncPlayerCapToClient;
 import com.robertx22.library_of_exile.utils.LoadSave;
@@ -32,10 +33,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.util.LazyOptional;
+import com.robertx22.library_of_exile.compat.capability.Capability;
+import com.robertx22.library_of_exile.compat.capability.CapabilityManager;
+import com.robertx22.library_of_exile.compat.capability.CapabilityToken;
+import com.robertx22.library_of_exile.compat.capability.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,33 +46,116 @@ import java.util.List;
 import java.util.Map;
 
 
-public class PlayerData implements ICap {
+public class PlayerData implements ICap, INBTSerializable<CompoundTag> {
 
 
-    public static final ResourceLocation RESOURCE = new ResourceLocation(SlashRef.MODID, "player_data");
+    public static final ResourceLocation RESOURCE = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "player_data");
     public static Capability<PlayerData> INSTANCE = CapabilityManager.get(new CapabilityToken<>() {
     });
 
     public static PlayerData get(LivingEntity entity) {
-        return entity.getCapability(INSTANCE)
-                .orElse(null);
+        return entity instanceof Player player
+                ? player.getData(com.robertx22.mine_and_slash.mmorpg.registers.common.SlashAttachments.PLAYER_DATA.get()).init(player)
+                : null;
     }
 
-    transient final LazyOptional<PlayerData> supp = LazyOptional.of(() -> this);
+    /**
+     * NeoForge Attachment 기본 생성자입니다.
+     */
+    public PlayerData() {
+        // player는 init()에서 나중에 주입됩니다
+    }
 
-    @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == INSTANCE) {
-            return supp.cast();
+    /**
+     * Attachment에서 꺼낸 후 player를 주입합니다.
+     * 처음 init() 호출 시 ATTACHMENT_LOOKUP에 클라이언트 역직렬화 함수도 등록합니다.
+     */
+    public PlayerData init(Player player) {
+        this.player = player;
+        if (this.cachedStats == null) {
+            this.cachedStats = new CachedPlayerStats(player);
+        } else {
+            this.cachedStats.p = player;
         }
-        return LazyOptional.empty();
+        return this;
+    }
+
+    @Override
+    public CompoundTag serializeNBT(net.minecraft.core.HolderLookup.Provider provider) {
+
+        CompoundTag nbt = new CompoundTag();
+
+        LoadSave.Save(team, nbt, TEAM_DATA);
+        LoadSave.Save(talents, nbt, TALENTS_DATA);
+        LoadSave.Save(prophecy, nbt, PROPHECY);
+        LoadSave.Save(statPoints, nbt, STAT_POINTS);
+        LoadSave.Save(ascClass, nbt, ASC);
+        LoadSave.Save(spellCastingData, nbt, CAST);
+        LoadSave.Save(config, nbt, CONFIG);
+        LoadSave.Save(favor, nbt, FAVOR);
+        LoadSave.Save(professions, nbt, PROFESSIONS);
+        LoadSave.Save(buff, nbt, BUFFS);
+        LoadSave.Save(rested_xp, nbt, RESTED_XP);
+        LoadSave.Save(characters, nbt, CHARACTERS);
+        LoadSave.Save(points, nbt, POINTS);
+        LoadSave.Save(miscInfo, nbt, MISC_INFO);
+        LoadSave.Save(summonedData, nbt, SUMMONED);
+
+        nbt.put(GEMS, skillGemInv.createTag(provider));
+        nbt.put(AURAS, auraInv.createTag(provider));
+        nbt.put(JEWELS, jewelsInv.createTag(provider));
+
+        nbt.putInt(BONUS_TALENTS, bonusTalents);
+        nbt.putInt(OMENS_FILLED, omensFilled);
+
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(net.minecraft.core.HolderLookup.Provider provider, CompoundTag nbt) {
+
+        this.team = loadOrBlank(TeamData.class, new TeamData(), nbt, TEAM_DATA, new TeamData());
+        this.prophecy = loadOrBlank(PlayerProphecies.class, new PlayerProphecies(), nbt, PROPHECY, new PlayerProphecies());
+        this.talents = loadOrBlank(TalentsData.class, new TalentsData(), nbt, TALENTS_DATA, new TalentsData());
+        this.statPoints = loadOrBlank(StatPointsData.class, new StatPointsData(), nbt, STAT_POINTS, new StatPointsData());
+        this.ascClass = loadOrBlank(SpellSchoolsData.class, new SpellSchoolsData(), nbt, ASC, new SpellSchoolsData());
+        this.spellCastingData = loadOrBlank(SpellCastingData.class, new SpellCastingData(), nbt, CAST, new SpellCastingData());
+        this.config = loadOrBlank(PlayerConfigData.class, new PlayerConfigData(), nbt, CONFIG, new PlayerConfigData());
+        this.favor = loadOrBlank(DeathFavorData.class, new DeathFavorData(), nbt, FAVOR, new DeathFavorData());
+        this.professions = loadOrBlank(PlayerProfessionsData.class, new PlayerProfessionsData(), nbt, PROFESSIONS, new PlayerProfessionsData());
+        this.buff = loadOrBlank(PlayerBuffData.class, new PlayerBuffData(), nbt, BUFFS, new PlayerBuffData());
+        this.rested_xp = loadOrBlank(RestedExpData.class, new RestedExpData(), nbt, RESTED_XP, new RestedExpData());
+        this.points = loadOrBlank(PlayerPointsData.class, new PlayerPointsData(), nbt, POINTS, new PlayerPointsData());
+        this.characters = loadOrBlank(CharStorageData.class, new CharStorageData(), nbt, CHARACTERS, new CharStorageData());
+        this.miscInfo = loadOrBlank(MiscSyncData.class, new MiscSyncData(), nbt, MISC_INFO, new MiscSyncData());
+        this.summonedData = loadOrBlank(SummonedData.class, new SummonedData(), nbt, SUMMONED, new SummonedData());
+        skillGemInv.fromTag(nbt.getList(GEMS, 10), provider);
+        auraInv.fromTag(nbt.getList(AURAS, 10), provider);
+        jewelsInv.fromTag(nbt.getList(JEWELS, 10), provider);
+
+
+        this.bonusTalents = nbt.getInt(BONUS_TALENTS);
+        if (bonusTalents < 0) {
+            bonusTalents = 0;
+        }
+        this.omensFilled = nbt.getInt(OMENS_FILLED);
+
+        // 클라이언트에서 역직렬화 후 player/cachedStats 참조 복구
+        // (player는 init()을 통해 나중에 주입됨, cachedStats만 null 체크)
+        if (this.player != null && this.cachedStats == null) {
+            this.cachedStats = new CachedPlayerStats(this.player);
+        }
 
     }
 
+    @Override
+    public CompoundTag serializeNBT() {
+        return serializeNBT(player != null ? player.level().registryAccess() : null);
+    }
 
     @Override
-    public void syncToClient(Player player) {
-
+    public void deserializeNBT(CompoundTag nbt) {
+        deserializeNBT(player != null ? player.level().registryAccess() : null, nbt);
     }
 
 
@@ -105,9 +189,6 @@ public class PlayerData implements ICap {
 
 
     public transient StatCalcInfoData ctxs = new StatCalcInfoData();
-
-    // so players know where their stats come from in the future gui
-    //ublic SavedStatCtxList ctxStats = new SavedStatCtxList();
 
     public TeamData team = new TeamData();
     public TalentsData talents = new TalentsData();
@@ -150,73 +231,15 @@ public class PlayerData implements ICap {
         return new JewelInvHelper(jewelsInv);
     }
 
-    @Override
-    public CompoundTag serializeNBT() {
-
-        CompoundTag nbt = new CompoundTag();
-
-        LoadSave.Save(team, nbt, TEAM_DATA);
-        LoadSave.Save(talents, nbt, TALENTS_DATA);
-        LoadSave.Save(prophecy, nbt, PROPHECY);
-        LoadSave.Save(statPoints, nbt, STAT_POINTS);
-        LoadSave.Save(ascClass, nbt, ASC);
-        LoadSave.Save(spellCastingData, nbt, CAST);
-        LoadSave.Save(config, nbt, CONFIG);
-        LoadSave.Save(favor, nbt, FAVOR);
-        LoadSave.Save(professions, nbt, PROFESSIONS);
-        LoadSave.Save(buff, nbt, BUFFS);
-        LoadSave.Save(rested_xp, nbt, RESTED_XP);
-        LoadSave.Save(characters, nbt, CHARACTERS);
-        LoadSave.Save(points, nbt, POINTS);
-        LoadSave.Save(miscInfo, nbt, MISC_INFO);
-        LoadSave.Save(summonedData, nbt, SUMMONED);
-        // LoadSave.Save(ctxStats, nbt, "ctx");
-
-        nbt.put(GEMS, skillGemInv.createTag());
-        nbt.put(AURAS, auraInv.createTag());
-        nbt.put(JEWELS, jewelsInv.createTag());
-
-        nbt.putInt(BONUS_TALENTS, bonusTalents);
-        nbt.putInt(OMENS_FILLED, omensFilled);
-
-        return nbt;
-    }
-
-    @Override
-    public void deserializeNBT(CompoundTag nbt) {
-
-        this.team = loadOrBlank(TeamData.class, new TeamData(), nbt, TEAM_DATA, new TeamData());
-        this.prophecy = loadOrBlank(PlayerProphecies.class, new PlayerProphecies(), nbt, PROPHECY, new PlayerProphecies());
-        this.talents = loadOrBlank(TalentsData.class, new TalentsData(), nbt, TALENTS_DATA, new TalentsData());
-        this.statPoints = loadOrBlank(StatPointsData.class, new StatPointsData(), nbt, STAT_POINTS, new StatPointsData());
-        this.ascClass = loadOrBlank(SpellSchoolsData.class, new SpellSchoolsData(), nbt, ASC, new SpellSchoolsData());
-        this.spellCastingData = loadOrBlank(SpellCastingData.class, new SpellCastingData(), nbt, CAST, new SpellCastingData());
-        this.config = loadOrBlank(PlayerConfigData.class, new PlayerConfigData(), nbt, CONFIG, new PlayerConfigData());
-        this.favor = loadOrBlank(DeathFavorData.class, new DeathFavorData(), nbt, FAVOR, new DeathFavorData());
-        this.professions = loadOrBlank(PlayerProfessionsData.class, new PlayerProfessionsData(), nbt, PROFESSIONS, new PlayerProfessionsData());
-        this.buff = loadOrBlank(PlayerBuffData.class, new PlayerBuffData(), nbt, BUFFS, new PlayerBuffData());
-        this.rested_xp = loadOrBlank(RestedExpData.class, new RestedExpData(), nbt, RESTED_XP, new RestedExpData());
-        this.points = loadOrBlank(PlayerPointsData.class, new PlayerPointsData(), nbt, POINTS, new PlayerPointsData());
-        this.characters = loadOrBlank(CharStorageData.class, new CharStorageData(), nbt, CHARACTERS, new CharStorageData());
-        this.miscInfo = loadOrBlank(MiscSyncData.class, new MiscSyncData(), nbt, MISC_INFO, new MiscSyncData());
-        this.summonedData = loadOrBlank(SummonedData.class, new SummonedData(), nbt, SUMMONED, new SummonedData());
-        // this.ctxStats = loadOrBlank(SavedStatCtxList.class, new SavedStatCtxList(), nbt, "ctx", new SavedStatCtxList());
-
-        skillGemInv.fromTag(nbt.getList(GEMS, 10)); // todo
-        auraInv.fromTag(nbt.getList(AURAS, 10)); // todo
-        jewelsInv.fromTag(nbt.getList(JEWELS, 10)); // todo
-
-
-        this.bonusTalents = nbt.getInt(BONUS_TALENTS);
-        if (bonusTalents < 0) {
-            bonusTalents = 0;
-        }
-        this.omensFilled = nbt.getInt(OMENS_FILLED);
-
-    }
 
     private void syncData() {
-        Packets.sendToClient(player, new SyncPlayerCapToClient(player, this.getCapIdForSyncing()));
+        if (player == null) return;
+        try {
+            // PlayerCapabilities 레거시 맵 대신 직접 NBT를 직렬화해서 전송합니다.
+            Packets.sendToClient(player, new SyncPlayerCapToClient(this.getCapIdForSyncing(), this.serializeNBT()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     transient HashMap<String, Unit> spellUnits = new HashMap<>();
@@ -315,6 +338,20 @@ public class PlayerData implements ICap {
     @Override
     public String getCapIdForSyncing() {
         return "rpg_player_data";
+    }
+
+    /**
+     * 클라이언트가 SyncPlayerCapToClient 패킷을 수신해 deserializeNBT()를 완료한 직후 호출됩니다.
+     * player 참조 주입 및 cachedStats 복구를 보장합니다.
+     */
+    @Override
+    public void onClientReceived(net.minecraft.world.entity.player.Player player) {
+        this.player = player;
+        if (this.cachedStats == null) {
+            this.cachedStats = new CachedPlayerStats(player);
+        } else {
+            this.cachedStats.p = player;
+        }
     }
 
 }

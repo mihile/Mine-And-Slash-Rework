@@ -45,11 +45,15 @@ public class DungeonAddonEvents {
 
                     if (map != null) {
 
-                        map.lvl = Load.Unit(event.p).getLevel();
+                        if (map.lvl <= 1) {
+                            map.lvl = Load.Unit(event.p).getLevel();
+                        }
 
                         var mapdata = MapData.newMap(event.p, map);
 
-                        WorldData.get(event.p.level()).map.setData(event.p, mapdata, event.mapInfo.structure, event.startChunkPos.getMiddleBlockPosition(5));
+                        var worldData = WorldData.get(event.p.level());
+                        worldData.map.setData(event.p, mapdata, event.mapInfo.structure, event.startChunkPos.getMiddleBlockPosition(5));
+                        worldData.setDirty();
 
                         Load.Unit(event.p).getCooldowns().setOnCooldown("start_map", ServerContainer.get().MAP_START_COOLDOWN_SECONDS.get() * 20);
                     }

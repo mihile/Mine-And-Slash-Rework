@@ -31,7 +31,7 @@ public abstract class WeaponMechanic implements IGUID {
         int num = (int) data.getAttackerEntityData()
                 .getUnit()
                 .getCalculatedStat(WeaponDamage.getInstance())
-                .getValue();
+                .get();
 
         DamageEvent dmg = EventBuilder.ofDamage(data, data.getAttackerEntity(), data.getTargetEntity(), num)
                 .setupDamage(AttackType.hit, weptype, data.weaponData.GetBaseGearType().style)

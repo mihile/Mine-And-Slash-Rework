@@ -1,6 +1,6 @@
 package com.robertx22.mine_and_slash.uncommon.utilityclasses;
 
-import net.minecraftforge.fml.loading.FMLPaths;
+import net.neoforged.fml.loading.FMLPaths;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

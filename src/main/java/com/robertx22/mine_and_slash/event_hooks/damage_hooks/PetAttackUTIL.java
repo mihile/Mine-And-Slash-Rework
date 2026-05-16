@@ -15,33 +15,20 @@ public class PetAttackUTIL {
         if (caster != null) {
 
             Spell spell = ExileDB.Spells().get(Load.Unit(summon).summonedPetData.spell);
+            System.out.println("Pet Spell: " + (spell != null ? spell.toString() : "null") + ", Caster: " + (caster != null ? caster.getName().getString() : "null"));
 
             if (spell != null) {
-
-
                 Spell basic = spell.getConfig().getSummonBasicSpell();
-
                 var ctx = new SpellCastContext(caster, 0, basic);
 
-                //  var originctx = new SpellCastContext(caster, 0, basic); // pet should be using the pet spell here
-
-
-                boolean cancast = false;
-                if (caster instanceof Player p) {
-                    if (Load.player(p).spellCastingData.canCast(basic, p).can) {
-                        cancast = true;
-                    } else {
-                        cancast = false;
-                    }
-                }
+                // 소환수의 기본 공격은 자원 검사 없이 발동하도록 수정
+                boolean cancast = true;
 
                 if (cancast) {
                     basic.spendResources(ctx);
                     basic.attached.onCast(SpellCtx.onCast(caster, ctx.calcData));
-                    basic.attached.tryActivate(Spell.DEFAULT_EN_NAME, SpellCtx.onHit(caster, summon, target, ctx.calcData)); // todo this should be reworked.
-                    // pet ability should gain the stats of the pet used to summon it, this is a nasty hack
+                    basic.attached.tryActivate(Spell.DEFAULT_EN_NAME, SpellCtx.onHit(caster, summon, target, ctx.calcData));
                 }
-
             }
         } else {
             summon.kill();

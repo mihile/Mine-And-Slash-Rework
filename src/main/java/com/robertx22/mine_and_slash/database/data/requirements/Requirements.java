@@ -20,7 +20,7 @@ public class Requirements implements ITooltipList {
 
     public boolean satisfiesAllRequirements(GearRequestedFor requested) {
         for (TagRequirement req : tag_requirements) {
-            if (req.meetsRequierment(requested) == false) {
+            if (!req.meetsRequierment(requested)) {
                 return false;
             }
         }

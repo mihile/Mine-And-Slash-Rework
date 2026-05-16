@@ -38,7 +38,6 @@ public abstract class BaseRarity implements Rarity {
         try {
             return ChatFormatting.valueOf(text_format);
         } catch (Exception e) {
-            //  e.printStackTrace();
         }
         return ChatFormatting.GRAY;
     }

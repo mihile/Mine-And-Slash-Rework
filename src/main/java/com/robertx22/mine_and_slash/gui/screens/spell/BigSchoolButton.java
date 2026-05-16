@@ -4,14 +4,14 @@ import com.robertx22.library_of_exile.utils.TextUTIL;
 import com.robertx22.mine_and_slash.mmorpg.SlashRef;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BigSchoolButton extends ImageButton {
+public class BigSchoolButton extends OldImageButton {
 
     static int SIZE = 36;
 

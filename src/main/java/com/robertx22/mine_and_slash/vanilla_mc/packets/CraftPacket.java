@@ -48,7 +48,6 @@ public class CraftPacket extends MyPacket<CraftPacket> {
 
             if (pbe.craftingState == Crafting_State.IDLE || pbe.craftingState == Crafting_State.ACTIVE) {
                 pbe.craftingState = Crafting_State.STOPPED;
-                // pbe.ownerUUID = null;
             } else {
                 pbe.craftingState = Crafting_State.ACTIVE;
                 pbe.ownerUUID = exilePacketContext.getPlayer().getUUID();

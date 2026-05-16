@@ -18,9 +18,6 @@ public class MagicShieldHeal extends Stat {
         this.min = 0;
         this.scaling = StatScaling.NORMAL;
         this.group = StatGroup.Misc;
-
-        //this.is_long = true;
-
         this.statEffect = new Effect();
 
     }
@@ -80,7 +77,7 @@ public class MagicShieldHeal extends Stat {
 
         @Override
         public RestoreResourceEvent activate(RestoreResourceEvent effect, StatData data, Stat stat) {
-            float num = effect.data.getNumber() * data.getValue() / 100F;
+            float num = effect.data.getNumber() * data.get() / 100F;
             // we get the original so the scaling only happens for magic shield, not twice
             RestoreResourceEvent restore = EventBuilder.ofRestore(effect.source, effect.target, ResourceType.magic_shield, effect.data.getRestoreType(), num)
                     .build();

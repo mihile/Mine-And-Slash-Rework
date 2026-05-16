@@ -99,17 +99,8 @@ public class SlashItems {
 
     public static RegObj<Item> NEWBIE_GEAR_BAG = Def.item(() -> new ItemNewbieGearBag(), "newbie_gear_bag");
     public static RegObj<Item> DESTROY_OUTPUT = Def.item(() -> new DestroyOutputMegaExpItem("Disassembler's Learning Method"), "destroy_output_exp");
-    //   public static RegObj<Item> SALVAGE_HAMMER = Def.item(() -> new SalvageHammerItem(), "salvage_hammer");
-    //  public static RegObj<Item> SOCKET_EXTRACTOR = Def.item(() -> new GemExtractorItem(), "socket_extractor");
     public static RegObj<Item> SOUL_CLEANER = Def.item(() -> new SoulCleanerItem(), "soul_cleaner");
 
-
-    /*
-    public static RegObj<Item> INFUSED_IRON = Def.item(() -> new SimpleMatItem(), "mat/infused_iron");
-    public static RegObj<Item> CRYSTALLIZED_ESSENCE = Def.item(() -> new SimpleMatItem(), "mat/crystallized_essence");
-    public static RegObj<Item> GOLDEN_ORB = Def.item(() -> new SimpleMatItem(), "mat/golden_orb");
-    public static RegObj<Item> MYTHIC_ESSENCE = Def.item(() -> new SimpleMatItem(), "mat/mythic_essence");
-     */
 
     public static RegObj<LootChestItem> CURRENCY_CHEST = Def.item(() -> new LootChestItem("Currency"), "chest/currency");
 
@@ -122,11 +113,6 @@ public class SlashItems {
 
     public static HashMap<String, RegObj<Item>> STATIONS = new HashMap<>();
     public static HashMap<String, RegObj<Item>> EFFECT_DISPLAY = new HashMap<>();
-
-    //  public static RegObj<Item> CLOTH_SET = Def.item(() -> new TagForceSoulItem(() -> Items.PAPER, TagForceSoulItem.AvailableTags.CLOTH), "cloth_set");
-    // public static RegObj<Item> LEATHER_SET = Def.item(() -> new TagForceSoulItem(() -> Items.LEATHER, TagForceSoulItem.AvailableTags.LEATHER), "leather_set");
-    //public static RegObj<Item> PLATE_SET = Def.item(() -> new TagForceSoulItem(() -> Items.COPPER_INGOT, TagForceSoulItem.AvailableTags.PLATE), "plate_set");
-
 
     public static class GearItems {
 

@@ -25,7 +25,7 @@ public abstract class BestiaryEntry<T> {
     }
 
     public List<Component> getTooltip() {
-        var list = stack.getTooltipLines(ClientOnly.getPlayer(), TooltipFlag.NORMAL);
+        var list = stack.getTooltipLines(net.minecraft.world.item.Item.TooltipContext.EMPTY, ClientOnly.getPlayer(), TooltipFlag.NORMAL);
         return list;
     }
 

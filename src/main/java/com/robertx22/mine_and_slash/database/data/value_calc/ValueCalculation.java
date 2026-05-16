@@ -49,7 +49,7 @@ public class ValueCalculation implements JsonExileRegistry<ValueCalculation>, IA
             return 0;
         }
 
-        float basedmg = base_scaling_type.scale(base.getValue(en, provider), Load.Unit(en).getLevel());
+        float basedmg = base_scaling_type.scale(base.get(en, provider), Load.Unit(en).getLevel());
 
         basedmg *= CompatConfig.get().spellBaseDmgMulti();
 
@@ -57,7 +57,7 @@ public class ValueCalculation implements JsonExileRegistry<ValueCalculation>, IA
     }
 
     public float getDamageEffectiveness(LivingEntity en, MaxLevelProvider provider) {
-        return dmg_effectiveness.getMulti().getValue(en, provider);
+        return dmg_effectiveness.getMulti().get(en, provider);
     }
 
     public String getLocDmgTooltip(Elements element) {
@@ -124,7 +124,7 @@ public class ValueCalculation implements JsonExileRegistry<ValueCalculation>, IA
             var opt = getAllScalingValues().stream().filter(x -> x.getStat() == WeaponDamage.getInstance()).findFirst();
 
             if (opt.isPresent()) {
-                int num = (int) (opt.get().getMulti().getValue(en, provider) * 100F * this.cap_to_wep_dmg);
+                int num = (int) (opt.get().getMulti().get(en, provider) * 100F * this.cap_to_wep_dmg);
                 text.append(Words.CAPPED_TO_WEP_DMG.locName(num));
             }
         }

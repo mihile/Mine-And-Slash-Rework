@@ -73,40 +73,6 @@ public class ParticleInRadiusAction extends SpellAction {
 
             Packets.sendToTracking(new ParticlesPacket(saved), ctx.getBlockPos(), ctx.world);
 
-            /*
-            ShapeHelper c = new Circle3d(new MyPosition(pos), radius);
-
-            float finalRadius = radius;
-            ParticleMotion finalMotion1 = motion;
-            c.doXTimes(amount, x -> {
-                MyPosition sp = null;
-                float yRandom = (int) RandomUtils.RandomRange(0, yrand);
-
-                if (shape == ParticleShape.CIRCLE) {
-                    sp = new MyPosition(new Circle3d(new MyPosition(pos), finalRadius).getRandomPos());
-                }
-                if (shape == ParticleShape.CIRCLE_EDGE) {
-                    sp = new MyPosition(new Circle3d(new MyPosition(pos), finalRadius).getRandomEdgePos());
-                }
-                if (shape == ParticleShape.CIRCLE_2D) {
-                    sp = new MyPosition(new Circle2d(new MyPosition(pos), finalRadius).getRandomPos());
-                }
-                if (shape == ParticleShape.CIRCLE_2D_EDGE) {
-                    sp = new MyPosition(new Circle2d(new MyPosition(pos), finalRadius).getEdgePos(x.multi));
-                }
-
-                sp = new MyPosition(sp.x - vel.x / 2F, sp.y - vel.y / 2 + height, sp.z - vel.z / 2);
-
-                Vec3 v = finalMotion1.getMotion(new Vec3(sp.x, sp.y + yRandom, sp.z), ctx).multiply(motionMulti, motionMulti, motionMulti);
-
-                // todo this could be buggy
-
-                c.spawnParticle(ctx.world, sp.asVector3D(), particle, new MyPosition(v).asVector3D());
-            });
-
-             */
-
-
         }
     }
 

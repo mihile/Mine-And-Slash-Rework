@@ -221,23 +221,6 @@ public class Professions {
             return this;
         }
 
-        /*
-        public Builder sometimesDrop(HashMap<CraftedItemPower, RegObj<Item>> map, float chance) {
-            List<Profession.ProfessionDrop> drops = new ArrayList<>();
-
-            for (Map.Entry<CraftedItemPower, RegObj<Item>> en : map.entrySet()) {
-                Item item = en.getValue().get();
-                var id = VanillaUTIL.REGISTRY.items().getKey(item).toString();
-                var drop = new Profession.ProfessionDrop(id, 1, 1000, 0); // all use separate loot tables
-                drops.add(drop);
-
-                this.p.chance_drops.add(new Profession.ChancedDrop(drops, en.getKey().category, chance * (en.getKey().weight / 1000F)));
-            }
-            return this;
-        }
-
-         */
-
         public void build() {
             p.addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
         }

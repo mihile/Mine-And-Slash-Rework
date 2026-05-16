@@ -17,7 +17,7 @@ public class UnsavedMaxEffectStacksData {
 
         for (StatData stat : c.stats.values()) {
             if (stat.GetStat() instanceof MaximumChargesStat b) {
-                bonus.put(b.effect.GUID(), (int) stat.getValue());
+                bonus.put(b.effect.GUID(), (int) stat.get());
             }
         }
     }

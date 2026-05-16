@@ -37,7 +37,7 @@ public class GearRarityPart extends BlueprintPart<GearRarity, ItemBlueprint> {
 
     public void setupChances(LootInfo info) {
         if (info.playerEntityData != null) {
-            chanceForHigherRarity += info.playerEntityData.getUnit().getCalculatedStat(TreasureQuality.getInstance()).getValue();
+            chanceForHigherRarity += info.playerEntityData.getUnit().getCalculatedStat(TreasureQuality.getInstance()).get();
         }
     }
 

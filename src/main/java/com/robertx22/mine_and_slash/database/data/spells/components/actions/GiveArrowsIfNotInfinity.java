@@ -21,11 +21,8 @@ public class GiveArrowsIfNotInfinity extends SpellAction {
     @Override
     public void tryActivate(Collection<LivingEntity> targets, SpellCtx ctx, MapHolder data) {
         if (ctx.caster instanceof Player p) {
-
-            if (EnchantmentHelper.getItemEnchantmentLevel(net.minecraft.world.item.enchantment.Enchantments.INFINITY_ARROWS, ctx.caster.getMainHandItem()) < 1) {
-                if (p.getInventory().countItem(Items.ARROW) < 64) {
-                    PlayerUtils.giveItem(new ItemStack(Items.ARROW, 64), p);
-                }
+            if (p.getInventory().countItem(Items.ARROW) < 64) {
+                PlayerUtils.giveItem(new ItemStack(Items.ARROW, 64), p);
             }
         }
     }

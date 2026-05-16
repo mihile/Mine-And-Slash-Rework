@@ -8,19 +8,19 @@ import com.robertx22.library_of_exile.gui.ItemSlotButton;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public class PlayerGearButton extends ImageButton {
+public class PlayerGearButton extends OldImageButton {
 
     public static int xSize = 99;
     public static int ySize = 80;
 
-    static ResourceLocation TEX = new ResourceLocation(SlashRef.MODID, "textures/gui/player_gear.png");
+    static ResourceLocation TEX = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/player_gear.png");
     BaseScreen screen;
     Player player;
 
@@ -31,27 +31,14 @@ public class PlayerGearButton extends ImageButton {
         this.screen = screen;
 
         // todo why is this broken
-
-/*
-        addItemButton(MyCurioUtils.get(RefCurio.NECKLACE, player, 0), this.getX() + 0, this.getY() + 4);
-        addItemButton(MyCurioUtils.get(RefCurio.RING, player, 0), this.getX() + 0, this.getY() + 22);
-        addItemButton(MyCurioUtils.get(RefCurio.RING, player, 1), this.getX() + 0, this.getY() + 40);
-
-        addItemButton(player.getItemBySlot(EquipmentSlot.HEAD), this.getX() + 81, this.getY() + 4);
-        addItemButton(player.getItemBySlot(EquipmentSlot.CHEST), this.getX() + 81, this.getY() + 22);
-        addItemButton(player.getItemBySlot(EquipmentSlot.LEGS), this.getX() + 81, this.getY() + 40);
-        addItemButton(player.getItemBySlot(EquipmentSlot.FEET), this.getX() + 81, this.getY() + 58);
-
-
- */
         // addItemButton(player.getEquippedStack(EquipmentSlot.MAINHAND), 58, 69);
         //addItemButton(player.getEquippedStack(EquipmentSlot.OFFHAND), 179, 69);
 
     }
 
     @Override
-    public void render(GuiGraphics gui, int x, int y, float ticks) {
-        super.render(gui, x, y, ticks);
+    public void renderWidget(GuiGraphics gui, int x, int y, float ticks) {
+        super.renderWidget(gui, x, y, ticks);
 
         MutableComponent str = Gui.MAINHUB_LEVEL.locName().append(String.valueOf(Load.Unit(player).getLevel()));
 
@@ -59,7 +46,7 @@ public class PlayerGearButton extends ImageButton {
 
 
         // player 3d view
-        InventoryScreen.renderEntityInInventoryFollowsMouse(gui, this.getX() + 50, this.getY() + 77, 30, (float) (getX() + 51) - x, (float) (getY() + 75 - 50) - y, player);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(gui, this.getX() + 20, this.getY() + 18, this.getX() + 80, this.getY() + 77, 30, 0.0625F, (float) (getX() + 51) - x, (float) (getY() + 25) - y, player);
 
         gui.drawString(mc.font, str, this.getX() + xSize / 2 - mc.font.width(str) / 2, this.getY() + 6, ChatFormatting.YELLOW.getColor());
 
@@ -71,3 +58,4 @@ public class PlayerGearButton extends ImageButton {
     }
 
 }
+

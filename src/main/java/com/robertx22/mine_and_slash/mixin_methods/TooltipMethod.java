@@ -2,6 +2,7 @@ package com.robertx22.mine_and_slash.mixin_methods;
 
 import com.robertx22.addons.orbs_of_crafting.currency.IItemAsCurrency;
 import com.robertx22.library_of_exile.registry.Database;
+import com.robertx22.orbs_of_crafting.register.ExileCurrency;
 import com.robertx22.mine_and_slash.capability.entity.EntityData;
 import com.robertx22.mine_and_slash.database.data.gear_slots.GearSlot;
 import com.robertx22.mine_and_slash.mixin_ducks.tooltip.ItemTooltip;
@@ -71,7 +72,7 @@ public class TooltipMethod {
 
             boolean hasdata = false;
 
-            if (stack.hasTag()) {
+            if (stack.has(net.minecraft.core.component.DataComponents.CUSTOM_DATA)) {
 
                 ICommonDataItem data = ICommonDataItem.load(stack);
 
@@ -109,7 +110,11 @@ public class TooltipMethod {
                 }
             }
 
-            if (addCurrencyTooltip) {
+            var exileCur = ExileCurrency.get(stack);
+            if (exileCur.isPresent()) {
+                tooltip.clear();
+                tooltip.addAll(exileCur.get().getTooltip());
+            } else if (addCurrencyTooltip) {
                 IItemAsCurrency currency = (IItemAsCurrency) stack.getItem();
                 currency.currencyEffect(stack).addToTooltip(tooltip);
             }

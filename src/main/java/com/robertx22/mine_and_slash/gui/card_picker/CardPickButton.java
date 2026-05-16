@@ -6,12 +6,12 @@ import com.robertx22.mine_and_slash.uncommon.utilityclasses.ClientOnly;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 
-public class CardPickButton extends ImageButton {
+public class CardPickButton extends OldImageButton {
 
     public static int SIZE_X = 124;
     public static int SIZE_Y = 191;
@@ -26,12 +26,6 @@ public class CardPickButton extends ImageButton {
             Minecraft.getInstance().setScreen(null);
         });
         this.card = card;
-    }
-
-    @Override
-    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
-        setModTooltip();
-        super.render(gui, mouseX, mouseY, delta);
     }
 
     @Override
@@ -66,3 +60,4 @@ public class CardPickButton extends ImageButton {
 
 
 }
+

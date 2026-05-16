@@ -50,7 +50,7 @@ public class ElementalResist extends ElementalStat implements IUsableStat {
     @Override
     public ChatFormatting getStatGuiTooltipNumberColor(StatData data) {
 
-        float val = data.getValue();
+        float val = data.get();
 
         if (val > 75) {
             return ChatFormatting.LIGHT_PURPLE;
@@ -72,7 +72,7 @@ public class ElementalResist extends ElementalStat implements IUsableStat {
 
     @Override
     public float getAdditionalMax(Unit data) {
-        return data.getCalculatedStat(getMaxStat()).getValue();
+        return data.getCalculatedStat(getMaxStat()).get();
     }
 
     @Override

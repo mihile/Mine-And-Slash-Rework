@@ -7,6 +7,7 @@ import com.robertx22.library_of_exile.events.base.ExileEvents;
 import com.robertx22.library_of_exile.localization.ExileLangFile;
 import com.robertx22.library_of_exile.localization.ExileTranslation;
 import com.robertx22.library_of_exile.localization.TranslationBuilder;
+import com.robertx22.library_of_exile.compat.SimpleChannel;
 import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import com.robertx22.library_of_exile.registry.helpers.OrderedModConstructor;
 import com.robertx22.library_of_exile.registry.register_info.HardcodedRegistration;
@@ -35,11 +36,14 @@ import com.robertx22.mine_and_slash.gui.SocketTooltip;
 import com.robertx22.mine_and_slash.maps.MapEvents;
 import com.robertx22.mine_and_slash.mixin_ducks.tooltip.ItemTooltipsRegister;
 import com.robertx22.mine_and_slash.mmorpg.event_registers.CommonEvents;
+import com.robertx22.mine_and_slash.mmorpg.event_registers.GuiOverlays;
 import com.robertx22.mine_and_slash.mmorpg.init.ClientInit;
 import com.robertx22.mine_and_slash.mmorpg.registers.client.KeybindsRegister;
+import com.robertx22.mine_and_slash.mmorpg.registers.client.ContainerGuiRegisters;
 import com.robertx22.mine_and_slash.mmorpg.registers.client.RenderRegister;
 import com.robertx22.mine_and_slash.mmorpg.registers.client.S2CPacketRegister;
 import com.robertx22.mine_and_slash.mmorpg.registers.common.C2SPacketRegister;
+import com.robertx22.mine_and_slash.mmorpg.registers.common.SlashAttachments;
 import com.robertx22.mine_and_slash.mmorpg.registers.common.SlashCapabilities;
 import com.robertx22.mine_and_slash.mmorpg.registers.common.SlashItemTags;
 import com.robertx22.mine_and_slash.mmorpg.registers.common.items.SlashItems;
@@ -51,24 +55,22 @@ import com.robertx22.mine_and_slash.uncommon.effectdatas.rework.condition.StatCo
 import com.robertx22.mine_and_slash.uncommon.interfaces.data_items.VanillaRarities;
 import com.robertx22.test.test2.SchemaTest;
 import net.minecraft.ChatFormatting;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.fml.InterModComms;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
+import net.neoforged.fml.ModContainer;
 import top.theillusivec4.curios.api.SlotTypeMessage;
 
 import java.text.DecimalFormat;
@@ -79,7 +81,7 @@ import java.util.function.Consumer;
 public class MMORPG {
 
     // DISABLE WHEN PUBLIC BUILD
-    public static boolean RUN_DEV_TOOLS = false;
+    public static boolean RUN_DEV_TOOLS = true;
 
     public static SeriazableRegistration SERIAZABLE_REGISTRATION_INFO = new SeriazableRegistration(SlashRef.MODID);
     public static HardcodedRegistration HARDCODED_REGISTRATION_INFO = new HardcodedRegistration(SlashRef.MODID);
@@ -110,25 +112,26 @@ public class MMORPG {
 
 
     public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00");
+    public static IEventBus MOD_BUS;
+    public static ModContainer MOD_CONTAINER;
 
 
     public static boolean RUN_DEV_TOOLS_REMOVE_WHEN_DONE = RUN_DEV_TOOLS; // this exists to stop me from making dumb mistakes when testing and forgetting about it
 
 
-    private static final String PROTOCOL_VERSION = "1";
-    public static final SimpleChannel NETWORK = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(SlashRef.MODID, "main"),
-            () -> PROTOCOL_VERSION,
-            PROTOCOL_VERSION::equals,
-            PROTOCOL_VERSION::equals
-    );
+    public static final SimpleChannel NETWORK = new SimpleChannel();
 
-    public MMORPG() {
-
+    public MMORPG(IEventBus bus, ModContainer modContainer) {
+        com.robertx22.library_of_exile.main.ExileLog.get().onlyInConsole("MMORPG: Starting Mine and Slash...");
         SchemaTest.run();
 
-        final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        MOD_BUS = bus;
+        MOD_CONTAINER = modContainer;
         OrderedModConstructor.register(new MnsConstructor(SlashRef.MODID), bus);
+
+        // NeoForge Data Attachment ????깅줉 (?ㅽ꺈, ?덈꺼, ?뚮젅?댁뼱 ?곗씠?????곸냽?붾? ?꾪빐 ?꾩닔)
+        SlashAttachments.init(bus);
+
 
         if (MMORPG.RUN_DEV_TOOLS) {
             ExileRegistryUtil.setCurrentRegistarMod(SlashRef.MODID);
@@ -137,14 +140,13 @@ public class MMORPG {
         Watch watch = new Watch();
 
 
-        ModLoadingContext.get()
-                .registerConfig(ModConfig.Type.SERVER, ServerContainer.spec, NeatForgeConfig.defaultConfigName(ModConfig.Type.SERVER, "mine_and_slash"));
+        modContainer.registerConfig(ModConfig.Type.SERVER, ServerContainer.spec, NeatForgeConfig.defaultConfigName(ModConfig.Type.SERVER, "mine_and_slash"));
 
 
         ExileEvents.CHECK_IF_DEV_TOOLS_SHOULD_RUN.register(new EventConsumer<ExileEvents.OnCheckIsDevToolsRunning>() {
             @Override
             public void accept(ExileEvents.OnCheckIsDevToolsRunning event) {
-                event.run = MMORPG.RUN_DEV_TOOLS;
+                event.run = true;
             }
         });
 
@@ -159,24 +161,44 @@ public class MMORPG {
             x.register(SocketTooltip.SocketComponent.class, SocketTooltip::new);
         });
 
+        bus.addListener(SimpleChannel::registerPayloadHandlers);
 
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
 
-            NeatForgeConfig.register();
+        if (FMLEnvironment.dist == Dist.CLIENT) {
 
-            ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfigs.clientSpec, NeatForgeConfig.defaultConfigName(ModConfig.Type.CLIENT, "mine_and_slash"));
+            NeatForgeConfig.register(modContainer);
+
+            modContainer.registerConfig(ModConfig.Type.CLIENT, ClientConfigs.clientSpec, NeatForgeConfig.defaultConfigName(ModConfig.Type.CLIENT, "mine_and_slash"));
             bus.addListener(ClientInit::onInitializeClient);
+            bus.addListener(ContainerGuiRegisters::reg);
+
+            ForgeEvents.registerForgeEvent(RegisterGuiLayersEvent.class, GuiOverlays::registerOverlay);
 
             ForgeEvents.registerForgeEvent(RegisterKeyMappingsEvent.class, x -> {
                 KeybindsRegister.register(x);
             });
 
-            //bus.addListener(KeybindsRegister::register);
-            FMLJavaModLoadingContext.get().getModEventBus().addListener((Consumer<EntityRenderersEvent.RegisterRenderers>) x -> {
+            bus.addListener((Consumer<EntityRenderersEvent.RegisterRenderers>) x -> {
                 RenderRegister.regRenders(x);
             });
 
-        });
+            // 클라이언트에서 플레이어 로그인 후 Attachment init 보장
+            // transient 필드(entity, player 참조)는 직렬화되지 않으므로 수동 주입이 필요합니다.
+            ForgeEvents.registerForgeEvent(
+                    net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent.LoggingIn.class,
+                    event -> {
+                        try {
+                            var p = event.getPlayer();
+                            if (p != null) {
+                                p.getData(com.robertx22.mine_and_slash.mmorpg.registers.common.SlashAttachments.ENTITY_DATA.get()).init(p);
+                                p.getData(com.robertx22.mine_and_slash.mmorpg.registers.common.SlashAttachments.PLAYER_DATA.get()).init(p);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+
+        }
 
 
         bus.addListener(this::commonSetupEvent);
@@ -201,7 +223,6 @@ public class MMORPG {
         MapField.init();
         EffectCondition.init();
         SlashItemTags.init();
-        //   ExileDBInit.registerAllItems(); // after config registerAll
         CommonEvents.register();
 
         C2SPacketRegister.register();
@@ -209,7 +230,7 @@ public class MMORPG {
 
         LifeCycleEvents.register();
 
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.LOW, new Consumer<GatherDataEvent>() {
+        bus.addListener(EventPriority.LOW, new Consumer<GatherDataEvent>() {
             @Override
             public void accept(GatherDataEvent x) {
                 for (ExileRegistryType type : ExileRegistryType.getAllInRegisterOrder()) {
@@ -227,8 +248,6 @@ public class MMORPG {
 
         DerivedRegistries.init();
 
-        // OnClick.register();
-
         DungeonAddonEvents.init();
 
         watch.print("Mine and slash mod initialization ");
@@ -244,8 +263,7 @@ public class MMORPG {
         InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder(RefCurio.NECKLACE).size(1).build());
         InterModComms.sendTo("curios", SlotTypeMessage.REGISTER_TYPE, () -> new SlotTypeMessage.Builder(RefCurio.OMEN).size(1).build());
 
-        ModLoadingContext.get()
-                .registerConfig(ModConfig.Type.SERVER, CompatConfig.spec, NeatForgeConfig.defaultConfigName(ModConfig.Type.SERVER, "mine_and_slash_compatibility"));
+        MOD_CONTAINER.registerConfig(ModConfig.Type.SERVER, CompatConfig.spec, NeatForgeConfig.defaultConfigName(ModConfig.Type.SERVER, "mine_and_slash_compatibility"));
 
     }
 

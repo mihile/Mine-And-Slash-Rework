@@ -16,8 +16,7 @@ public class ParticleUtils {
     public static void spawnDefaultSlashingWeaponParticles(Entity en) {
         SoundUtils.playSound(en, SoundEvents.PLAYER_ATTACK_SWEEP, 1, 1);
 
-        if (en instanceof Player) {
-            Player p = (Player) en;
+        if (en instanceof Player p) {
             p.sweepAttack();
         }
     }

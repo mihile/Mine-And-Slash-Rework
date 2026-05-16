@@ -62,6 +62,7 @@ public class OperationTipBlock extends AbstractTextBlock {
         if (this.additionalOperation != null) {
             components.addAll(this.additionalOperation);
         }
+
         if (this.shift && !info.hasShiftDown && !info.hasAltDown) {
             component.append(Itemtips.SHIFT_TIP.locName()).withStyle(ChatFormatting.BLUE).append(" ");
         }

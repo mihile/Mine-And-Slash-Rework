@@ -6,9 +6,9 @@ import java.util.Locale;
 
 public enum ModType {
 
-    FLAT(false, "flat", AttributeModifier.Operation.ADDITION),
-    PERCENT(true, "percent", AttributeModifier.Operation.MULTIPLY_BASE),
-    MORE(true, "more", AttributeModifier.Operation.MULTIPLY_TOTAL);
+    FLAT(false, "flat", AttributeModifier.Operation.ADD_VALUE),
+    PERCENT(true, "percent", AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+    MORE(true, "more", AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
     ModType(boolean isperc, String id, AttributeModifier.Operation op) {
         this.id = id;
@@ -40,11 +40,7 @@ public enum ModType {
         }
 
         try {
-            ModType TYPE = valueOf(str);
-
-            if (TYPE != null) {
-                return TYPE;
-            }
+            return valueOf(str);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }

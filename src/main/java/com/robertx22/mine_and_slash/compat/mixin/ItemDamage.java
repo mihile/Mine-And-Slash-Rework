@@ -25,8 +25,10 @@ public class ItemDamage {
 
         if (!pEntity.level().isClientSide && (!(pEntity instanceof Player) || !((Player) pEntity).getAbilities().instabuild)) {
             if (stack.isDamageableItem()) {
-                pAmount = stack.getItem().damageItem(stack, pAmount, pEntity, pOnBroken);
-                if (stack.hurt(pAmount, pEntity.getRandom(), pEntity instanceof ServerPlayer ? (ServerPlayer) pEntity : null)) {
+                pAmount = stack.getItem().damageItem(stack, pAmount, pEntity, item -> pOnBroken.accept(pEntity));
+                int oldDamage = stack.getDamageValue();
+                stack.hurtAndBreak(pAmount, (net.minecraft.server.level.ServerLevel) pEntity.level(), pEntity, item -> pOnBroken.accept(pEntity));
+                if (!stack.isEmpty() && stack.getDamageValue() < oldDamage) {
                     pOnBroken.accept(pEntity);
                     Item item = stack.getItem();
                     stack.shrink(1);

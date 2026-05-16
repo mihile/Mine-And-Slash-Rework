@@ -2,7 +2,7 @@ package com.robertx22.mine_and_slash.mmorpg.registers.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.client.settings.KeyModifier;
+import net.neoforged.neoforge.client.settings.KeyModifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,19 +35,6 @@ public class SpellKeybind {
 
     public int getIndex() {
         int n = num - 1;
-
-/*
-        if (ClientConfigs.getConfig().HOTBAR_SWAPPING.get()) {
-            if (IS_ON_SECONd_HOTBAR) {
-                if (!firstbar) {
-                    n -= 4;
-
-                }
-            }
-        }
-
- */
-
 
         return n;
     }

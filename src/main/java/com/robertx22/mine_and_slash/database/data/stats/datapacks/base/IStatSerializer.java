@@ -13,7 +13,6 @@ public interface IStatSerializer<T extends BaseDatapackStat> {
     default void saveBaseStatValues(T obj, JsonObject json) {
 
         json.addProperty("id", obj.id);
-        //json.addProperty("name", obj.locNameForLangFile());
         json.addProperty("min", obj.min);
         json.addProperty("max", obj.max);
         json.addProperty("base", obj.base);

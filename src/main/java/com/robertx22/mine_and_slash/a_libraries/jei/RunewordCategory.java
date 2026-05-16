@@ -93,7 +93,7 @@ public class RunewordCategory implements IRecipeCategory<RunewordRecipe> {
 
     @Override
     public @Nullable ResourceLocation getRegistryName(RunewordRecipe recipe) {
-        return new ResourceLocation(recipe.id);
+        return ResourceLocation.parse(recipe.id);
     }
 
     private class Dimensions {

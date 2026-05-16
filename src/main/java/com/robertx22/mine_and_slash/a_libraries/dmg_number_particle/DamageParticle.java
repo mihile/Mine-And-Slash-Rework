@@ -37,31 +37,17 @@ public class DamageParticle {
 
 
         Minecraft mc = Minecraft.getInstance();
-        /*
-        Vec3 entityLocation = entity.position()
-                .add(0, entity.getBbHeight(), 0);
-        Vec3 cameraLocation = mc.gameRenderer.getMainCamera()
-                .getPosition();
-        double offsetBy = entity.getBbWidth();
-        Vec3 offset = cameraLocation.subtract(entityLocation)
-                .normalize()
-                .scale(offsetBy);
-        Vec3 pos = entityLocation.add(offset);
-
-         */
 
         age = 0;
+        
+        // 엔티티 대신 패킷에서 직접 서버 동기화 좌표를 가져옵니다.
+        x = packet.x + (mc.level.random.nextGaussian() * 0.5);
+        y = packet.y + (mc.level.random.nextGaussian() * 0.5);
+        z = packet.z + (mc.level.random.nextGaussian() * 0.5);
 
         vx = mc.level.random.nextGaussian() * 0.01;
         vy = 0.05 + (mc.level.random.nextGaussian() * 0.01);
         vz = mc.level.random.nextGaussian() * 0.01;
-
-        /*
-        x = pos.x;
-        y = pos.y;
-        z = pos.z;
-
-         */
 
         xPrev = x;
         yPrev = y;

@@ -7,20 +7,20 @@ import com.robertx22.mine_and_slash.uncommon.enumclasses.ModType;
 import com.robertx22.library_of_exile.registry.ExileRegistryInit;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public class StatCompats implements ExileRegistryInit {
     @Override
     public void registerAll() {
 
         new StatCompat("armor").editAndReg(x -> {
-            x.attribute_id = ForgeRegistries.ATTRIBUTES.getKey(Attributes.ARMOR).toString();
+            x.attribute_id = BuiltInRegistries.ATTRIBUTE.getKey(Attributes.ARMOR.value()).toString();
             x.mns_stat_id = Armor.getInstance().GUID();
             x.mod_type = ModType.PERCENT;
         });
 
         new StatCompat("sharpness_damage").editAndReg(x -> {
-            x.enchant_id = ForgeRegistries.ENCHANTMENTS.getKey(Enchantments.SHARPNESS).toString();
+            x.enchant_id = Enchantments.SHARPNESS.location().toString();
             x.mns_stat_id = OffenseStats.TOTAL_DAMAGE.get().GUID();
             x.mod_type = ModType.FLAT;
             x.conversion = 5;

@@ -11,18 +11,18 @@ import com.robertx22.mine_and_slash.uncommon.utilityclasses.ClientOnly;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class MainHubButton extends ImageButton {
+public class MainHubButton extends OldImageButton {
 
     public static int xSize = 105;
     public static int ySize = 28;
-    public static ResourceLocation EXLAMATION_MARK_TEX = new ResourceLocation(
+    public static ResourceLocation EXLAMATION_MARK_TEX = ResourceLocation.fromNamespaceAndPath(
             SlashRef.MODID, "textures/gui/main_hub/exclamation_mark.png");
 
     boolean shouldAlert = false;
@@ -52,15 +52,13 @@ public class MainHubButton extends ImageButton {
         this.initTick = ClientOnly.getPlayer().tickCount;
 
     }
-
-    @Override
     protected ClientTooltipPositioner createTooltipPositioner() {
         return DefaultTooltipPositioner.INSTANCE;
     }
 
     @Override
-    public void render(GuiGraphics gui, int x, int y, float ticks) {
-        super.render(gui, x, y, ticks);
+    public void renderWidget(GuiGraphics gui, int x, int y, float ticks) {
+        super.renderWidget(gui, x, y, ticks);
 
 
         if (right) {
@@ -111,3 +109,5 @@ public class MainHubButton extends ImageButton {
     }
 
 }
+
+

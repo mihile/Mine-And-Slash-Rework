@@ -17,15 +17,7 @@ public class AffixTypeFilter extends GroupFilterEntry {
 
     @Override
     public boolean isValid(BestiaryEntry e) {
-
-        if (e.obj instanceof Affix u) {
-            if (u.type == this.type) {
-                return true;
-
-            }
-
-        }
-        return false;
+        return e.obj instanceof Affix u && u.type == this.type;
     }
 
     @Override

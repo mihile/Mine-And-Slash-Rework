@@ -17,20 +17,6 @@ public class BackpackInventory extends MyInventory {
     }
 
 
-    /*
-    @Override
-    public int getTotalSlots() {
-        int slots = 0;
-
-        ItemStack stack = MyCurioUtils.get(RefCurio.BACKPACK, p, 0);
-        if (stack.getItem() instanceof BackpackItem bag) {
-            slots += bag.getSlots();
-        }
-        return MathHelper.clamp(slots, 0, getContainerSize());
-    }
-     */
-
-
     // todo must test this
     public void throwOutBlockedSlotItems(int slots) {
 

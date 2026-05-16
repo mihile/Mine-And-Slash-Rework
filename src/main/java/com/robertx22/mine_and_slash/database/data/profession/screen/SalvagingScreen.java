@@ -9,6 +9,6 @@ import net.minecraft.world.entity.player.Inventory;
 public class SalvagingScreen extends CraftingStationScreen {
     public SalvagingScreen(CraftingStationMenu pMenu, Inventory pPlayerInventory, Component txt) {
         super(Professions.SALVAGING, pMenu, pPlayerInventory, txt);
-        BACKGROUND_LOCATION = new ResourceLocation(SlashRef.MODID, "textures/gui/salvage_station.png");
+        BACKGROUND_LOCATION = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/salvage_station.png");
     }
 }

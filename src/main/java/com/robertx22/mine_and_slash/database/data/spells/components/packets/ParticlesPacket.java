@@ -46,7 +46,7 @@ public class ParticlesPacket extends MyPacket<ParticlesPacket> {
         public float motionMulti = 1;
 
         public SimpleParticleType getParticle() {
-            return (SimpleParticleType) BuiltInRegistries.PARTICLE_TYPE.get(new ResourceLocation(particle));
+            return (SimpleParticleType) BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.parse(particle));
         }
     }
 

@@ -34,8 +34,7 @@ public class CreateLangFileUtils {
     }
 
     public static boolean matches(ResourceLocation loc) {
-        if (loc == null || loc.getNamespace()
-                .equals(SlashRef.MODID) == false) {
+        if (loc == null || loc.getNamespace().equals(SlashRef.MODID)) {
             return false;
         }
         return true;

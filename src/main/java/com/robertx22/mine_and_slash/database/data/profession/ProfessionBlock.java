@@ -4,6 +4,7 @@ import com.robertx22.mine_and_slash.database.data.profession.screen.CraftingStat
 import com.robertx22.mine_and_slash.mmorpg.registers.common.SlashBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Inventory;
@@ -34,11 +35,16 @@ public class ProfessionBlock extends BaseEntityBlock implements WorldlyContainer
     public String profession;
 
     public ProfessionBlock(String profession) {
-        super(Properties.copy(Blocks.CRAFTING_TABLE).noOcclusion());
+        super(Properties.of().strength(2.5F).noOcclusion());
         this.profession = profession;
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
 
 
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
     }
 
     @Override
@@ -97,7 +103,7 @@ public class ProfessionBlock extends BaseEntityBlock implements WorldlyContainer
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player p, InteractionHand pHand, BlockHitResult pHit) {
+    protected InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player p, BlockHitResult pHit) {
 
         if (!pLevel.isClientSide) {
             ProfessionBlockEntity be = (ProfessionBlockEntity) pLevel.getBlockEntity(pPos);

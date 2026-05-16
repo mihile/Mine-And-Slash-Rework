@@ -11,7 +11,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 
 public class ModSkeletonRender<T extends Mob & RangedAttackMob> extends HumanoidMobRenderer<T, SkeletonModel<T>> {
-    private ResourceLocation SKELETON_LOCATION = new ResourceLocation("textures/entity/skeleton/skeleton.png");
+    private ResourceLocation SKELETON_LOCATION = ResourceLocation.parse("textures/entity/skeleton/skeleton.png");
 
     public ModSkeletonRender(ResourceLocation tex, EntityRendererProvider.Context ctx) {
         this(ctx, ModelLayers.SKELETON, ModelLayers.SKELETON_INNER_ARMOR, ModelLayers.SKELETON_OUTER_ARMOR);

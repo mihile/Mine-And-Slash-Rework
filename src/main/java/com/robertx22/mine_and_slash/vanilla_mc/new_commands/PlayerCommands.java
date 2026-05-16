@@ -168,23 +168,6 @@ public class PlayerCommands {
 
         }, "Sends a packet from server to open a gui from the client, useful for testing");
 
-        /*
-        CommandBuilder.of(dis, x -> {
-            PlayerWrapper PLAYER = new PlayerWrapper();
-
-            x.addLiteral("misc", PermWrapper.OP);
-            x.addLiteral("unequip_support_gems", PermWrapper.OP);
-
-            x.addArg(PLAYER);
-
-            x.action(e -> {
-                var p = PLAYER.get(e);
-                Load.player(p).getSkillGemInventory().getGemsInv().
-            });
-
-        }, "Opens MNS Hub Gui");
-         */
-
         CommandBuilder.of(CommandRefs.ID, dis, x -> {
             PlayerWrapper PLAYER = new PlayerWrapper();
             IntWrapper NUMBER = new IntWrapper("level");

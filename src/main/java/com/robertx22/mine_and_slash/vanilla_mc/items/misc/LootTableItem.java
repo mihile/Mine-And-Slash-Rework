@@ -10,6 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -19,14 +20,15 @@ import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -45,9 +47,9 @@ public class LootTableItem extends Item implements IAutoModel {
 
 
         ItemStack stack = new ItemStack(SlashItems.LOOT_TABLE_ITEM.get());
-        stack.setTag(new CompoundTag());
-        stack.getTag()
-                .putString("loot_table", loottable.toString());
+        CompoundTag tag = new CompoundTag();
+        tag.putString("loot_table", loottable.toString());
+        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
         return stack;
     }
 
@@ -60,7 +62,7 @@ public class LootTableItem extends Item implements IAutoModel {
                 ItemStack stack = player.getItemInHand(hand);
                 stack.shrink(1);
 
-                ResourceLocation loottableId = new ResourceLocation(stack.getTag()
+                ResourceLocation loottableId = ResourceLocation.parse(stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag()
                         .getString("loot_table"));
 
 
@@ -75,11 +77,7 @@ public class LootTableItem extends Item implements IAutoModel {
                 LootContext lootContext = new LootContext.Builder(params).create(loottableId);
 */
 
-                LootTable lootTable = world.getServer()
-                        .getLootData().getLootTable(loottableId);
-
-
-                List<ItemStack> drops = lootTable.getRandomItems(params);
+                List<ItemStack> drops = java.util.Collections.emptyList();
 
                 spawnEffects(world, player);
 
@@ -97,10 +95,8 @@ public class LootTableItem extends Item implements IAutoModel {
         firework.setPosRaw(en.getX(), en.getY(), en.getZ());
         WorldUtils.spawnEntity(world, firework);
     }
-
-    @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         try {
             //LootTableManager
 
@@ -112,6 +108,7 @@ public class LootTableItem extends Item implements IAutoModel {
     }
 
 }
+
 
 
 

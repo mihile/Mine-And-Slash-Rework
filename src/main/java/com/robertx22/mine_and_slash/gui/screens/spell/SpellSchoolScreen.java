@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SpellSchoolScreen extends BaseScreen implements INamedScreen, ILeftRight, IAlertScreen {
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(SlashRef.MODID, "textures/gui/asc_classes/background.png");
+    private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/asc_classes/background.png");
 
     static int sizeX = 250;
     static int sizeY = 233;
@@ -54,7 +54,7 @@ public class SpellSchoolScreen extends BaseScreen implements INamedScreen, ILeft
 
     @Override
     public ResourceLocation iconLocation() {
-        return new ResourceLocation(SlashRef.MODID, "textures/gui/main_hub/icons/spells.png");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/spells.png");
     }
 
     @Override
@@ -82,7 +82,7 @@ public class SpellSchoolScreen extends BaseScreen implements INamedScreen, ILeft
             this.publicAddButton(LEFT_SCHOOL);
             this.publicAddButton(RIGHT_SCHOOL);
 
-            if (all.size() > 0) {
+            if (!all.isEmpty()) {
                 LEFT_SCHOOL.school = all.get(0);
             }
             if (all.size() > 1) {
@@ -156,15 +156,6 @@ public class SpellSchoolScreen extends BaseScreen implements INamedScreen, ILeft
             super.render(gui, x, y, ticks);
 
 
-            /*
-            String txt = Gui.SPELL_POINTS.locName().append(String.valueOf(PlayerPointsType.SPELLS.getFreePoints(mc.player))).getString();
-            GuiUtils.renderScaledText(gui, guiLeft + 50, guiTop + 215, 1, txt, ChatFormatting.WHITE);
-
-            String tx2 = Gui.PASSIVE_POINTS.locName().append(String.valueOf(PlayerPointsType.PASSIVES.getFreePoints(mc.player))).getString();
-            GuiUtils.renderScaledText(gui, guiLeft + 195, guiTop + 215, 1, tx2, ChatFormatting.WHITE);
-
-             */
-            //buttons.forEach(b -> b.renderToolTip(matrix, x, y));
         } catch (Exception e) {
             e.printStackTrace();
         }

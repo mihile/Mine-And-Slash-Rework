@@ -10,7 +10,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
-public class ToonActionPacket extends MyPacket<CreateCharPacket> {
+public class ToonActionPacket extends MyPacket<ToonActionPacket> {
 
     int num;
     ToonActionButton.Action act;
@@ -78,7 +78,7 @@ public class ToonActionPacket extends MyPacket<CreateCharPacket> {
     }
 
     @Override
-    public MyPacket<CreateCharPacket> newInstance() {
+    public MyPacket<ToonActionPacket> newInstance() {
         return new ToonActionPacket(ToonActionButton.Action.LOAD, -1, "");
     }
 }

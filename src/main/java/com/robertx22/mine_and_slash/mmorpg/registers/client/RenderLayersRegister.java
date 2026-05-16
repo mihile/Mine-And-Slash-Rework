@@ -20,7 +20,5 @@ public class RenderLayersRegister {
         ItemBlockRenderTypes.setRenderLayer(SlashBlocks.FROST_FLOWER.get(), RenderType.cutout());
 
      
-        //  RenderTypeLookup.setRenderLayer(SlashBlocks.RUNEWORD.get(), RenderType.cutout());
-
     }
 }

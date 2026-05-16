@@ -51,7 +51,7 @@ public class AilmentChance extends Stat {
         }).build();
 
         event.Activate();
-        event.sendDamageMessage(event.calculateAllBonusElementalDamage());
+        // event.sendDamageMessage(event.calculateAllBonusElementalDamage()); // removed redundant call
 
         Load.Unit(target).ailments.onAilmentCausingDamage(source, target, ailment, event.data.getNumber());
     }
@@ -91,7 +91,7 @@ public class AilmentChance extends Stat {
             if (effect.data.getBoolean(EventData.IS_DODGED)) {
                 return false;
             }
-            return !effect.data.getBoolean(EventData.IS_BLOCKED) && effect.getElement() != null && effect.getElement() == ailment.element && (effect.getAttackType().isHit() || effect.getAttackType() == AttackType.bonus_dmg) && RandomUtils.roll(data.getValue());
+            return !effect.data.getBoolean(EventData.IS_BLOCKED) && effect.getElement() != null && effect.getElement() == ailment.element && (effect.getAttackType().isHit() || effect.getAttackType() == AttackType.bonus_dmg) && RandomUtils.roll(data.get());
         }
 
     }

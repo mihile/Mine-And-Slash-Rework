@@ -133,7 +133,6 @@ public class EffectStats {
             .setLocName(x -> x.locNameForLangFile() + " Effect Strength")
             .setLocDesc(x -> "Increases the stat strength of effects you give")
             .modifyAfterDone(x -> {
-                //  x.is_long = true;
                 x.is_perc = true;
                 x.scaling = StatScaling.NONE;
             })

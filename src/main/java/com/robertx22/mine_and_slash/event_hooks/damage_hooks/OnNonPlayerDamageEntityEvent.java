@@ -25,10 +25,10 @@ public class OnNonPlayerDamageEntityEvent extends EventConsumer<ExileEvents.OnDa
         if (event.source.is(DamageTypes.FELL_OUT_OF_WORLD)) {
             return;
         }
-        if (event.source.getEntity() instanceof LivingEntity == false) {
+        if (!(event.source.getEntity() instanceof LivingEntity)) {
             return;
         }
-        if (event.mob instanceof Player == false) {
+        if (!(event.mob instanceof Player)) {
             if (WorldUtils.isMapWorldClass(event.mob.level(), event.mob.blockPosition())) {
                 if (event.source.is(DamageTypes.IN_WALL)) {
                     UnstuckMobs.unstuckFromWalls(event.mob);

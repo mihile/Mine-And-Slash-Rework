@@ -21,7 +21,7 @@ public class OnTrackEntity {
                 if (!Unit.shouldSendUpdatePackets((LivingEntity) entity)) {
                     return;
                 }
-                if (entity.is(serverPlayerEntity) == false) {
+                if (!entity.is(serverPlayerEntity)) {
                     Packets.sendToClient(serverPlayerEntity,
                             Unit.getUpdatePacketFor((LivingEntity) entity, Load.Unit(entity))
                     );

@@ -25,10 +25,9 @@ public class SkeletonSummon extends SummonEntity {
     }
 
 
-    @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
 
-        var d = super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+        var d = super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData);
 
         this.equipItemIfPossible(Items.BOW.getDefaultInstance());
 

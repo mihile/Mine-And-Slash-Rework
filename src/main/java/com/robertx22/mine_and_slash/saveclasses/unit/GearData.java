@@ -54,13 +54,6 @@ public class GearData {
                     stats.forEach(s -> s.multiplyBy(multi));
                 }
                 cachedStats.add(GearStatCtx.of(gear, stats));
-                /*
-                var ench = gear.getEnchantCompatStats(stack);
-                if (ench != null) {
-                    cachedStats.add(ench);
-                }
-
-                 */
             } else {
                 percentStatUtilization = 0;
             }
@@ -71,7 +64,7 @@ public class GearData {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof GearData == false) {
+        if (!(obj instanceof GearData)) {
             return false;
         }
         GearData other = (GearData) obj;

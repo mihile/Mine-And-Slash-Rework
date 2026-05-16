@@ -20,7 +20,7 @@ public class IncreaseNumberPerCurseOnTarget extends StatEffect {
 
         int curses = ExileEffectUtils.countEffectsWithTag(event.target, EffectTags.curse);
 
-        event.data.getNumber(EventData.NUMBER).number += event.data.getNumber() * curses * data.getValue() / 100F;
+        event.data.getNumber(EventData.NUMBER).number += event.data.getNumber() * curses * data.get() / 100F;
     }
 
     @Override

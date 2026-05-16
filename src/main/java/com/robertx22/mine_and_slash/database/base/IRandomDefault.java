@@ -19,7 +19,7 @@ public interface IRandomDefault<T extends IhasRequirements & IWeighted> extends 
 
         List<T> allThatMeetReq = allThatMeetRequirement(All(), gearRequestedFor);
 
-        if (allThatMeetReq.size() == 0) {
+        if (allThatMeetReq.isEmpty()) {
             ExileLog.get().warn("No Matching item found for the gear requested, returning null.");
             return null;
         }

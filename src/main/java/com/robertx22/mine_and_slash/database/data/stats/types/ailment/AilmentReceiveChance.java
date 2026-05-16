@@ -50,7 +50,7 @@ public class AilmentReceiveChance extends Stat {
 
         @Override
         public boolean canActivate(DamageEvent effect, StatData data, Stat stat) {
-            return !effect.data.getBoolean(EventData.IS_BLOCKED) && effect.getElement() != null && effect.getElement() == ailment.element && (effect.getAttackType().isHit() || effect.getAttackType() == AttackType.bonus_dmg) && RandomUtils.roll(data.getValue());
+            return !effect.data.getBoolean(EventData.IS_BLOCKED) && effect.getElement() != null && effect.getElement() == ailment.element && (effect.getAttackType().isHit() || effect.getAttackType() == AttackType.bonus_dmg) && RandomUtils.roll(data.get());
         }
 
     }

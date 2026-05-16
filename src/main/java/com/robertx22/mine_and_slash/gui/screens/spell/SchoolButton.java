@@ -5,14 +5,14 @@ import com.robertx22.mine_and_slash.database.data.spell_school.SpellSchool;
 import com.robertx22.mine_and_slash.mmorpg.SlashRef;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SchoolButton extends ImageButton {
+public class SchoolButton extends OldImageButton {
 
     static int SIZE = 25;
 

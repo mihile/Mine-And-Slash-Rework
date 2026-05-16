@@ -19,6 +19,10 @@ public interface DamageSourceDuck {
 
     public float getOriginalDamage();
 
+    public boolean isMessageSent();
+
+    public void setMessageSent(boolean sent);
+
     default void tryOverrideDmgWithMns(AttackInformation info) {
         if (hasMnsDamageOverride()) {
             info.setAmount(getMnsDamage());

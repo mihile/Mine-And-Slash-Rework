@@ -43,26 +43,12 @@ public class ToonScreen extends Screen implements INamedScreen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics pGuiGraphics) {
-        super.renderBackground(pGuiGraphics);
-        /*
-        if (this.minecraft.level != null) {
-            pGuiGraphics.fillGradient(0, 0, this.width, this.height, -1072689136, -804253680);
-            net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.ScreenEvent.BackgroundRendered(this, pGuiGraphics));
-        } else {
-            this.renderDirtBackground(pGuiGraphics);
-        }
-
-         */
-
+    public void renderBackground(GuiGraphics pGuiGraphics, int mouseX, int mouseY, float partialTick) {
     }
 
     @Override
     public void tick() {
-        this.searchBox.tick();
     }
-
-    //  public Checkbox searchTooltipsCheckbox;
 
     // gotta call add filter button first or it cant be clicked for some reason
     @Override
@@ -115,10 +101,6 @@ public class ToonScreen extends Screen implements INamedScreen {
 
     @Override
     public void removed() {
-        if (this.list != null) {
-            //  this.list.children().forEach(WorldSelectionList.Entry::close);
-        }
-
     }
 
     @Override

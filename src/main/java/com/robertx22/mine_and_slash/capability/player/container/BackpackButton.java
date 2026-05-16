@@ -6,38 +6,36 @@ import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.library_of_exile.utils.TextUTIL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Arrays;
 
-public class BackpackButton extends ImageButton {
+public class BackpackButton extends OldImageButton {
 
     public static int SX = 16;
     public static int SY = 16;
 
     Minecraft mc = Minecraft.getInstance();
+    private static final WidgetSprites EMPTY_SPRITES = new WidgetSprites(ResourceLocation.parse("empty"), ResourceLocation.parse("empty"));
 
     public Backpacks.BackpackType type;
 
     public BackpackButton(Backpacks.BackpackType type, int xPos, int yPos) {
-        super(xPos, yPos, SX, SY, 0, 0, SY, new ResourceLocation("empty"), (button) -> {
+        super(xPos, yPos, SX, SY, EMPTY_SPRITES, (button) -> {
             Packets.sendToServer(new OpenBackpackPacket(type));
-        });
+        }, Component.empty());
         this.type = type;
 
     }
 
 
     @Override
-    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
-        setModTooltip();
-        super.render(gui, mouseX, mouseY, delta);
-    }
-
-    @Override
     public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
+        setModTooltip();
         ResourceLocation tex = type.getIcon();
         gui.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         gui.blit(tex, getX(), getY(), SX, SX, SX, SX, SX, SX);
@@ -60,3 +58,4 @@ public class BackpackButton extends ImageButton {
 
 
 }
+

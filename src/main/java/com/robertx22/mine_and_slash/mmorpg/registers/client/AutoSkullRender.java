@@ -19,8 +19,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class AutoSkullRender extends EntityRenderer<AutoAimingProj> {
-    private static final ResourceLocation WITHER_INVULNERABLE_LOCATION = new ResourceLocation("textures/entity/wither/wither_invulnerable.png");
-    private static final ResourceLocation WITHER_LOCATION = new ResourceLocation("textures/entity/wither/wither.png");
+    private static final ResourceLocation WITHER_INVULNERABLE_LOCATION = ResourceLocation.parse("textures/entity/wither/wither_invulnerable.png");
+    private static final ResourceLocation WITHER_LOCATION = ResourceLocation.parse("textures/entity/wither/wither.png");
     private final SkullModel model;
 
     public AutoSkullRender(EntityRendererProvider.Context pContext) {
@@ -46,7 +46,7 @@ public class AutoSkullRender extends EntityRenderer<AutoAimingProj> {
         float f1 = Mth.lerp(pPartialTicks, pEntity.xRotO, pEntity.getXRot());
         VertexConsumer vertexconsumer = pBuffer.getBuffer(this.model.renderType(this.getTextureLocation(pEntity)));
         this.model.setupAnim(0.0F, f, f1);
-        this.model.renderToBuffer(pMatrixStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        this.model.renderToBuffer(pMatrixStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY);
         pMatrixStack.popPose();
         super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
     }

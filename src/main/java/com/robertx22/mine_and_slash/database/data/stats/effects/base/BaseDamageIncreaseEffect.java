@@ -26,7 +26,7 @@ public abstract class BaseDamageIncreaseEffect extends BaseDamageEffect {
 
     @Override
     public DamageEvent activate(DamageEvent effect, StatData data, Stat stat) {
-        effect.getLayer(StatLayers.Offensive.ADDITIVE_DMG, EventData.NUMBER, Side()).add(data.getValue());
+        effect.getLayer(StatLayers.Offensive.ADDITIVE_DMG, EventData.NUMBER, Side()).add(data.get());
 
         if (stat.getMultiUseType() == Stat.MultiUseType.MULTIPLICATIVE_DAMAGE) {
             effect.addMoreMulti(stat, EventData.NUMBER, data.getMoreStatTypeMulti());

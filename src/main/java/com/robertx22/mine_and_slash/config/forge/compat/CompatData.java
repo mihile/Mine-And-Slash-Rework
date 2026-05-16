@@ -2,29 +2,29 @@ package com.robertx22.mine_and_slash.config.forge.compat;
 
 import com.robertx22.mine_and_slash.database.data.base_stats.BaseStatsConfig;
 import com.robertx22.mine_and_slash.database.data.game_balance_config.GameBalanceConfig;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class CompatData implements CompatDummy {
-    private ForgeConfigSpec.BooleanValue CAP_ITEM_DAMAGE;
-    private ForgeConfigSpec.BooleanValue ENABLE_MINUS_RESISTS_PER_LEVEL;
-    private ForgeConfigSpec.BooleanValue DISABLE_VANILLA_HEALTH_REGEN;
-    private ForgeConfigSpec.BooleanValue IGNORE_WEAPON_REQUIREMENTS_FOR_SPELLS;
-    private ForgeConfigSpec.IntValue ITEM_DAMAGE_CAP_PER_HIT;
-    private ForgeConfigSpec.EnumValue<DamageCompatibilityType> DAMAGE_SYSTEM;
-    private ForgeConfigSpec.EnumValue<HealthSystem> HEALTH_SYSTEM;
-    private ForgeConfigSpec.EnumValue<GameBalanceConfig.BalanceEnum> BALANCE_DATAPACK;
-    private ForgeConfigSpec.EnumValue<BaseStatsConfig.BaseStatsEnum> BASE_STATS_DATAPACK;
-    private ForgeConfigSpec.DoubleValue MOB_FLAT_DAMAGE_BONUS;
-    private ForgeConfigSpec.DoubleValue MOB_PERCENT_DAMAGE_AS_BONUS;
-    private ForgeConfigSpec.DoubleValue STAT_REQUIREMENTS_MULTIPLIER;
-    private ForgeConfigSpec.DoubleValue SPELL_BASE_DAMAGE_MULTIPLIER;
-    private ForgeConfigSpec.DoubleValue VANILLA_TO_WEAPON_DAMAGE_PERCENT;
-    private ForgeConfigSpec.BooleanValue ENERGY_PENALTY;
-    private ForgeConfigSpec.BooleanValue DISABLE_MOB_IFRAMES;
-    private ForgeConfigSpec.IntValue DAMAGE_CONVERSION_LOSS;
+    private ModConfigSpec.BooleanValue CAP_ITEM_DAMAGE;
+    private ModConfigSpec.BooleanValue ENABLE_MINUS_RESISTS_PER_LEVEL;
+    private ModConfigSpec.BooleanValue DISABLE_VANILLA_HEALTH_REGEN;
+    private ModConfigSpec.BooleanValue IGNORE_WEAPON_REQUIREMENTS_FOR_SPELLS;
+    private ModConfigSpec.IntValue ITEM_DAMAGE_CAP_PER_HIT;
+    private ModConfigSpec.EnumValue<DamageCompatibilityType> DAMAGE_SYSTEM;
+    private ModConfigSpec.EnumValue<HealthSystem> HEALTH_SYSTEM;
+    private ModConfigSpec.EnumValue<GameBalanceConfig.BalanceEnum> BALANCE_DATAPACK;
+    private ModConfigSpec.EnumValue<BaseStatsConfig.BaseStatsEnum> BASE_STATS_DATAPACK;
+    private ModConfigSpec.DoubleValue MOB_FLAT_DAMAGE_BONUS;
+    private ModConfigSpec.DoubleValue MOB_PERCENT_DAMAGE_AS_BONUS;
+    private ModConfigSpec.DoubleValue STAT_REQUIREMENTS_MULTIPLIER;
+    private ModConfigSpec.DoubleValue SPELL_BASE_DAMAGE_MULTIPLIER;
+    private ModConfigSpec.DoubleValue VANILLA_TO_WEAPON_DAMAGE_PERCENT;
+    private ModConfigSpec.BooleanValue ENERGY_PENALTY;
+    private ModConfigSpec.BooleanValue DISABLE_MOB_IFRAMES;
+    private ModConfigSpec.IntValue DAMAGE_CONVERSION_LOSS;
 
 
-    public void build(ForgeConfigSpec.Builder b, DefaultCompatData defaults) {
+    public void build(ModConfigSpec.Builder b, DefaultCompatData defaults) {
 
         DAMAGE_SYSTEM = b.comment("Bonus means mns dmg will act as bonus damage, while override means it will replace the vanilla damage. The Bonus mode requires installing the Compatibility Addon Mod")
                 .defineEnum("DAMAGE_SYSTEM", defaults.dmgCompat);

@@ -43,12 +43,6 @@ public class StatEffects implements ExileRegistryInit {
         public static ModifyStatLayerEffect DAMAGE_SUPPRESSION_50 = new ModifyStatLayerEffect("", StatLayers.Defensive.DAMAGE_SUPPRESSION, EventData.NUMBER, ModifyStatLayerEffect.ModificationType.REDUCE, NumberProvider.specificNumber(50));
 
 
-        // public static ModifyStatLayerEffect ELEMENTAL_RESIST = new ModifyStatLayerEffect(StatLayers.Defensive.ELEMENTAL_MITIGATION, EventData.NUMBER, ModifyStatLayerEffect.ModificationType.REDUCE, ModifyStatLayerEffect.CalculationType.JUST_STAT_NUMBER);
-        //public static ModifyStatLayerEffect ELEMENTAL_PENETRATION = new ModifyStatLayerEffect(StatLayers.Defensive.ELEMENTAL_MITIGATION, EventData.NUMBER, ModifyStatLayerEffect.ModificationType.ADD, ModifyStatLayerEffect.CalculationType.JUST_STAT_NUMBER);
-
-        //public static ModifyStatLayerEffect ARMOR = new ModifyStatLayerEffect(StatLayers.Defensive.PHYS_MITIGATION, EventData.NUMBER, ModifyStatLayerEffect.ModificationType.REDUCE, ModifyStatLayerEffect.CalculationType.EFFECTIVE_ARMOR);
-        //public static ModifyStatLayerEffect ARMOR_PENETRATION = new ModifyStatLayerEffect(StatLayers.Defensive.PHYS_MITIGATION, EventData.NUMBER, ModifyStatLayerEffect.ModificationType.ADD, ModifyStatLayerEffect.CalculationType.EFFECTIVE_ARMOR);
-
         public static void init() {
 
         }
@@ -142,19 +136,10 @@ public class StatEffects implements ExileRegistryInit {
 
     public static StatEffect INC_VALUE_PER_CURSE_ON_TARGET = new IncreaseNumberPerCurseOnTarget();
 
-    /*
-    // todo ..
-    public static StatEffect INCREASE_VALUE = new IncreaseNumberByPercentEffect(EventData.NUMBER);
-    public static StatEffect MULTIPLY_VALUE = new MultiplyNumberByPercentEffect(EventData.NUMBER);
-    public static StatEffect DECREASE_VALUE = new DecreaseNumberByPercentEffect(EventData.NUMBER);
-
-
-     */
     public static StatEffect INCREASE_EFFECT_DURATION = new IncreaseNumberByPercentEffect(EventData.EFFECT_DURATION_TICKS);
     public static StatEffect INCREASE_SECONDS = new IncreaseNumberByPercentEffect(EventData.SECONDS);
     public static StatEffect SET_ACCURACY = new SetDataNumberAction(EventData.ACCURACY);
     public static StatEffect ADD_STAT_DATA_TO_NUMBER = new AddToNumberEffect("add_stat_data_to_num", EventData.NUMBER, NumberProvider.ofStatData());
-    //public static StatEffect ADD_TO_MAX_SUMMONS = new AddToNumberEffect("add_max_summons", EventData.BONUS_MAX_SUMMONS, NumberProvider.ofStatData());
     public static StatEffect ADD_TOTAL_SUMMONS = new AddToNumberEffect("add_total_summons", EventData.BONUS_TOTAL_SUMMONS, NumberProvider.ofStatData());
 
     public static StatEffect DECREASE_COOLDOWN = new DecreaseNumberByPercentEffect(EventData.COOLDOWN_TICKS);

@@ -42,7 +42,14 @@ public class GuiConfigToggle extends GuiAction {
 
     @Override
     public Object loadExtraData(FriendlyByteBuf buf) {
-        return null;
+        var id = buf.readUtf();
+        for (PlayerConfigData.Config config : PlayerConfigData.Config.values()) {
+            if (config.id.equals(id)) {
+                this.config = config;
+                break;
+            }
+        }
+        return id;
     }
 
     @Override

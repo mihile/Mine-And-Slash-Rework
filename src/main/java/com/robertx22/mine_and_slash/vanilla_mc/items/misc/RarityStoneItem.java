@@ -16,9 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,9 +39,7 @@ public class RarityStoneItem extends Item implements IWeighted, IAutoModel {
     public static Item of(String rar) {
         return RarityItems.RARITY_STONE.get(rar).get(); // todo bad
     }
-
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> l, TooltipFlag pIsAdvanced) {
+    public void appendHoverText(ItemStack pStack, Item.TooltipContext pContext, List<Component> l, TooltipFlag pIsAdvanced) {
         var pro = ExileDB.Professions().get(Professions.SALVAGING);
         var tip = ProfTierMatItem.makeTooltip(pro, null);
         tip.accept(new UsageBlock(Arrays.asList(Itemtips.STONE_REPAIRE_DURABILITY.locName(getTotalRepair()).withStyle(ChatFormatting.GREEN))));
@@ -64,3 +60,4 @@ public class RarityStoneItem extends Item implements IWeighted, IAutoModel {
         manager.generated(this);
     }
 }
+

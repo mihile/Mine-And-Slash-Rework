@@ -37,7 +37,6 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +55,7 @@ public class CraftedBuffFoodItem extends AutoItem implements IRarityItem, ICreat
 
     static Properties getProp(PlayerBuffData.Type type) {
         if (type.isFood()) {
-            return new Properties().food(new FoodProperties.Builder().nutrition(6).saturationMod(5).meat().build());
+            return new Properties().food(new FoodProperties.Builder().nutrition(6).saturationModifier(5).build());
         } else {
             return new Properties();
         }
@@ -78,7 +77,7 @@ public class CraftedBuffFoodItem extends AutoItem implements IRarityItem, ICreat
             if (pLivingEntity instanceof Player p) {
                 boolean did = Load.player(p).buff.tryAdd(p, getBuff(), LeveledItem.getLevel(stack), rar.getPercent(), type, getTicksDuration());
                 if (did) {
-                    pLivingEntity.addEffect(new MobEffectInstance(this.type.effect.get(), getTicksDuration()));
+                    pLivingEntity.addEffect(new MobEffectInstance(net.minecraft.core.registries.BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this.type.effect.get()), getTicksDuration()));
                     stack.shrink(1);
                     return stack;
                 }
@@ -93,7 +92,6 @@ public class CraftedBuffFoodItem extends AutoItem implements IRarityItem, ICreat
         return type.durationTicks;
     }
 
-    @Override
     public UseAnim getUseAnimation(ItemStack pStack) {
         if (type.isFood()) {
             return UseAnim.EAT;
@@ -102,7 +100,6 @@ public class CraftedBuffFoodItem extends AutoItem implements IRarityItem, ICreat
         }
     }
 
-    @Override
     public int getUseDuration(ItemStack pStack) {
         return 32;
     }
@@ -119,8 +116,7 @@ public class CraftedBuffFoodItem extends AutoItem implements IRarityItem, ICreat
     }
 
 
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level pLevel, List<Component> list, TooltipFlag pIsAdvanced) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext pContext, List<Component> list, TooltipFlag pIsAdvanced) {
 
         try {
 

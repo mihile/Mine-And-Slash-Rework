@@ -1,6 +1,6 @@
 package com.robertx22.mine_and_slash.config.forge.compat;
 
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 
 public interface IRestrictedConfig<T> {
 

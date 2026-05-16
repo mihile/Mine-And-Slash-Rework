@@ -28,7 +28,7 @@ public class StatContainer {
 
         for (Map.Entry<String, StatData> en : stats.entrySet()) {
             var stat = en.getValue();
-            c.stats.put(en.getKey(), new StatData(stat.getId(), stat.getValue(), stat.getMoreStatTypeMulti()));
+            c.stats.put(en.getKey(), new StatData(stat.getId(), stat.get(), stat.getMoreStatTypeMulti()));
         }
 
         return c;

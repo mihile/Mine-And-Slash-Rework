@@ -33,34 +33,27 @@ public class EntityTypeUtils {
 
         if (isMob(entity)) {
             return EntityClassification.MOB;
-        } else if (isAnimal(entity)) {
-            return EntityClassification.ANIMAL;
-        } else if (isNPC(entity)) {
-            return EntityClassification.NPC;
-        } else if (entity instanceof Player) {
-            return EntityClassification.PLAYER;
-        } else if (entity instanceof AmbientCreature || entity.getType().getCategory() == MobCategory.AMBIENT || entity.getType().getCategory() == MobCategory.WATER_AMBIENT) {
-            return EntityClassification.AMBIENT;
-        } else {
-            return EntityClassification.OTHER;
         }
+        if (isAnimal(entity)) {
+            return EntityClassification.ANIMAL;
+        }
+        if (isNPC(entity)) {
+            return EntityClassification.NPC;
+        }
+        if (entity instanceof Player) {
+            return EntityClassification.PLAYER;
+        }
+        if (entity instanceof AmbientCreature || entity.getType().getCategory() == MobCategory.AMBIENT || entity.getType().getCategory() == MobCategory.WATER_AMBIENT) {
+            return EntityClassification.AMBIENT;
+        }
+        return EntityClassification.OTHER;
 
     }
 
     public static boolean isMob(Entity en) {
-        if (en instanceof Enemy) {
-            return true;
-        }
-        if (en instanceof NeutralMob) {
-            return true;
-        }
-        if (!en.getType()
+        return en instanceof Enemy || en instanceof NeutralMob || !en.getType()
                 .getCategory()
-                .isFriendly()) {
-            return true;
-        }
-
-        return false;
+                .isFriendly();
     }
 
     public static boolean isAnimal(Entity en) {

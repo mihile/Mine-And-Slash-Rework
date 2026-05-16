@@ -21,7 +21,7 @@ public class OpenInvGuiScreen implements IContainerNamedScreen {
 
     @Override
     public ResourceLocation iconLocation() {
-        return new ResourceLocation(SlashRef.MODID, "textures/gui/main_hub/icons/" + icon + ".png");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/" + icon + ".png");
     }
 
     @Override

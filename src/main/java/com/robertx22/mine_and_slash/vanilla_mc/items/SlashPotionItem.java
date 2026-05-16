@@ -37,7 +37,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -71,9 +70,7 @@ public class SlashPotionItem extends AutoItem implements ICreativeTabTiered {
     public Item getThis() {
         return this;
     }
-
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+    public void appendHoverText(ItemStack pStack, Item.TooltipContext pContext, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
 
         int num = (int) this.type.getHealPercent(pStack);
         pTooltipComponents.clear();
@@ -127,7 +124,7 @@ public class SlashPotionItem extends AutoItem implements ICreativeTabTiered {
                 ResourcesData resources = Load.Unit(player).getResources();
                 if (HealthUtils.getCurrentHealth(player) < HealthUtils.getMaxHealth(player) || resources.getMagicShield() < resources.getMax(player, ResourceType.magic_shield)) {
                     EventBuilder.ofRestore(player, player, ResourceType.health, RestoreType.potion, HealthUtils.getMaxHealth(player) * healPercent / 100F).build().Activate();
-                    EventBuilder.ofRestore(player, player, ResourceType.magic_shield, RestoreType.potion, Load.Unit(player).getUnit().magicShieldData().getValue() * healPercent / 100F).build().Activate();
+                    EventBuilder.ofRestore(player, player, ResourceType.magic_shield, RestoreType.potion, Load.Unit(player).getUnit().magicShieldData().get() * healPercent / 100F).build().Activate();
                     return true;
                 }
                 return false;
@@ -152,8 +149,8 @@ public class SlashPotionItem extends AutoItem implements ICreativeTabTiered {
                 float healPercent = this.getHealPercent(itemStack);
                 ResourcesData resources = Load.Unit(player).getResources();
                 if (resources.getMana() < resources.getMax(player, ResourceType.mana) || resources.getEnergy() < resources.getMax(player, ResourceType.energy)) {
-                    EventBuilder.ofRestore(player, player, ResourceType.mana, RestoreType.potion, Load.Unit(player).getUnit().manaData().getValue() * healPercent / 100F).build().Activate();
-                    EventBuilder.ofRestore(player, player, ResourceType.energy, RestoreType.potion, Load.Unit(player).getUnit().energyData().getValue() * healPercent / 100F).build().Activate();
+                    EventBuilder.ofRestore(player, player, ResourceType.mana, RestoreType.potion, Load.Unit(player).getUnit().manaData().get() * healPercent / 100F).build().Activate();
+                    EventBuilder.ofRestore(player, player, ResourceType.energy, RestoreType.potion, Load.Unit(player).getUnit().energyData().get() * healPercent / 100F).build().Activate();
 
                     return true;
                 }
@@ -187,3 +184,4 @@ public class SlashPotionItem extends AutoItem implements ICreativeTabTiered {
         }
     }
 }
+

@@ -25,8 +25,6 @@ public class LootModifiersList {
             hovertext.append(mod.name.getFullName(mod.multi)).append("\n");
         }
 
-        //var hover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, hovertext);
-
         return hovertext;
     }
 

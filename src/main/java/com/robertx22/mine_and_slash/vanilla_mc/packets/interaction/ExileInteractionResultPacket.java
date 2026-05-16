@@ -28,7 +28,7 @@ public class ExileInteractionResultPacket extends MyPacket<ExileInteractionResul
 
     @Override
     public ResourceLocation getIdentifier() {
-        return new ResourceLocation(SlashRef.MODID, "eirpp");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "eirpp");
     }
 
     @Override
@@ -49,6 +49,11 @@ public class ExileInteractionResultPacket extends MyPacket<ExileInteractionResul
     public void onReceived(ExilePacketContext exilePacketContext) {
         if (!ClientConfigs.getConfig().ENABLE_FLOATING_DMG.get().getReal()) return;
         Entity entity = exilePacketContext.getPlayer().level().getEntity(id);
+        if (entity == null) {
+            System.out.println("ExileInteractionResultPacket received but entity is null! ID: " + id);
+            return;
+        }
+        System.out.println("ExileInteractionResultPacket received for entity: " + entity.getName().getString());
         notifier.spawnOnClient(entity);
     }
 

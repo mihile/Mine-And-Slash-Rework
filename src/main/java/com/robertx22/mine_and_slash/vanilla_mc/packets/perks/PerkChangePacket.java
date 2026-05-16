@@ -37,7 +37,7 @@ public class PerkChangePacket extends MyPacket<PerkChangePacket> {
 
     @Override
     public ResourceLocation getIdentifier() {
-        return new ResourceLocation(SlashRef.MODID, "perk_change");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "perk_change");
     }
 
     @Override

@@ -6,6 +6,4 @@ public class SlashParticles {
 
     }
 
-    //  public static final RegObj<BasicParticleType> POISON = Def.particle("poison", () -> new BasicParticleType(false));
-
 }

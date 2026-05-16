@@ -26,7 +26,6 @@ public class DataGenHook implements DataProvider {
         for (ExileRegistryType type : ExileRegistryType.getAllInRegisterOrder()) {
             type.getDatapackGenerator().run(pOutput);
         }
-        //DataProvider.saveStable(pOutput, x.serializeRecipe(), target);
 
         return CompletableFuture.completedFuture(null); // todo this is bad, but would it work?
         // i think this is only needed if you dont directly save the jsons yourself?

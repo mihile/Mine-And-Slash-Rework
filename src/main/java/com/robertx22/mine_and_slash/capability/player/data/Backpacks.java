@@ -32,6 +32,11 @@ public class Backpacks {
         }
     }
 
+    /** NeoForge Attachment에서 player 레퍼런스를 나중에 주입하기 위한 메서드 */
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
 
     public enum BackpackType {
         GEARS("gear", Words.Gear) {
@@ -50,10 +55,7 @@ public class Backpacks {
             @Override
             public boolean isValid(ItemStack stack) {
                 var cur = ExileCurrency.get(stack);
-                if (cur.isPresent()) {
-                    return true;
-                }
-                return stack.getItem() instanceof IItemAsCurrency || stack.getItem() instanceof RuneItem || stack.getItem() instanceof RarityStoneItem;
+                return cur.isPresent() || stack.getItem() instanceof IItemAsCurrency || stack.getItem() instanceof RuneItem || stack.getItem() instanceof RarityStoneItem;
             }
         },
         SKILL_GEMS("skill_gem", Words.SkillGem) {
@@ -121,7 +123,7 @@ public class Backpacks {
 
     }
 
-    public boolean tryAutoPickup(Player p, ItemStack stack){
+    public boolean tryAutoPickup(Player p, ItemStack stack) {
         return tryAutoPickup(p, stack, true);
     }
     // todo every time before you open backpack, it will replace locked slots with blocked slots that cant be clicked on and throw out/give items back
@@ -134,7 +136,6 @@ public class Backpacks {
             }
 
             BackpackInventory inv = getInv(type);
-            //inv.throwOutBlockedSlotItems(rows * 9);
             p.openMenu(new SimpleMenuProvider((i, playerInventory, playerEntity) -> {
                 return new BackpackMenu(type, i, playerInventory, inv, rows);
             }, Component.literal("")));

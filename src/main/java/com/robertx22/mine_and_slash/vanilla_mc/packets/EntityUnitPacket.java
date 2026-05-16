@@ -26,7 +26,7 @@ public class EntityUnitPacket extends MyPacket<EntityUnitPacket> {
 
     @Override
     public ResourceLocation getIdentifier() {
-        return new ResourceLocation(SlashRef.MODID, "enpack");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "enpack");
     }
 
     @Override
@@ -51,7 +51,11 @@ public class EntityUnitPacket extends MyPacket<EntityUnitPacket> {
 
             LivingEntity en = (LivingEntity) entity;
 
-            Load.Unit(en).deserializeNBT(nbt);
+            // Load.Unit()은 내부적으로 getData().init(en)을 호출하여 entity 참조를 보장합니다
+            com.robertx22.mine_and_slash.capability.entity.EntityData data = Load.Unit(en);
+            data.deserializeNBT(nbt);
+            // 역직렬화 후 entity 참조를 다시 보장 (transient 필드 초기화 목적)
+            data.init(en);
         }
     }
 

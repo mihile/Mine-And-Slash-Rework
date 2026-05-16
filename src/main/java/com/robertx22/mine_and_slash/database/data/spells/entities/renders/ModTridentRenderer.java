@@ -15,7 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.projectile.Projectile;
 
 public class ModTridentRenderer extends EntityRenderer<Projectile> {
-    public static final ResourceLocation TEXTURE = new ResourceLocation("textures/entity/trident.png");
+    public static final ResourceLocation TEXTURE = ResourceLocation.parse("textures/entity/trident.png");
     private final TridentModel model;
 
     public ModTridentRenderer(EntityRendererProvider.Context ctx) {
@@ -31,7 +31,7 @@ public class ModTridentRenderer extends EntityRenderer<Projectile> {
         matrixStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(g, tridentEntity.yRotO, tridentEntity.getYRot()) - 90.0F));
         matrixStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(g, tridentEntity.xRotO, tridentEntity.getXRot()) + 90.0F));
         VertexConsumer vertexConsumer = ItemRenderer.getFoilBufferDirect(vertexConsumerProvider, this.model.renderType(this.getTextureLocation(tridentEntity)), false, false);
-        this.model.renderToBuffer(matrixStack, vertexConsumer, i, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        this.model.renderToBuffer(matrixStack, vertexConsumer, i, OverlayTexture.NO_OVERLAY);
         matrixStack.popPose();
         super.render(tridentEntity, f, g, matrixStack, vertexConsumerProvider, i);
     }

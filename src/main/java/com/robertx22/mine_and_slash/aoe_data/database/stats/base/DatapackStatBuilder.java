@@ -206,7 +206,6 @@ public class DatapackStatBuilder<T extends IGUID> {
         Objects.requireNonNull(locDescMaker);
 
         ErrorUtils.ifFalse(!stats.isEmpty());
-        //ErrorUtils.ifFalse(!events.isEmpty());
 
         stats.entrySet()
                 .forEach(x -> {

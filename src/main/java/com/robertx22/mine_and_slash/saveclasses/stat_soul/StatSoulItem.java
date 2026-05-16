@@ -29,8 +29,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,12 +45,11 @@ public class StatSoulItem extends Item implements IGUID, ICreativeTabNbt, iHideJ
     }
 
     public static boolean hasSoul(ItemStack stack) {
-        return stack.hasTag() && stack.getTag()
-                .contains(TAG);
+        return StackSaving.STAT_SOULS.has(stack);
     }
 
     public static StatSoulData getSoul(ItemStack stack) {
-        StatSoulData data = LoadSave.Load(StatSoulData.class, new StatSoulData(), stack.getOrCreateTag(), TAG);
+        StatSoulData data = StackSaving.STAT_SOULS.loadFrom(stack);
         return data;
     }
 
@@ -140,10 +139,8 @@ public class StatSoulItem extends Item implements IGUID, ICreativeTabNbt, iHideJ
         }
         return txt;
     }
-
-    @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext world, List<Component> tooltip, TooltipFlag context) {
         try {
             StatSoulData data = StackSaving.STAT_SOULS.loadFrom(stack);
             if (data != null) {
@@ -152,7 +149,7 @@ public class StatSoulItem extends Item implements IGUID, ICreativeTabNbt, iHideJ
                     // todo temp solution to view extracted souls
                     var gearstack = new ItemStack(Items.IRON_SWORD);
                     data.gear.saveTo(gearstack);
-                    data.gear.gear.BuildTooltip(new TooltipContext(gearstack, tooltip, Load.Unit(ClientOnly.getPlayer())));
+                    data.gear.gear.BuildTooltip(new com.robertx22.mine_and_slash.saveclasses.gearitem.gear_bases.TooltipContext(gearstack, tooltip, Load.Unit(ClientOnly.getPlayer())));
                 } else {
                     ExileTooltips exileTooltips = data.getTooltip(stack, false);
                     exileTooltips.accept(new NameBlock(Collections.singletonList(stack.getHoverName())));
@@ -173,3 +170,4 @@ public class StatSoulItem extends Item implements IGUID, ICreativeTabNbt, iHideJ
 
 
 }
+

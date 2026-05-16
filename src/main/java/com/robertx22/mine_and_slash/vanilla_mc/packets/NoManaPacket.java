@@ -14,7 +14,7 @@ public class NoManaPacket extends MyPacket<NoManaPacket> {
 
     @Override
     public ResourceLocation getIdentifier() {
-        return new ResourceLocation(SlashRef.MODID, "nomana");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "nomana");
     }
 
     @Override

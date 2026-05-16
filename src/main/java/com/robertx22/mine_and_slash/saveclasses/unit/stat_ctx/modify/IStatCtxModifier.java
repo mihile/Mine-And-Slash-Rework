@@ -8,7 +8,7 @@ import java.util.List;
 public interface IStatCtxModifier {
 
     default List<ExactStatData> modify(ExactStatData thisStat, StatContext target) {
-        float multi = thisStat.getValue() / 100F;
+        float multi = thisStat.get() / 100F;
         return target.getPercentOfStats(multi);
     }
 

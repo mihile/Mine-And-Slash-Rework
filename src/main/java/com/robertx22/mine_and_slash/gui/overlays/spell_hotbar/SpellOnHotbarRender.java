@@ -17,19 +17,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.client.settings.KeyModifier;
+import net.neoforged.neoforge.client.settings.KeyModifier;
 
 import java.util.Locale;
 
 public class SpellOnHotbarRender {
     static int CHARGE_SIZE = 20;
 
-    private static final ResourceLocation CHARGE = new ResourceLocation(SlashRef.MODID, "textures/gui/spells/charges/full_charges.png");
-    private static final ResourceLocation LOW_CHARGE = new ResourceLocation(SlashRef.MODID, "textures/gui/spells/charges/low_charges.png");
-    private static final ResourceLocation NO_CHARGE = new ResourceLocation(SlashRef.MODID, "textures/gui/spells/charges/no_charges.png");
-    private static final ResourceLocation KEY_BG = new ResourceLocation(SlashRef.MODID, "textures/gui/spells/keybind_bg.png");
-    private static final ResourceLocation MOD_BG = new ResourceLocation(SlashRef.MODID, "textures/gui/spells/modbg.png");
-    private static final ResourceLocation COOLDOWN_TEX = new ResourceLocation(SlashRef.MODID, "textures/gui/spells/cooldown.png");
+    private static final ResourceLocation CHARGE = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/spells/charges/full_charges.png");
+    private static final ResourceLocation LOW_CHARGE = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/spells/charges/low_charges.png");
+    private static final ResourceLocation NO_CHARGE = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/spells/charges/no_charges.png");
+    private static final ResourceLocation KEY_BG = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/spells/keybind_bg.png");
+    private static final ResourceLocation MOD_BG = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/spells/modbg.png");
+    private static final ResourceLocation COOLDOWN_TEX = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/spells/cooldown.png");
 
 
     public int place;
@@ -53,25 +53,13 @@ public class SpellOnHotbarRender {
         this.x = x;
         this.y = y;
 
-        if (ClientConfigs.getConfig().HOTBAR_SWAPPING.get()) {
-            if (place > 3) {
-                if (!SpellKeybind.IS_ON_SECONd_HOTBAR) {
-                    disableKeyRender = true;
-                }
-            } else {
-                if (SpellKeybind.IS_ON_SECONd_HOTBAR) {
-                    disableKeyRender = true;
-                }
-            }
-
-        }
+        disableKeyRender = ClientConfigs.getConfig().HOTBAR_SWAPPING.get()
+                && ((place > 3 && !SpellKeybind.IS_ON_SECONd_HOTBAR) || (place <= 3 && SpellKeybind.IS_ON_SECONd_HOTBAR));
 
         this.keyNum = place;
 
-        if (ClientConfigs.getConfig().HOTBAR_SWAPPING.get()) {
-            if (SpellKeybind.IS_ON_SECONd_HOTBAR) {
-                keyNum -= 4;
-            }
+        if (ClientConfigs.getConfig().HOTBAR_SWAPPING.get() && SpellKeybind.IS_ON_SECONd_HOTBAR) {
+            keyNum -= 4;
         }
 
         this.spell = Load.player(ClientOnly.getPlayer()).getSkillGemInventory().getHotbarGem(place).getSpell();
@@ -134,11 +122,8 @@ public class SpellOnHotbarRender {
 
         if (charges == 0) {
             chargeTex = NO_CHARGE;
-
-        } else {
-            if (charges != spell.config.charges) {
-                chargeTex = LOW_CHARGE;
-            }
+        } else if (charges != spell.config.charges) {
+            chargeTex = LOW_CHARGE;
         }
 
         if (charges == 0) {
@@ -176,12 +161,8 @@ public class SpellOnHotbarRender {
         String txt = CLOC.translate(KeybindsRegister.getSpellHotbar(keyNum).key.getKey().getDisplayName()).toUpperCase(Locale.ROOT);
         txt = txt.substring(0, 1);
         if (KeybindsRegister.getSpellHotbar(keyNum).key.isUnbound()) {
-            if (disableKeyRender) {
-                txt = "";
-            } else {
-                //txt = "UNBOUND KEY";
-                txt = "";
-            }
+            //txt = "UNBOUND KEY";
+            txt = "";
         }
         // todo renderScaledText doesnt do push and pop but does antiscale.. FIX THIS
         GuiUtils.renderScaledText(gui, xkey - 1, ykey, 1, txt, ChatFormatting.GREEN);
@@ -209,8 +190,6 @@ public class SpellOnHotbarRender {
 
         if (cds.getCooldownTicks(spell.GUID()) > 1) {
             gui.blit(COOLDOWN_TEX, this.x, this.y, 0, 0, 16, (int) (16 * percent), 16, 16);
-        } else {
-            return;
         }
 
         int cdsec = cds.getCooldownTicks(spell.GUID()) / 20;

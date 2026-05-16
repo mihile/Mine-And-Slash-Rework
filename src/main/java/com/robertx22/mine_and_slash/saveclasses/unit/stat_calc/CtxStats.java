@@ -48,7 +48,6 @@ public class CtxStats {
                 .forEach(v -> {
                     v.stats.forEach(s -> {
                         if (s.getStat() == null) {
-                            //ExileLog.get().log(s.getStatId());
                         } else {
                             if (s.getStat().statContextModifier != null) {
                                 map.get(s.getStat().statContextModifier.getCtxTypeNeeded()).forEach(c -> {

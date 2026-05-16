@@ -40,7 +40,7 @@ public class ScalingCalc {
     }
 
     public int getMultiAsPercent(LivingEntity en, MaxLevelProvider provider) {
-        return (int) (multi.getValue(en, provider) * 100);
+        return (int) (multi.get(en, provider) * 100);
     }
 
     public Component GetTooltipString(LivingEntity en, MaxLevelProvider provider) {
@@ -67,14 +67,14 @@ public class ScalingCalc {
     }
 
     public int getCalculatedValue(LivingEntity en, MaxLevelProvider provider) {
-        float multi = (getMulti().getValue(en, provider));
+        float multi = (getMulti().get(en, provider));
 
         int val = (int) (multi * Load.Unit(en)
                 .getUnit()
                 .getCalculatedStat(stat)
-                .getValue());
+                .get());
 
-        if (getStat() == WeaponDamage.getInstance() && en instanceof Player == false) {
+        if (getStat() == WeaponDamage.getInstance() && !(en instanceof Player)) {
             val += Load.Unit(en).getMobBaseDamage(); // todo what?
         }
         return val;

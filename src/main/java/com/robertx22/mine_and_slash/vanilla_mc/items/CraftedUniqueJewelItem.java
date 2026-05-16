@@ -20,7 +20,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class CraftedUniqueJewelItem extends Item implements IShapelessRecipe {
@@ -58,9 +57,7 @@ public class CraftedUniqueJewelItem extends Item implements IShapelessRecipe {
         return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
 
     }
-
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+    public void appendHoverText(ItemStack pStack, Item.TooltipContext pContext, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         if (!StackSaving.JEWEL.has(pStack)) {
             pTooltipComponents.add(Itemtips.UNIQUE_JEWEL_USE.locName());
         }
@@ -88,3 +85,4 @@ public class CraftedUniqueJewelItem extends Item implements IShapelessRecipe {
         return RuneItems.MAP.get(type.id).get();
     }
 }
+

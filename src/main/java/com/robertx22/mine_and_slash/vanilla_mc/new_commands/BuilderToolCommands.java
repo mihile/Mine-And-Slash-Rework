@@ -56,7 +56,6 @@ public class BuilderToolCommands {
                     for (int z = 0; z < radius; z++) {
                         var cpos = new ChunkPos(cp.x + x, cp.z + z);
                         var fpos = cpos.getBlockAt(0, pos.getY(), 0);
-                        //world.setBlock(fpos, Blocks.STRUCTURE_BLOCK.defaultBlockState(), 2);
                         StructureUtils.createNewEmptyStructureBlock(x + "_" + z, fpos, new BlockPos(16, height, 16), Rotation.NONE, world);
                     }
                 }
@@ -101,7 +100,6 @@ public class BuilderToolCommands {
                         if (world.getBlockEntity(roomPos) instanceof StructureBlockEntity be) {
                             be.setStructureName(aroom.loc);
                             be.setStructurePos(new BlockPos(0, 0, 0).above().north());
-                            be.loadStructure((ServerLevel) world);
                         }
 
                         z++;
@@ -153,7 +151,6 @@ public class BuilderToolCommands {
 
                     for (Map.Entry<BlockPos, BlockEntity> en : bes.entrySet()) {
                         if (en.getValue() instanceof StructureBlockEntity be) {
-                            be.loadStructure((ServerLevel) world);
                         }
                     }
                 }

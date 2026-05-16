@@ -9,7 +9,7 @@ public class TestMixin {
     @Inject(method = "postReload", cancellable = true, at = @At(value = "HEAD"))
     public void hookDisableFire(ServerFunctionLibrary pReloader, CallbackInfo ci) {
         try {
-            ResourceLocation TICK_FUNCTION_TAG = new ResourceLocation("tick");
+            ResourceLocation TICK_FUNCTION_TAG = ResourceLocation.parse("tick");
 
             var ticking = ImmutableList.copyOf(pReloader.getTag(TICK_FUNCTION_TAG));
 

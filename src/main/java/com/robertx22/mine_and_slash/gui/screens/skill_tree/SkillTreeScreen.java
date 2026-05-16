@@ -42,7 +42,7 @@ import java.awt.*;
 import java.util.*;
 
 public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen, IAlertScreen {
-    static ResourceLocation BIG_PANEL = new ResourceLocation(SlashRef.MODID, "textures/gui/skill_tree/bar.png");
+    static ResourceLocation BIG_PANEL = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skill_tree/bar.png");
 
     public SchoolType schoolType;
 
@@ -78,8 +78,6 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
         graphics.pose().mulPose(Axis.ZP.rotation(rotation));
         int length = (int) getDistanceBetweenButtons(button1, button2);
 
-        //graphics.pose().scale(1F, 1.5F, 1F); // thicken it a bit
-
         int off = 0;
 
         if (renderer.connection() == Perk.Connection.LINKED) {
@@ -94,9 +92,6 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
         HashMultimap<ResourceLocation, BufferInfo> map = this.vertexContainer.map;
         map.put(SlashRef.id("textures/gui/skill_tree/skill_connection.png"), BufferInfo.of(0, -3, length, 6, -5, (float) 0, off, length, 6, 50, 16, graphics.pose().last().pose()));
-
-
-        //graphics.blit(CON, 0, -3, length, 6, 0, off, length, 6, 50, 16);
 
         graphics.pose().popPose();
     }
@@ -223,7 +218,6 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
     @Override
     public void tick() {
-        SEARCH.tick();
     }
 
     @Override
@@ -287,12 +281,9 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
     public void refreshButtons() {
 
-        //Watch watch = new Watch();
-
         originalButtonLocMap.clear();
         pointPerkButtonMap.clear();
 
-        // this.buttons.clear();
         this.clearWidgets();
 
         this.scrollX = 0;
@@ -304,7 +295,6 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
             if (perk == null) {
                 perk = ExileDB.Perks().get(new UnknownStat().GUID()); // we show unknown stat so its visible ingame that something is wrong on the GUI
-                //continue;
             }
 
             try {
@@ -394,7 +384,7 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scroll) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scroll) {
         if (scroll < 0) {
             targetZoom -= 0.1F;
         }
@@ -434,9 +424,6 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
         ctx = new PerkScreenContext(this);
 
-        // String searchTerm = SkillTreeScreen.SEARCH.getValue();
-
-        // Watch watch = new Watch();
         mouseRecentlyClickedTicks--;
 
         renderBackgroundDirt(gui, this, 0);
@@ -460,7 +447,6 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
                         b.setX(xp);
                         b.setY(yp);
 
-                        //b.search = searchTerm;
                     }
             }
 
@@ -491,7 +477,6 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
         this.msstring = watch.getPrint();
 
-        //watch.print(" rendering ");
     }
 
 
@@ -504,11 +489,8 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
         Minecraft mc = Minecraft.getInstance();
 
-        // todo test
-        //gui.setColor(0.25F, 0.25F, 0.25F, 1.0F);
         int i = 32;
         gui.blit(BACKGROUND, 0, 0, -10, 0.0F, 0.0F, mc.screen.width, mc.screen.height, 32, 32);
-        //gui.setColor(1.0F, 1.0F, 1.0F, 1.0F);
 
     }
 

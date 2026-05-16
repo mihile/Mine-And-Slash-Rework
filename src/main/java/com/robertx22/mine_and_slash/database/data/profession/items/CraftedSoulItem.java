@@ -20,13 +20,13 @@ import com.robertx22.mine_and_slash.uncommon.utilityclasses.ClientOnly;
 import com.robertx22.mine_and_slash.uncommon.utilityclasses.StringUTIL;
 import com.robertx22.mine_and_slash.vanilla_mc.items.misc.AutoItem;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.component.CustomData;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -49,22 +49,22 @@ public class CraftedSoulItem extends AutoItem implements ICreativeTabTiered, IRa
     public StatSoulData getSoul(ItemStack stack) {
         StatSoulData data = StatSoulData.ofFamily(ExileDB.GearRarities().get(rar), LeveledItem.getTier(stack), fam);
 
-        String force = stack.getOrCreateTag().getString("force_tag");
+        String force = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getString("force_tag");
         if (!force.isEmpty()) {
             data.force_tag = force;
         }
         return data;
     }
 
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> list, TooltipFlag pIsAdvanced) {
+    public void appendHoverText(ItemStack pStack, Item.TooltipContext pContext, List<Component> list, TooltipFlag pIsAdvanced) {
         try {
             var soul = getSoul(pStack);
 
             if (soul != null) {
                 list.clear();
                 if (Screen.hasShiftDown() && soul.gear != null) {
-                    soul.gear.gear.BuildTooltip(new TooltipContext(pStack, list, Load.Unit(ClientOnly.getPlayer())));
+                    ExileTooltips tooltip = soul.getTooltip(pStack, false);
+                    list.addAll(tooltip.release());
                 } else {
                     ExileTooltips tooltip = soul.getTooltip(pStack, false);
                     tooltip.accept(new NameBlock(Collections.singletonList(pStack.getHoverName())));

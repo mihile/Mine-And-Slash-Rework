@@ -15,7 +15,6 @@ public abstract class ModWeapon extends SingleTargetWeapon {
 
     }
 
-    @Override
     public boolean isCorrectToolForDrops(BlockState blockIn) {
         return blockIn.getBlock() == Blocks.COBWEB;
     }

@@ -18,7 +18,6 @@ public class OnTickCondition extends EffectCondition {
     @Override
     public boolean canActivate(SpellCtx ctx, MapHolder data) {
         if (ctx.activation != EntityActivation.ON_TICK) {
-            //return false; TODO
         }
         int ticks = data.get(MapField.TICK_RATE)
             .intValue();

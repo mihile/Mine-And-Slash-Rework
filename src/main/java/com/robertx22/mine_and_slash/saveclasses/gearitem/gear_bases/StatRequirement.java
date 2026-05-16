@@ -54,14 +54,14 @@ public class StatRequirement {
         for (Map.Entry<String, Float> en : this.scaling_req.entrySet()) {
             Stat x = ExileDB.Stats().get(en.getKey());
             int num = getScalingReq(x, lvl);
-            if (num > data.getUnit().getCalculatedStat(x).getValue()) {
+            if (num > data.getUnit().getCalculatedStat(x).get()) {
                 return false;
             }
         }
         for (Map.Entry<String, Float> en : this.base_req.entrySet()) {
             Stat x = ExileDB.Stats().get(en.getKey());
             int num = getNonScalingReq(x, lvl);
-            if (num > data.getUnit().getCalculatedStat(x).getValue()) {
+            if (num > data.getUnit().getCalculatedStat(x).get()) {
                 return false;
             }
         }
@@ -75,7 +75,7 @@ public class StatRequirement {
         for (Map.Entry<String, Float> en : this.scaling_req.entrySet()) {
             Stat x = ExileDB.Stats().get(en.getKey());
             int num = getScalingReq(x, lvl);
-            float targetValue = data.getUnit().getCalculatedStat(x).getValue();
+            float targetValue = data.getUnit().getCalculatedStat(x).get();
             if (num > targetValue) {
                 components.add(Chats.NOT_MEET_MAP_REQ.locName(x.locName(), targetValue, num).withStyle(ChatFormatting.RED));
             }
@@ -83,7 +83,7 @@ public class StatRequirement {
         for (Map.Entry<String, Float> en : this.base_req.entrySet()) {
             Stat x = ExileDB.Stats().get(en.getKey());
             int num = getNonScalingReq(x, lvl);
-            float targetValue = data.getUnit().getCalculatedStat(x).getValue();
+            float targetValue = data.getUnit().getCalculatedStat(x).get();
             if (num > targetValue) {
                 components.add(Chats.NOT_MEET_MAP_REQ.locName(x.locName(), targetValue, num).withStyle(ChatFormatting.RED));
             }
@@ -99,15 +99,15 @@ public class StatRequirement {
         for (Map.Entry<String, Float> en : this.scaling_req.entrySet()) {
             Stat x = ExileDB.Stats().get(en.getKey());
             int num = getScalingReq(x, lvl);
-            if (num > data.getUnit().getCalculatedStat(x).getValue()) {
-                lacking += Math.abs(num - data.getUnit().getCalculatedStat(x).getValue());
+            if (num > data.getUnit().getCalculatedStat(x).get()) {
+                lacking += Math.abs(num - data.getUnit().getCalculatedStat(x).get());
             }
         }
         for (Map.Entry<String, Float> en : this.base_req.entrySet()) {
             Stat x = ExileDB.Stats().get(en.getKey());
             int num = getNonScalingReq(x, lvl);
-            if (num > data.getUnit().getCalculatedStat(x).getValue()) {
-                lacking += Math.abs(num - data.getUnit().getCalculatedStat(x).getValue());
+            if (num > data.getUnit().getCalculatedStat(x).get()) {
+                lacking += Math.abs(num - data.getUnit().getCalculatedStat(x).get());
             }
         }
         return lacking;
@@ -181,7 +181,7 @@ public class StatRequirement {
 
         if (data.getUnit()
                 .getCalculatedStat(stat)
-                .getValue() >= req) {
+                .get() >= req) {
             return Component.literal(ChatFormatting.GREEN + "" + ChatFormatting.BOLD + CHECK_YES_ICON + " ").append(Itemtips.Stat_Req.locName(stat.locName())
                             .withStyle(ChatFormatting.GRAY))
                     .append("" + ChatFormatting.GRAY + req + perc + " ");

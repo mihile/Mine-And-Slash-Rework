@@ -15,7 +15,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.server.command.EnumArgument;
+import net.neoforged.neoforge.server.command.EnumArgument;
 
 import java.util.Arrays;
 import java.util.List;

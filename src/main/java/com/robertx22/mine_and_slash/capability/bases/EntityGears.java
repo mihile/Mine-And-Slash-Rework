@@ -10,21 +10,21 @@ public class EntityGears {
     private HashMap<EquipmentSlot, ItemStack> map = new HashMap<>();
 
     public ItemStack get(EquipmentSlot slot) {
-        if (map.isEmpty()) {
-            for (EquipmentSlot s : EquipmentSlot.values()) {
-                map.put(s, ItemStack.EMPTY);
-            }
-        }
+        fillMissingSlots();
         return map.get(slot);
     }
 
     public ItemStack put(EquipmentSlot slot, ItemStack stack) {
+        fillMissingSlots();
+        return map.put(slot, stack);
+    }
+
+    private void fillMissingSlots() {
         if (map.isEmpty()) {
             for (EquipmentSlot s : EquipmentSlot.values()) {
                 map.put(s, ItemStack.EMPTY);
             }
         }
-        return map.put(slot, stack);
     }
 
 }

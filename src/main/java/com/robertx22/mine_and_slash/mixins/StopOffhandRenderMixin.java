@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(Gui.class)
 public class StopOffhandRenderMixin {
 
-    @Redirect(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isEmpty()Z", opcode = Opcodes.GETFIELD))
+    @Redirect(method = "renderHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isEmpty()Z", opcode = Opcodes.GETFIELD), require = 0)
     private boolean injected(ItemStack instance) {
         if (ClientConfigs.getConfig().GUI_POSITION.get() == GuiPosition.BOTTOM_CENTER) {
             return true;

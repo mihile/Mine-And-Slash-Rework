@@ -9,7 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
-public class InvGuiPacket extends MyPacket<OpenGuiPacket> {
+public class InvGuiPacket extends MyPacket<InvGuiPacket> {
 
     GuiItemData data;
 
@@ -49,13 +49,13 @@ public class InvGuiPacket extends MyPacket<OpenGuiPacket> {
     }
 
     @Override
-    public MyPacket<OpenGuiPacket> newInstance() {
+    public MyPacket<InvGuiPacket> newInstance() {
         return new InvGuiPacket();
     }
 
     @Override
     public ResourceLocation getIdentifier() {
-        return new ResourceLocation(SlashRef.MODID, "invgui");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "invgui");
     }
 
 }

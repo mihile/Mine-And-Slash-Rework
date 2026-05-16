@@ -59,8 +59,6 @@ public class GeneratedData {
         new Stats().registerAll();
         new DatapackStats().registerAll();
 
-        //new GearRaritiesAdder().registerAll();
-
         SpellCalcs.init();
         new Spells().registerAll();
         new SpellSchoolsAdder().registerAll();

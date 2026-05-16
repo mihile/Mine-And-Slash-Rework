@@ -25,7 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.network.NetworkHooks;
 
 import java.util.ArrayList;
 
@@ -54,7 +54,7 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
     public BlockState getBlockState() {
 
         try {
-            return VanillaUTIL.REGISTRY.blocks().get(new ResourceLocation(this.entityData.get(BLOCK)))
+            return VanillaUTIL.REGISTRY.blocks().get(ResourceLocation.parse(this.entityData.get(BLOCK)))
                     .defaultBlockState();
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,7 +72,6 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
     public static final EntityDataAccessor<Boolean> IS_FALLING = SynchedEntityData.defineId(StationaryFallingBlockEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Float> FALL_SPEED = SynchedEntityData.defineId(StationaryFallingBlockEntity.class, EntityDataSerializers.FLOAT);
 
-    @Override
     public Iterable<ItemStack> getArmorSlots() {
         return new ArrayList<>();
     }
@@ -83,7 +82,6 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
         removeNextTick = true;
     }
 
-    @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
@@ -95,8 +93,6 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
             this.remove(RemovalReason.KILLED);
             return;
         }
-
-        //this.age++; this is called somewhere again idk
 
         if (entityData.get(IS_FALLING)) {
             if (!this.isNoGravity()) {
@@ -180,13 +176,13 @@ public class StationaryFallingBlockEntity extends FallingBlockEntity implements 
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(SPELL_DATA, new CompoundTag());
-        this.entityData.define(ENTITY_NAME, "");
-        this.entityData.define(BLOCK, "");
-        this.entityData.define(IS_FALLING, false);
-        this.entityData.define(FALL_SPEED, -0.04F);
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(SPELL_DATA, new CompoundTag());
+        builder.define(ENTITY_NAME, "");
+        builder.define(BLOCK, "");
+        builder.define(IS_FALLING, false);
+        builder.define(FALL_SPEED, -0.04F);
+        super.defineSynchedData(builder);
     }
 
     public String getScoreboardName() {

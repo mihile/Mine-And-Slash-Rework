@@ -8,15 +8,15 @@ import com.robertx22.mine_and_slash.uncommon.datasaving.Load;
 import com.robertx22.mine_and_slash.uncommon.localization.Words;
 import com.robertx22.mine_and_slash.uncommon.utilityclasses.ClientOnly;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 
-public class ProphecyAffixButton extends ImageButton {
-    static ResourceLocation ID = new ResourceLocation(SlashRef.MODID, "textures/gui/prophecy/affix.png");
+public class ProphecyAffixButton extends OldImageButton {
+    static ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/prophecy/affix.png");
 
     MapAffix data;
 
@@ -38,7 +38,7 @@ public class ProphecyAffixButton extends ImageButton {
     }
 
     @Override
-    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         pGuiGraphics.blit(SlashRef.guiId("prophecy/icon"), getX(), getY(), 0, 0, 16, 16, 16, 16);
 
         var stats = data.getStats(100, Load.Unit(ClientOnly.getPlayer()).getLevel());
@@ -66,8 +66,9 @@ public class ProphecyAffixButton extends ImageButton {
         this.setTooltip(Tooltip.create(TextUTIL.mergeList(tip)));
 
 
-        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        super.renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
 
 
     }
 }
+

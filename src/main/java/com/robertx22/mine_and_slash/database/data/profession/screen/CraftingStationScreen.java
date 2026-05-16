@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 // todo sepearate screens for each station
 public abstract class CraftingStationScreen extends AbstractContainerScreen<CraftingStationMenu> {
-    public ResourceLocation BACKGROUND_LOCATION = new ResourceLocation(SlashRef.MODID, "textures/gui/crafting_table2.png");
+    public ResourceLocation BACKGROUND_LOCATION = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/crafting_table2.png");
 
 
     Profession prof;
@@ -92,7 +92,7 @@ public abstract class CraftingStationScreen extends AbstractContainerScreen<Craf
     }
 
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(pGuiGraphics);
+        this.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
     }
@@ -193,14 +193,13 @@ public abstract class CraftingStationScreen extends AbstractContainerScreen<Craf
             recipes = new HashSet<>();
         }
         recipes.addAll(ExileDB.Recipes().getFilterWrapped(x -> x.profession.equals(prof.GUID()) && x.canCraft(menu.getItems()).can).list);
-        return recipes.stream().toList();
+        return List.copyOf(recipes);
 
     }
 
     @Override
     protected void renderLabels(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
         pGuiGraphics.drawString(this.font, this.title, this.titleLabelX - font.width(title) / 2, this.titleLabelY, ChatFormatting.YELLOW.getColor(), false);
-        //pGuiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, ChatFormatting.WHITE.getColor(), false);
     }
 
     @Override

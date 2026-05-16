@@ -113,7 +113,35 @@ public class ItemReqs extends ExileKeyHolder<ItemRequirement> {
 
     @Override
     public void loadClass() {
-
-
+        var ser = com.robertx22.orbs_of_crafting.register.CustomSerializers.ITEM_REQ;
+        
+        // Use exact ID strings or ItemReqSers constants to match datapack JSON keys
+        ser.register(new BeDungeonMapReq("is_map"));
+        ser.register(new BeGearReq("is_gear"));
+        ser.register(new BeJewelReq()); // fixed constructor
+        ser.register(new BeSoulReq()); // constructor has no args, uses "is_soul" internally
+        
+        ser.register(new IsRarityReq(ItemReqSers.IS_RARITY, null));
+        ser.register(new HasAffixOfRarity(ItemReqSers.HAS_RARITY_AFFIX, null));
+        ser.register(new HasAffixUnderRarity("has_affix_of_rar_or_lower", null));
+        
+        ser.register(new MapIsRarityReq("map_is_mythic", null)); // special case for specific keys
+        ser.register(new MapHasHigherRarityReq(ItemReqSers.MAP_HAS_HIGHER_RAR));
+        
+        ser.register(new IsNotCorruptedReq(ItemReqSers.IS_NOT_CORRUPTED));
+        ser.register(new HasCorruptAffixes(ItemReqSers.HAS_CORRUPTION_AFFIXES));
+        ser.register(new MaximumUsesReq(ItemReqSers.MAX_USES, null));
+        
+        ser.register(new LevelNotMaxReq(ItemReqSers.LVL_NOT_MAX));
+        ser.register(new MustHaveAffixesReq(ItemReqSers.HAS_AFFIXES));
+        ser.register(new MustHaveImplicitReq(ItemReqSers.HAS_IMPLICIT));
+        ser.register(new HasInfusionReq(ItemReqSers.HAS_INFUSION));
+        ser.register(new CanAddSocketsReq(ItemReqSers.CAN_ADD_SOCKETS));
+        ser.register(new IsUnderQualityReq("is_under_20_quality", IsUnderQualityReq.UNDER_20));
+        ser.register(new IsUnderQualityReq("is_under_21_quality", IsUnderQualityReq.UNDER_21));
+        ser.register(new IsGearNotCraftedReq(ItemReqSers.NOT_CRAFTED_GEAR));
+        ser.register(new HasSocketedReq("has_socketed_gem", null));
+        ser.register(new HasSocketedReq("has_socketed_rune", null));
+        ser.register(new JewelHasAffixesReq(ItemReqSers.JEWEL_HAS_AFFIXES));
     }
 }

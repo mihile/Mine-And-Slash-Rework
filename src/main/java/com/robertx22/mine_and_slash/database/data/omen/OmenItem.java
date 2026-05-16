@@ -12,11 +12,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class OmenItem extends BaseBaublesItem implements IOmen {
@@ -25,13 +24,12 @@ public class OmenItem extends BaseBaublesItem implements IOmen {
 
 
     public OmenItem(VanillaMaterial mat) {
-        super(new Properties().durability(500 + mat.armormat.getDurabilityForType(ArmorItem.Type.CHESTPLATE) * 2)
+        super(new Properties().durability(500)
                 , "Omen");
         this.mat = mat;
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level pLevel, List<Component> list, TooltipFlag pIsAdvanced) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext pContext, List<Component> list, TooltipFlag pIsAdvanced) {
 
         try {
 

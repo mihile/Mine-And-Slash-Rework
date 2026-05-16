@@ -58,19 +58,6 @@ public class TotemSpells implements ExileRegistryInit {
 
     @Override
     public void registerAll() {
-/*
-        of(SlashBlocks.GUARD_TOTEM.get(), GUARD_TOTEM_ID, SpellConfiguration.Builder.instant(18, 20 * 30), "Guarding Totem",
-                Arrays.asList(SpellTag.totem, SpellTag.area), ParticleTypes.EFFECT)
-                .manualDesc(
-                        "Summon a totem which gives " + SpellCalcs.TOTEM_GUARD.getLocDmgTooltip() + " shield to allies around it."
-                )
-                .onTick("block", PartBuilder.justAction(SpellAction.GIVE_SHIELD.create(SpellCalcs.TOTEM_GUARD, 10D))
-                        .addTarget(TargetSelector.AOE.alliesInRadius(3D))
-                        .onTick(20D))
-                .build();
-
- */
-
         of(SlashBlocks.BLUE_TOTEM.get(), MANA_TOTEM_ID, SpellConfiguration.Builder.nonInstant(18, 20 * 30, 20), "Astral Totem",
                 Arrays.asList(SpellTags.totem, SpellTags.area), ParticleTypes.WITCH)
                 .manualDesc(

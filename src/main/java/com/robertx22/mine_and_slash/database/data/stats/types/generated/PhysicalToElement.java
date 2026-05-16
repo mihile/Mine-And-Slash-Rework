@@ -80,28 +80,8 @@ public class PhysicalToElement extends ElementalStat {
         @Override
         public DamageEvent activate(DamageEvent effect, StatData data, Stat stat) {
 
-            effect.getLayer(StatLayers.Offensive.DAMAGE_CONVERSION, EventData.NUMBER, Side()).convertDamage(getElement(), (int) data.getValue());
+            effect.getLayer(StatLayers.Offensive.DAMAGE_CONVERSION, EventData.NUMBER, Side()).convertDamage(getElement(), (int) data.get());
 
-/*
-            var conv = data.getValue();
-
-            if (conv > effect.unconvertedDamagePercent) {
-                conv = effect.unconvertedDamagePercent;
-            }
-            if (conv <= 0) {
-                return effect;
-            }
-            effect.unconvertedDamagePercent -= conv;
-
-            float dmg = effect.data.getNumber(EventData.NUMBER).number * conv / 100F;
-            dmg = MathHelper.clamp(dmg, 0, effect.data.getNumber());
-            if (dmg > 0) {
-                effect.addBonusEleDmg(stat.getElement(), dmg, Side());
-                effect.getLayer(StatLayers.Offensive.DAMAGE_CONVERSION, EventData.NUMBER, Side()).reduce(dmg);
-                // or maybe create a dmg conversion layer..?
-            }
-
- */
             return effect;
         }
 

@@ -20,7 +20,7 @@ public class OpenJewelsScreen implements IContainerNamedScreen, IAlertScreen {
 
     @Override
     public ResourceLocation iconLocation() {
-        return new ResourceLocation(SlashRef.MODID, "textures/gui/main_hub/icons/jewel.png");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/jewel.png");
     }
 
     @Override

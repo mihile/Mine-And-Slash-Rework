@@ -34,7 +34,7 @@ public class SpecialStats {
                 @Override
                 public RestoreResourceEvent activate(RestoreResourceEvent effect, StatData data, Stat stat) {
                     for (MobEffectInstance x : new ArrayList<>(effect.target.getActiveEffects())) {
-                        if (x.getEffect()
+                        if (x.getEffect().value()
                                 .getCategory() == MobEffectCategory.HARMFUL) {
                             effect.target.removeEffect(x.getEffect());
                         }
@@ -44,7 +44,7 @@ public class SpecialStats {
 
                 @Override
                 public boolean canActivate(RestoreResourceEvent effect, StatData data, Stat stat) {
-                    return effect.isSpell() && RandomUtils.roll(data.getValue());
+                    return effect.isSpell() && RandomUtils.roll(data.get());
                 }
 
                 @Override

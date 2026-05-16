@@ -32,8 +32,6 @@ public abstract class GearCurrency extends CodeCurrency {
 
     @Override
     public void internalModifyMethod(LocReqContext ctx) {
-        //GearItemData data = ctx.stack.GEAR.get();
-
         GearOutcome outcome = getOutcome();
 
         ExileStack ex = ExileStack.of(ctx.stack);

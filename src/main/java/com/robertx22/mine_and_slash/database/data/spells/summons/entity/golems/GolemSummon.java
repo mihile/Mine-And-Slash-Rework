@@ -24,43 +24,18 @@ public abstract class GolemSummon extends SummonEntity {
     }
 
 
-    /*
-    @Override
-    public boolean doHurtTarget(Entity pEntity) {
-        if (super.doHurtTarget(pEntity)) {
-            if (!this.level().isClientSide) {
-                if (getOwner() instanceof Player en) {
-                    int chance = (int) (5 + Load.Unit(en).getUnit().getCalculatedStat(GolemSpellChance.getInstance()).getValue());
-                    if (RandomUtils.roll(chance)) {
-                        var spell = ExileDB.Spells().get(this.aoeSpell());
-                        // todo this doesnt affect summon damage.. hm
-                        var c = (new SpellCastContext(en, 0, spell));
-                        spell.getAttached().onCast(SpellCtx.onCast(en, c.calcData).setSourceEntity(this));
-                    }
-                }
-            }
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-     */
-
     public abstract String affix();
 
     public abstract String aoeSpell();
 
     public abstract Elements ele();
 
-    @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
 
 
         Load.Unit(this).getAffixData().affixes.add(affix());
 
-        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData);
     }
 
     @Override

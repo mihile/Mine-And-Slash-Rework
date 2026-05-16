@@ -50,7 +50,7 @@ import com.robertx22.mine_and_slash.uncommon.utilityclasses.MapManager;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 public class ExileDB {
 
@@ -69,7 +69,7 @@ public class ExileDB {
 
     public static EntityConfig getEntityConfig(LivingEntity entity, EntityData data) {
 
-        var id = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+        var id = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
         String monster_id = id.toString();
         String mod_id = id.getNamespace();
 
@@ -114,13 +114,6 @@ public class ExileDB {
     }
 
 
-    /*
-    public static ExileRegistryContainer<Currency> CurrencyItems() {
-        return Database.getRegistry(ExileRegistryTypes.CURRENCY_ITEMS);
-    }
-
-
-     */
     public static ExileRegistryContainer<DimensionConfig> DimensionConfigs() {
         return Database.getRegistry(ExileRegistryTypes.DIMENSION_CONFIGS);
     }

@@ -3,6 +3,7 @@ package com.robertx22.mine_and_slash.database.data.spells.components.actions;
 import com.robertx22.mine_and_slash.database.data.spells.components.MapHolder;
 import com.robertx22.mine_and_slash.database.data.spells.components.actions.ExileEffectAction.GiveOrTake;
 import com.robertx22.mine_and_slash.database.data.spells.spell_classes.SpellCtx;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -30,7 +31,7 @@ public class PotionAction extends SpellAction {
 
             for (LivingEntity t : targets) {
                 if (action == GiveOrTake.GIVE_STACKS) {
-                    MobEffect potion = data.getPotion();
+                    Holder<MobEffect> potion = BuiltInRegistries.MOB_EFFECT.wrapAsHolder(data.getPotion());
 
                     int dura = data.get(POTION_DURATION)
                             .intValue();
@@ -38,7 +39,7 @@ public class PotionAction extends SpellAction {
                             .intValue();
                     t.addEffect(new MobEffectInstance(potion, dura, str));
                 } else if (action == GiveOrTake.REMOVE_STACKS) {
-                    MobEffect potion = data.getPotion();
+                    Holder<MobEffect> potion = BuiltInRegistries.MOB_EFFECT.wrapAsHolder(data.getPotion());
 
                     t.removeEffect(potion);
                 } else if (action == GiveOrTake.REMOVE_NEGATIVE) {
@@ -48,7 +49,7 @@ public class PotionAction extends SpellAction {
 
                         List<MobEffectInstance> opt = t.getActiveEffects()
                                 .stream()
-                                .filter(x -> x.getEffect().getCategory() == MobEffectCategory.HARMFUL)
+                                .filter(x -> x.getEffect().value().getCategory() == MobEffectCategory.HARMFUL)
                                 .collect(Collectors.toList());
 
                         if (!opt.isEmpty()) {
@@ -75,6 +76,10 @@ public class PotionAction extends SpellAction {
         return dmg;
     }
 
+    public MapHolder createGive(Holder<MobEffect> effect, Double duration) {
+        return createGive(effect.value(), duration);
+    }
+
     public MapHolder removeNegative(Double count) {
         MapHolder dmg = new MapHolder();
         dmg.type = GUID();
@@ -91,6 +96,10 @@ public class PotionAction extends SpellAction {
         dmg.put(POTION_ID, BuiltInRegistries.MOB_EFFECT.getKey(effect)
                 .toString());
         return dmg;
+    }
+
+    public MapHolder createRemove(Holder<MobEffect> effect) {
+        return createRemove(effect.value());
     }
 
     @Override

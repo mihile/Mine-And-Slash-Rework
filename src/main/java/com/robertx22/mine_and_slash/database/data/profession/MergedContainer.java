@@ -34,12 +34,10 @@ public class MergedContainer extends SimpleContainer implements WorldlyContainer
                 setItem(index, stack.copy());
                 return true;
             }
-            if (current.getItem() == stack.getItem()) {
-                if (Objects.equals(stack.getTag(), current.getTag())) {
-                    if (current.getCount() + stack.getCount() <= current.getMaxStackSize()) {
-                        current.setCount(current.getCount() + stack.getCount());
-                        return true;
-                    }
+            if (ItemStack.isSameItemSameComponents(current, stack)) {
+                if (current.getCount() + stack.getCount() <= current.getMaxStackSize()) {
+                    current.setCount(current.getCount() + stack.getCount());
+                    return true;
                 }
             }
         }

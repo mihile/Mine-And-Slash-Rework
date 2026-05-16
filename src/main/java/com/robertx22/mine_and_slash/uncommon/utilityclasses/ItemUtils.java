@@ -15,9 +15,7 @@ import net.minecraft.world.item.ItemStack;
 public class ItemUtils {
     public static Item.Properties getDefaultGearProperties() {
 
-        Item.Properties prop = new Item.Properties();
-
-        return prop;
+        return new Item.Properties();
     }
 
     public static void tryAnnounceItem(ItemStack stack, Player player) {

@@ -75,7 +75,6 @@ public class PlayerConfigData {
 
     public class AutoSalvage {
 
-        //  private HashMap<ToggleAutoSalvageRarity.SalvageType, HashMap<String, Boolean>> map = new HashMap<>();
         // Salvage Type -> <rarity, enabled>
         private HashMap<ToggleAutoSalvageRarity.SalvageType, HashMap<String, Boolean>> map = new HashMap<>();
 

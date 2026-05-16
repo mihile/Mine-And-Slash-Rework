@@ -1,11 +1,12 @@
 package com.robertx22.mine_and_slash.a_libraries.neat;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-import net.minecraftforge.fml.IExtensionPoint;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.network.NetworkConstants;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec.ConfigValue;
+import net.neoforged.fml.IExtensionPoint;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.network.NetworkConstants;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -13,10 +14,12 @@ import java.util.Locale;
 
 
 public class NeatForgeConfig {
+    private static ModConfigSpec spec;
+
     public static void init() {
-        Pair<ForgeNeatConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ForgeNeatConfig::new);
+        Pair<ForgeNeatConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(ForgeNeatConfig::new);
         NeatConfig.instance = specPair.getLeft();
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, specPair.getRight(), defaultConfigName(ModConfig.Type.CLIENT, "mine_and_slash_neat_gui"));
+        spec = specPair.getRight();
     }
 
     public static String defaultConfigName(ModConfig.Type type, String modId) {
@@ -24,9 +27,9 @@ public class NeatForgeConfig {
         return String.format(Locale.ROOT, "%s-%s.toml", modId, type.extension());
     }
 
-    public static void register() {
-        ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> NetworkConstants.IGNORESERVERONLY, (incoming, isNetwork) -> true));
+    public static void register(ModContainer modContainer) {
         NeatForgeConfig.init();
+        modContainer.registerConfig(ModConfig.Type.CLIENT, spec, defaultConfigName(ModConfig.Type.CLIENT, "mine_and_slash_neat"));
     }
 
     private static class ForgeNeatConfig implements NeatConfig.ConfigAccess {
@@ -52,9 +55,16 @@ public class NeatForgeConfig {
         private final ConfigValue<Boolean> showOnlyFocused;
         private final ConfigValue<Boolean> showFullHealth;
         private final ConfigValue<Boolean> enableDebugInfo;
+        private final ConfigValue<Integer> backgroundAlpha;
+        private final ConfigValue<Integer> barAlpha;
+        private final ConfigValue<Double> debuffIconYOffset;
+        private final ConfigValue<Double> debuffIconXOffset;
+        private final ConfigValue<Integer> wikiListY0;
+        private final ConfigValue<Integer> wikiListY1Offset;
+        private final ConfigValue<Integer> wikiListItemHeight;
         private final ConfigValue<List<? extends String>> blacklist;
 
-        public ForgeNeatConfig(ForgeConfigSpec.Builder builder) {
+        public ForgeNeatConfig(ModConfigSpec.Builder builder) {
             builder.push("general");
 
             maxDistance = builder.define("Max Distance", 12);
@@ -79,127 +89,191 @@ public class NeatForgeConfig {
             showOnlyFocused = builder.define("Only show the health bar for the entity looked at", false);
             showFullHealth = builder.define("Show entities with full health", true);
             enableDebugInfo = builder.define("Show Debug Info with F3", true);
+            backgroundAlpha = builder.comment("Background plate alpha (0-255). Higher = more opaque. Default 64.")
+                    .defineInRange("Background Alpha", 64, 0, 255);
+            barAlpha = builder.comment("Health bar alpha (0-255). Higher = more opaque. Default 127.")
+                    .defineInRange("Bar Alpha", 127, 0, 255);
+
+            builder.push("debuff_icons");
+            debuffIconYOffset = builder.comment("Y offset for status effect icons. Positive = above health bar, Negative = below. Default -9.0.")
+                    .define("Debuff Icon Y Offset", -9.0);
+            debuffIconXOffset = builder.comment("X offset for status effect icons. Default 0.0.")
+                    .define("Debuff Icon X Offset", 0.0);
+            builder.pop();
+
+            builder.push("wiki_ui");
+            wikiListY0 = builder.comment("The top Y coordinate of the wiki list. Default 48.")
+                    .defineInRange("Wiki List Top Y", 48, 0, 1000);
+            wikiListY1Offset = builder.comment("The offset from the bottom of the screen for the wiki list. Default 70.")
+                    .defineInRange("Wiki List Bottom Offset", 70, 0, 1000);
+            wikiListItemHeight = builder.comment("The height of each entry in the wiki list. Default 36.")
+                    .defineInRange("Wiki List Item Height", 36, 10, 200);
+            builder.pop();
+
             blacklist = builder.comment("Blacklist uses entity IDs, not their display names. Use F3 to see them in the Neat bar.")
                     .defineList("Blacklist", NeatConfig.DEFAULT_DISABLED, a -> true);
 
             builder.pop();
         }
 
+        private <T> T get(ConfigValue<T> value, T fallback) {
+            try {
+                return value.get();
+            } catch (IllegalStateException e) {
+                return fallback;
+            }
+        }
+
         @Override
         public int maxDistance() {
-            return maxDistance.get();
+            return get(maxDistance, 12);
         }
 
         @Override
         public boolean renderInF1() {
-            return renderInF1.get();
+            return get(renderInF1, false);
         }
 
         @Override
         public double heightAbove() {
-            return heightAbove.get();
+            return get(heightAbove, 0.6);
         }
 
         @Override
         public boolean drawBackground() {
-            return drawBackground.get();
+            return get(drawBackground, true);
         }
 
         @Override
         public int backgroundPadding() {
-            return backgroundPadding.get();
+            return get(backgroundPadding, 2);
         }
 
         @Override
         public int backgroundHeight() {
-            return backgroundHeight.get();
+            return get(backgroundHeight, 6);
         }
 
         @Override
         public int barHeight() {
-            return barHeight.get();
+            return get(barHeight, 4);
         }
 
         @Override
         public int plateSize() {
-            return plateSize.get();
+            return get(plateSize, 25);
         }
 
         @Override
         public int plateSizeBoss() {
-            return plateSizeBoss.get();
+            return get(plateSizeBoss, 50);
         }
 
         @Override
         public boolean showAttributes() {
-            return showAttributes.get();
+            return get(showAttributes, true);
         }
 
         @Override
         public boolean showArmor() {
-            return showArmor.get();
+            return get(showArmor, true);
         }
 
         @Override
         public boolean groupArmor() {
-            return groupArmor.get();
+            return get(groupArmor, true);
         }
 
         @Override
         public boolean colorByType() {
-            return colorByType.get();
+            return get(colorByType, false);
         }
 
         @Override
         public int hpTextHeight() {
-            return hpTextHeight.get();
+            return get(hpTextHeight, 14);
         }
 
         @Override
         public boolean showMaxHP() {
-            return showMaxHP.get();
+            return get(showMaxHP, true);
         }
 
         @Override
         public boolean showCurrentHP() {
-            return showCurrentHP.get();
+            return get(showCurrentHP, true);
         }
 
         @Override
         public boolean showPercentage() {
-            return showPercentage.get();
+            return get(showPercentage, true);
         }
 
         @Override
         public boolean showOnPlayers() {
-            return showOnPlayers.get();
+            return get(showOnPlayers, true);
         }
 
         @Override
         public boolean showOnBosses() {
-            return showOnBosses.get();
+            return get(showOnBosses, true);
         }
 
         @Override
         public boolean showOnlyFocused() {
-            return showOnlyFocused.get();
+            return get(showOnlyFocused, false);
         }
 
         @Override
         public boolean showFullHealth() {
-            return showFullHealth.get();
+            return get(showFullHealth, true);
         }
 
         @Override
         public boolean enableDebugInfo() {
-            return enableDebugInfo.get();
+            return get(enableDebugInfo, true);
+        }
+
+        @Override
+        public int backgroundAlpha() {
+            return get(backgroundAlpha, 64);
+        }
+
+        @Override
+        public int barAlpha() {
+            return get(barAlpha, 127);
+        }
+
+        @Override
+        public double debuffIconYOffset() {
+            return get(debuffIconYOffset, -9.0);
+        }
+
+        @Override
+        public double debuffIconXOffset() {
+            return get(debuffIconXOffset, 0.0);
+        }
+
+        @Override
+        public int wikiListY0() {
+            return get(wikiListY0, 48);
+        }
+
+        @Override
+        public int wikiListY1Offset() {
+            return get(wikiListY1Offset, 70);
+        }
+
+        @Override
+        public int wikiListItemHeight() {
+            return get(wikiListItemHeight, 36);
         }
 
         @SuppressWarnings("unchecked")
         @Override
         public List<String> blacklist() {
             // Safe cast from List<? extends String> to List<String>, as String is final
-            return (List<String>) blacklist.get();
+            return (List<String>) get(blacklist, NeatConfig.DEFAULT_DISABLED);
         }
     }
 }

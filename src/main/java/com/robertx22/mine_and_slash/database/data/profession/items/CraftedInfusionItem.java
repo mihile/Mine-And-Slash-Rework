@@ -42,9 +42,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -60,9 +58,7 @@ public class CraftedInfusionItem extends AutoItem implements IRarityItem, IItemA
         this.fam = fam;
 
     }
-
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> l, TooltipFlag pIsAdvanced) {
+    public void appendHoverText(ItemStack pStack, Item.TooltipContext pContext, List<Component> l, TooltipFlag pIsAdvanced) {
         var tier = LeveledItem.getTier(pStack);
         l.clear();
         l.addAll(new ExileTooltips()
@@ -125,7 +121,11 @@ public class CraftedInfusionItem extends AutoItem implements IRarityItem, IItemA
                                         Affix affix = ExileDB.Affixes().getFilterWrapped(x -> {
                                             return x.type == Affix.AffixSlot.enchant && x.requirements.satisfiesAllRequirements(new GearRequestedFor(gear)) && x.getAllTagReq().contains(SlotTags.enchantment.GUID());
                                         }).random();
-                                        gear.ench.en = affix.GUID();
+                                        if (affix != null) {
+                                            gear.ench.en = affix.GUID();
+                                        } else {
+                                            gear.ench = null; // revert creation
+                                        }
                                     } else {
                                         gear.ench.rar = rar;
                                     }
@@ -256,3 +256,4 @@ public class CraftedInfusionItem extends AutoItem implements IRarityItem, IItemA
         return ExileDB.GearRarities().get(rar);
     }
 }
+

@@ -57,7 +57,6 @@ public class AddGearLevelItemMod extends GearModification {
     @Override
     public MutableComponent getDescWithParams() {
         return getTranslation(TranslationType.DESCRIPTION).getTranslatedName(data.add_levels);
-        // return this.getTranslation(TranslationType.DESCRIPTION).getTranslatedName(data.add_levels);
     }
 
 }

@@ -55,7 +55,6 @@ public class DeathFavorData {
 
         set(p, favor + favorGain);
         OnScreenMessageUtils.actionBar((ServerPlayer) p, Chats.GAIN_FAVOR_ON_LOOT.locName(favorGain, favor).withStyle(ChatFormatting.GREEN));
-        //  Load.player(p).prophecy.favor += ServerContainer.get().FAVOR_CHEST_GAIN.get();
     }
 
     public GearRarity getRarity() {

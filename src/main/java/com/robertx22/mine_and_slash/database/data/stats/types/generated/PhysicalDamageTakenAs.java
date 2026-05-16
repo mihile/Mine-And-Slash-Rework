@@ -78,7 +78,7 @@ public class PhysicalDamageTakenAs extends ElementalStat {
 
         @Override
         public DamageEvent activate(DamageEvent effect, StatData data, Stat stat) {
-            effect.getLayer(StatLayers.Defensive.DAMAGE_TAKEN_AS, EventData.NUMBER, Side()).damageTakenAs(getElement(), (int) data.getValue());
+            effect.getLayer(StatLayers.Defensive.DAMAGE_TAKEN_AS, EventData.NUMBER, Side()).damageTakenAs(getElement(), (int) data.get());
             return effect;
         }
 

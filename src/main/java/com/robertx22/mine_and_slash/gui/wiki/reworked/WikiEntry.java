@@ -9,10 +9,10 @@ import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.network.chat.Component;
-
-import static net.minecraft.client.gui.components.AbstractWidget.WIDGETS_LOCATION;
+import net.minecraft.resources.ResourceLocation;
 
 public class WikiEntry extends ObjectSelectionList.Entry<WikiEntry> {
+    private static final ResourceLocation WIDGETS_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/widgets.png");
 
     BestiaryEntry entry;
     WikiEntryList list;
@@ -52,12 +52,22 @@ public class WikiEntry extends ObjectSelectionList.Entry<WikiEntry> {
     }
 
     @Override
+    public boolean isMouseOver(double pMouseX, double pMouseY) {
+        // Only allow mouse over if it's within the list boundaries
+        if (pMouseY < list.getY() || pMouseY > list.getBottom()) return false;
+        
+        // Sync interaction area with the expanded visual highlight (32px height)
+        // The entry height in the list is 36px. We check if mouse is within the centered 32px.
+        return super.isMouseOver(pMouseX, pMouseY);
+    }
+
+    @Override
     public void render(GuiGraphics gui, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pHovering, float pPartialTick) {
 
 
-        // taken from abstractbutton
+        // expanded highlight range (32px height, centered in 36px slot)
         if (this.list.screen.selectedEntry == this.entry || this.isMouseOver(pMouseX, pMouseY)) {
-            gui.blitNineSliced(WIDGETS_LOCATION, pLeft - 1, pTop - 1, pWidth + 20, 20, 20, 4, pWidth, 20, 0, this.getTextureY(pMouseX, pMouseY));
+            gui.fill(pLeft - 4, pTop + 2, pLeft + pWidth + 4, pTop + 34, 0x55222222);
         }
 
         if (this.isMouseOver(pMouseX, pMouseY)) {
@@ -67,15 +77,15 @@ public class WikiEntry extends ObjectSelectionList.Entry<WikiEntry> {
 
         var mc = Minecraft.getInstance();
 
-        // todo add custom icon renderer
+        // adjusted positions to center within the larger highlight
         if (entry.icon == null) {
-            gui.renderFakeItem(entry.stack, pLeft, pTop);
+            gui.renderFakeItem(entry.stack, pLeft, pTop + 9);
         } else {
-            gui.blit(entry.icon, pLeft, pTop, 16, 16, 16, 16, 16, 16);
+            gui.blit(entry.icon, pLeft, pTop + 9, 0, 0, 16, 16, 16, 16);
         }
 
-        int xp = (int) (pLeft + 37);
-        int yp = (int) pTop + 5;
+        int xp = (int) (pLeft + 30);
+        int yp = (int) pTop + 13;
 
         gui.drawString(mc.font, entry.getCutName(), xp, yp, ChatFormatting.GREEN.getColor());
 

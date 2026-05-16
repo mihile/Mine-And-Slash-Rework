@@ -1,5 +1,7 @@
 package com.robertx22.mine_and_slash.capability.chunk;
 
+import net.neoforged.neoforge.common.util.INBTSerializable;
+
 import com.robertx22.library_of_exile.components.ICap;
 import com.robertx22.library_of_exile.main.ExileLog;
 import com.robertx22.mine_and_slash.mmorpg.MMORPG;
@@ -12,10 +14,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.util.LazyOptional;
+import com.robertx22.library_of_exile.compat.capability.Capability;
+import com.robertx22.library_of_exile.compat.capability.CapabilityManager;
+import com.robertx22.library_of_exile.compat.capability.CapabilityToken;
+import com.robertx22.library_of_exile.compat.capability.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,16 +25,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ChunkCap implements ICap {
+public class ChunkCap implements ICap, INBTSerializable<CompoundTag> {
 
 
-    public static final ResourceLocation RESOURCE = new ResourceLocation(SlashRef.MODID, "chunk");
+    public static final ResourceLocation RESOURCE = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "chunk");
     public static Capability<ChunkCap> INSTANCE = CapabilityManager.get(new CapabilityToken<>() {
     });
 
     transient final LazyOptional<ChunkCap> supp = LazyOptional.of(() -> this);
 
-    @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if (cap == INSTANCE) {
             return supp.cast();
@@ -47,6 +48,32 @@ public class ChunkCap implements ICap {
     public boolean generatedMobs = false;
     public boolean generatedTerrain = false;
 
+    /**
+     * NeoForge Attachment 기본 생성자입니다.
+     */
+    public ChunkCap() {
+    }
+
+    /**
+     * Attachment에서 꺼낸 후 chunk을 주입합니다.
+     */
+    public ChunkCap init(LevelChunk chunk) {
+        if (this.chunk == null) {
+            this.chunk = chunk;
+        }
+        return this;
+    }
+
+    @Override
+    public CompoundTag serializeNBT(net.minecraft.core.HolderLookup.Provider provider) {
+        return serializeNBT();
+    }
+
+    @Override
+    public void deserializeNBT(net.minecraft.core.HolderLookup.Provider provider, CompoundTag nbt) {
+        deserializeNBT(nbt);
+    }
+
     public ChunkCap(LevelChunk chunk) {
         this.chunk = chunk;
     }
@@ -55,22 +82,22 @@ public class ChunkCap implements ICap {
     List<CompoundTag> savedMobs = new ArrayList<>();
 
     public void tryLoadMobs(Level world) {
-        if (!savedMobs.isEmpty()) {
-            try {
+        if (savedMobs.isEmpty()) return;
 
-                var saved = savedMobs.stream().toList();
-                savedMobs.clear();
-                mobIds.clear();
+        try {
+            var saved = List.copyOf(savedMobs);
+            savedMobs.clear();
+            mobIds.clear();
 
-                for (CompoundTag nbt : saved) {
-                    var en = EntityType.loadEntityRecursive(nbt, world, x -> x);
+            for (CompoundTag nbt : saved) {
+                var en = EntityType.loadEntityRecursive(nbt, world, x -> x);
+                if (en != null) {
                     world.addFreshEntity(en);
                 }
-
-            } catch (Exception e) {
-                e.printStackTrace();
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -78,7 +105,7 @@ public class ChunkCap implements ICap {
 
     public void trySaveMob(LivingEntity en) {
 
-        if (en instanceof Player) {
+        if (en instanceof Player || mobIds.contains(en.getUUID())) {
             return;
         }
 
@@ -88,12 +115,10 @@ public class ChunkCap implements ICap {
             }
             return;
         }
-        if (mobIds.contains(en.getUUID())) {
-            return;
-        }
+
         mobIds.add(en.getUUID());
 
-        var nbt = en.serializeNBT();
+        var nbt = en.serializeNBT(en.registryAccess());
 
         savedMobs.add(nbt);
     }

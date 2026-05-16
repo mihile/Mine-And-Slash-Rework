@@ -105,8 +105,6 @@ public class ItemNewbieGearBag extends Item {
 
                 stack = exfi.getStack();
 
-                EnchantedBookItem.addEnchantment(stack, new EnchantmentInstance(Enchantments.UNBREAKING, 3));
-
                 PlayerUtils.giveItem(stack, player);
 
             });
@@ -128,18 +126,11 @@ public class ItemNewbieGearBag extends Item {
                         .filter(x -> x.is_entry)
                         .collect(Collectors.toList());
 
-                if (true || !starts.isEmpty()) { // todo
+                defaultContent.give(playerIn);
+                // ItemNewbieGearBag.giveNewbieItemsFor(playerIn, starts.get(0));
 
-                    defaultContent.give(playerIn);
-                    // ItemNewbieGearBag.giveNewbieItemsFor(playerIn, starts.get(0));
-
-
-                    playerIn.getItemInHand(handIn)
-                            .shrink(1);
-
-                } else {
-                    playerIn.displayClientMessage(Component.literal("Choose your path to open this. (Press [H] and then open Talent Tree scren"), false);
-                }
+                playerIn.getItemInHand(handIn)
+                        .shrink(1);
 
                 return new InteractionResultHolder<ItemStack>(InteractionResult.PASS, playerIn.getItemInHand(handIn));
 

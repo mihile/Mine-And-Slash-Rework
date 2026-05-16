@@ -25,7 +25,7 @@ public class IsMSBellowPercentCondition extends StatCondition {
     @Override
     public boolean can(EffectEvent event, EffectSides statSource, StatData data, Stat stat) {
         EntityData en = Load.Unit(event.getSide(side));
-        return perc > en.getResources().getMagicShield() / en.getUnit().magicShieldData().getValue() * 100F;
+        return perc > en.getResources().getMagicShield() / en.getUnit().magicShieldData().get() * 100F;
     }
 
     @Override

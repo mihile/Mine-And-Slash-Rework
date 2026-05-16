@@ -21,8 +21,6 @@ public class CustomItemData {
 
         public DataKey.IntKey QUALITY = of(new DataKey.IntKey("ql"));
         public DataKey.IntKey ENCHANT_TIMES = of(new DataKey.IntKey("et"));
-        //public DataKey.IntKey LEVEL_TIMES = of(new DataKey.IntKey("lt"));
-
     }
 
     public GenericDataHolder data = new GenericDataHolder();

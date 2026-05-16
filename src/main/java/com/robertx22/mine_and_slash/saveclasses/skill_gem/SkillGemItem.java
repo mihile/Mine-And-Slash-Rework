@@ -17,7 +17,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class SkillGemItem extends Item implements INeedsNBT {
@@ -49,12 +48,10 @@ public class SkillGemItem extends Item implements INeedsNBT {
         return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
 
     }
-
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level pLevel, List<Component> list, TooltipFlag pIsAdvanced) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext pContext, List<Component> list, TooltipFlag pIsAdvanced) {
 
         try {
-            if (pLevel != null && !pLevel.isClientSide()) {
+            if (pContext.level() != null && !pContext.level().isClientSide()) {
                 return;
             }
 
@@ -71,3 +68,4 @@ public class SkillGemItem extends Item implements INeedsNBT {
 
     }
 }
+

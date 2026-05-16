@@ -2,18 +2,12 @@ package com.robertx22.mine_and_slash.gui.screens.stat_gui;
 
 import com.robertx22.mine_and_slash.database.data.stats.Stat;
 import com.robertx22.mine_and_slash.database.data.stats.StatGuiGroup;
-import com.robertx22.mine_and_slash.database.data.stats.types.defense.Armor;
-import com.robertx22.mine_and_slash.database.data.stats.types.defense.DodgeRating;
-import com.robertx22.mine_and_slash.database.data.stats.types.generated.ElementalResist;
-import com.robertx22.mine_and_slash.database.data.stats.types.resources.health.Health;
-import com.robertx22.mine_and_slash.database.data.stats.types.resources.mana.Mana;
 import com.robertx22.mine_and_slash.gui.bases.BaseScreen;
 import com.robertx22.mine_and_slash.gui.bases.INamedScreen;
 import com.robertx22.mine_and_slash.mmorpg.SlashRef;
 import com.robertx22.mine_and_slash.saveclasses.unit.StatData;
 import com.robertx22.mine_and_slash.uncommon.MathHelper;
 import com.robertx22.mine_and_slash.uncommon.datasaving.Load;
-import com.robertx22.mine_and_slash.uncommon.enumclasses.Elements;
 import com.robertx22.mine_and_slash.uncommon.localization.Words;
 import com.robertx22.mine_and_slash.uncommon.utilityclasses.ClientOnly;
 import net.minecraft.client.Minecraft;
@@ -23,7 +17,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -62,11 +55,8 @@ public class StatScreen extends BaseScreen implements INamedScreen {
 
 
     public void setupStatButtons() {
-        this.renderables.removeIf(x -> x instanceof EditBox == false);
-        this.children().removeIf(x -> x instanceof EditBox == false);
-
-        //    this.children().clear();
-        //  this.renderables.clear();
+        this.renderables.removeIf(x -> !(x instanceof EditBox));
+        this.children().removeIf(x -> !(x instanceof EditBox));
 
         int secX = guiLeft + 9;
         int secY = guiTop + 18;
@@ -76,8 +66,6 @@ public class StatScreen extends BaseScreen implements INamedScreen {
             secY += StatSectionButton.ySize + 2;
         }
 
-
-        //  this.children().removeIf(x -> x instanceof StatPanelButton || x instanceof StatIconAndNumberButton);
 
         int x = this.guiLeft + 30;
         int y = this.guiTop + 16;
@@ -114,11 +102,11 @@ public class StatScreen extends BaseScreen implements INamedScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double num1, double num2, double num3) {
+    public boolean mouseScrolled(double num1, double num2, double num3, double num4) {
 
-        this.setCurrentElement((int) (currentElement - num3));
+        this.setCurrentElement((int) (currentElement - num4));
 
-        return super.mouseScrolled(num1, num2, num3);
+        return super.mouseScrolled(num1, num2, num3, num4);
 
     }
 
@@ -150,7 +138,6 @@ public class StatScreen extends BaseScreen implements INamedScreen {
 
     @Override
     public void tick() {
-        SEARCH.tick();
 
     }
 
@@ -169,26 +156,21 @@ public class StatScreen extends BaseScreen implements INamedScreen {
 
     public List<Stat> getAllStats() {
 
-        if (true) {
+        var stats = Load.Unit(ClientOnly.getPlayer()).getUnit().getStats().stats.values().stream().filter(x -> x.GetStat().show_in_gui).map(x -> x.GetStat()).collect(Collectors.toList());
 
-            var stats = Load.Unit(ClientOnly.getPlayer()).getUnit().getStats().stats.values().stream().filter(x -> x.GetStat().show_in_gui).map(x -> x.GetStat()).collect(Collectors.toList());
-
-            var ungrouped = stats.stream().filter(x -> !x.gui_group.isValid()).collect(Collectors.toList());
-            List<Stat> grouped = new ArrayList<>();
-            for (StatGuiGroup group : StatGuiGroup.values()) {
-                if (group.isValid()) {
-                    stats.stream().filter(x -> x.gui_group == group).findFirst().ifPresent(x -> grouped.add(x));
-                }
+        var ungrouped = stats.stream().filter(x -> !x.gui_group.isValid()).collect(Collectors.toList());
+        List<Stat> grouped = new ArrayList<>();
+        for (StatGuiGroup group : StatGuiGroup.values()) {
+            if (group.isValid()) {
+                stats.stream().filter(x -> x.gui_group == group).findFirst().ifPresent(x -> grouped.add(x));
             }
-
-            List<Stat> all = new ArrayList<>();
-            all.addAll(grouped);
-
-            all.addAll(ungrouped);
-            return all;
         }
 
-        return Arrays.asList(new ElementalResist(Elements.Physical), DodgeRating.getInstance(), Armor.getInstance(), Health.getInstance(), Mana.getInstance());
+        List<Stat> all = new ArrayList<>();
+        all.addAll(grouped);
+
+        all.addAll(ungrouped);
+        return all;
     }
 
     @Override

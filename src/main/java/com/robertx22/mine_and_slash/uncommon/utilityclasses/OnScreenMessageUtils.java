@@ -39,12 +39,4 @@ public class OnScreenMessageUtils {
         p.connection.send(new ClientboundSetActionBarTextPacket(title));
     }
 
-    /*
-    public static void sendMessage(ServerPlayer p, MutableComponent title, ClientboundSetTitlesPacket.Type act) {
-        p.connection.send(new ClientboundSetTitlesPacket(act, title
-                , 5, 15, 8));
-    }
-    
-     */
-
 }

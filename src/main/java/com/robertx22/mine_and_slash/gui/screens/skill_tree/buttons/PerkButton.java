@@ -23,9 +23,10 @@ import com.robertx22.library_of_exile.utils.GuiUtils;
 import com.robertx22.library_of_exile.utils.TextUTIL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.time.StopWatch;
@@ -33,13 +34,13 @@ import org.joml.Matrix4f;
 
 import java.util.List;
 
-public class PerkButton extends ImageButton {
+public class PerkButton extends OldImageButton {
 
     public static int SPACING = 26;
     public static int BIGGEST = 33;
 
-    static ResourceLocation ID = new ResourceLocation(SlashRef.MODID, "textures/gui/skill_tree/perk_buttons.png");
-    public static ResourceLocation LOCKED_TEX = new ResourceLocation(SlashRef.MODID, "textures/gui/locked.png");
+    static ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skill_tree/perk_buttons.png");
+    public static ResourceLocation LOCKED_TEX = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/locked.png");
 
     public Perk perk;
     public PointData point;
@@ -100,7 +101,7 @@ public class PerkButton extends ImageButton {
 
             Screen screen = Minecraft.getInstance().screen;
             if (screen != null) {
-                screen.setTooltipForNextRenderPass(this.getTooltip(), this.createTooltipPositioner(), true);
+                screen.setTooltipForNextRenderPass(this.getTooltip(), DefaultTooltipPositioner.INSTANCE, true);
             }
             //GuiUtils.renderTooltip(gui, tooltip, mouseX, mouseY);
         } else {
@@ -122,9 +123,6 @@ public class PerkButton extends ImageButton {
         if (this.active && this.visible) {
             boolean bl = this.clicked(mouseX, mouseY);
             if (bl) {
-//                ExileLog.get().log(this.getX() + "_" + getY() + " : " + perk.GUID());
-
-
                 this.playDownSound(Minecraft.getInstance()
                         .getSoundManager());
 
@@ -198,10 +196,6 @@ public class PerkButton extends ImageButton {
                 }
             } else if (perk.stats.stream()
                     .anyMatch(item -> item.getStat().locName().getString().toLowerCase().contains(search.toLowerCase())) || perk.locName().getString().toLowerCase().contains(search.toLowerCase())){
-                /*boolean containsSearchStat = perk.stats.stream()
-                        .anyMatch(item -> item.getStat().locName().getString().toLowerCase().contains(search.toLowerCase()));
-
-                boolean containsName = perk.locName().getString().toLowerCase().contains(search.toLowerCase());*/
                 opacity = 1F;
             } else if (search.equals(Gui.TALENT_SCREEN_SEARCH_KEYWORD_GAME_CHANGER.locName().getString())) {
                 if (perk.getType().equals(Perk.PerkType.MAJOR)){
@@ -219,11 +213,7 @@ public class PerkButton extends ImageButton {
 
         var type = perk.type;
 
-        //gui.blit(ID, xPos(0, posMulti), yPos(0, posMulti), perk.getType().getXOffset(), status.getYOffset(), this.width, this.height);
-
         int offcolor = (int) ((perk.getType().size - 20) / 2F);
-
-        //gui.setColor(1.0F, 1.0F, 1.0F, opacity);
 
         HashMultimap<ResourceLocation, BufferInfo> container = screen.vertexContainer.map;
 

@@ -7,8 +7,9 @@ import com.robertx22.mine_and_slash.uncommon.localization.Words;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -17,10 +18,11 @@ import net.minecraft.world.item.Item;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PrimaryMatInfoButton extends ImageButton {
+public class PrimaryMatInfoButton extends OldImageButton {
 
     public static int XS = 18;
     public static int YS = 17;
+    private static final WidgetSprites SPRITES = new WidgetSprites(SlashRef.guiId("primary_info"), SlashRef.guiId("primary_info"));
 
     Minecraft mc = Minecraft.getInstance();
 
@@ -41,21 +43,15 @@ public class PrimaryMatInfoButton extends ImageButton {
     InfoData info;
 
     public PrimaryMatInfoButton(InfoData info, int xPos, int yPos) {
-        super(xPos, yPos, XS, YS, 0, 0, YS, SlashRef.guiId(""), (button) -> {
+        super(xPos, yPos, XS, YS, SPRITES, (button) -> {
 
-        });
+        }, Component.empty());
         this.info = info;
     }
 
     @Override
-    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
-        setModTooltip();
-        super.render(gui, mouseX, mouseY, delta);
-    }
-
-    @Override
     public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
-
+        setModTooltip();
 
         ResourceLocation tex = SlashRef.guiId("primary_info");
         gui.setColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -95,3 +91,4 @@ public class PrimaryMatInfoButton extends ImageButton {
     }
 
 }
+

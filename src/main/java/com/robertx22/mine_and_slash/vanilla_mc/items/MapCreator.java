@@ -27,7 +27,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.robertx22.library_of_exile.tooltip.ExileTooltipUtils.splitLongText;
@@ -65,9 +64,7 @@ public class MapCreator extends AutoItem implements IShapedRecipe {
         }
         return InteractionResultHolder.pass(p.getItemInHand(pUsedHand));
     }
-
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> list, TooltipFlag pIsAdvanced) {
+    public void appendHoverText(ItemStack pStack, Item.TooltipContext pContext, List<Component> list, TooltipFlag pIsAdvanced) {
         ExileTooltips tip = new ExileTooltips();
         tip.accept(new RequirementBlock(ServerContainer.get().MIN_LEVEL_MAP_DROPS.get()));
         tip.accept(new AdditionalBlock(splitLongText(Itemtips.MAP_CREATOR_ITEM.locName().withStyle(ChatFormatting.YELLOW))));
@@ -97,3 +94,4 @@ public class MapCreator extends AutoItem implements IShapedRecipe {
         return "map_creator";
     }
 }
+

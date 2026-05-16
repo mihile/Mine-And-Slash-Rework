@@ -48,7 +48,7 @@ public class ProfessionToolData implements ITooltip {
 
     public List<ExactStatData> GetAllStats() {
         List<ExactStatData> list = new ArrayList<>();
-        affixes.stream().forEach(x -> {
+        affixes.forEach(x -> {
             try {
                 ExileDB.Affixes().get(x.id).getStats().stream().map(e -> e.ToExactStat(x.p, lvl)).forEach(t -> list.add(t));
             } catch (Exception e) {
@@ -135,13 +135,6 @@ public class ProfessionToolData implements ITooltip {
     @Override
     public void BuildTooltip(TooltipContext ctx) {
 
-        /*while (ctx.tooltip.get(0).getString().equals(ctx.stack.getHoverName().getString()) || ctx.tooltip.get(0).getString().isBlank()){
-            ctx.tooltip.remove(0);
-        }
-
-        while (ctx.tooltip.get(ctx.tooltip.size() - 1).getString().isBlank()){
-            ctx.tooltip.remove(ctx.tooltip.size() - 1);
-        }*/
         if (Screen.hasControlDown()) {
             return;
         }

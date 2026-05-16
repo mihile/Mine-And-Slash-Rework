@@ -41,7 +41,7 @@ public class CraftingExtension implements ICraftingCategoryExtension {
     @Nullable
     @Override
     public ResourceLocation getRegistryName() {
-        return new ResourceLocation(recipe.result);
+        return ResourceLocation.parse(recipe.result);
     }
 
     @Override

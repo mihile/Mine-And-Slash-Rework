@@ -16,13 +16,7 @@ public class CurrencyLeagueFilter extends GroupFilterEntry {
     @Override
     public boolean isValid(BestiaryEntry e) {
         var ext = ExtendedOrb.from(e.obj);
-
-        if (ext != null) {
-            if (ext.drop_req.hasLeague() && !ext.drop_req.getLeague().GUID().equals(league.GUID())) {
-                return false;
-            }
-        }
-        return true;
+        return ext == null || !ext.drop_req.hasLeague() || ext.drop_req.getLeague().GUID().equals(league.GUID());
     }
 
     @Override

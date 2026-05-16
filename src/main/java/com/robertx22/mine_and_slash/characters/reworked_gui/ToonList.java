@@ -17,13 +17,11 @@ public class ToonList extends ObjectSelectionList<ToonEntry> {
     ToonScreen screen;
 
     public ToonList(ToonScreen screen, Minecraft mc, int pWidth, int pHeight, int pY0, int pY1, int pItemHeight) {
-        super(mc, pWidth, pHeight, 48, screen.height - 64, 36);
+        super(mc, pWidth, pHeight, 36, 48);
         this.screen = screen;
 
 
         reloadAllEntries();
-
-        this.setRenderBackground(false);
     }
 
     private List<ToonData> all = new ArrayList<>();
@@ -41,7 +39,6 @@ public class ToonList extends ObjectSelectionList<ToonEntry> {
     }
 
 
-    @Override
     protected void renderBackground(GuiGraphics pGuiGraphics) {
         pGuiGraphics.fillGradient(0, 0, this.width, this.height, -1072689136, -804253680);
     }

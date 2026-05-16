@@ -2,153 +2,90 @@ package com.robertx22.mine_and_slash.a_libraries.dmg_number_particle;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
-import net.minecraft.ChatFormatting;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.robertx22.mine_and_slash.a_libraries.neat.NeatRenderType;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
 
 import java.util.HashSet;
 import java.util.Set;
 
-
 public class DamageParticleRenderer {
-
-    // todo might need to do without dmg particles for a while.
 
     public static Set<DamageParticle> PARTICLES = new HashSet<>();
 
-    public static void renderParticles(GuiGraphics gui, Camera camera) {
+    public static void renderParticles(PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, Camera camera) {
         for (DamageParticle p : PARTICLES) {
-            renderParticle(gui, p, camera);
-            p.tick();
+            renderParticle(poseStack, bufferSource, p, camera);
         }
-
-        PARTICLES.removeIf(x -> x.age > 50);
     }
 
-    private static void renderParticle(GuiGraphics gui, DamageParticle particle, Camera camera) {
+    private static void renderParticle(PoseStack matrix, MultiBufferSource.BufferSource bufferSource, DamageParticle particle, Camera camera) {
         float scaleToGui = 0.025f;
 
         if (particle.packet.iscrit) {
-            scaleToGui *= 2;
+            scaleToGui *= 1.5f; // 크리티컬 시 크기 증가
         }
-
-
-        if (true) {
-            //   renderNameTag(gui, camera, particle.renderString, particle, gui.pose(), 10000);
-            return;
-        }
-
-
-        var matrix = gui.pose();
 
         Minecraft client = Minecraft.getInstance();
-        float tickDelta = client.getFrameTime();
+        float tickDelta = client.getTimer().getGameTimeDeltaPartialTick(false);
 
-
+        // 보간된 절대 좌표 계산
         double x = Mth.lerp((double) tickDelta, particle.xPrev, particle.x);
         double y = Mth.lerp((double) tickDelta, particle.yPrev, particle.y);
         double z = Mth.lerp((double) tickDelta, particle.zPrev, particle.z);
 
-
+        // 카메라 좌표
         Vec3 camPos = camera.getPosition();
         double camX = camPos.x;
         double camY = camPos.y;
         double camZ = camPos.z;
 
         matrix.pushPose();
-
-        // matrix.translate(x, y, z);
+        
+        // 카메라를 기준으로 상대 좌표로 이동 (Identity matrix 가정)
         matrix.translate(x - camX, y - camY, z - camZ);
-
+        
+        // 카메라를 항상 바라보게 회전
         matrix.mulPose(client.getEntityRenderDispatcher().cameraOrientation());
-        matrix.mulPose(Axis.YP.rotationDegrees(180.0F));
+        
+        // 중요: Y축 반전 및 크기 조절 (일반 네임태그 렌더링 방식)
+        matrix.scale(-scaleToGui, -scaleToGui, scaleToGui);
 
-        matrix.scale(scaleToGui, scaleToGui, scaleToGui);
+        Font font = client.font;
+        String text = particle.renderString;
+        float f2 = (float) (-font.width(text) / 2);
 
-
-        //   matrix.mulPose(camera.rotation());
-        //matrix.mulPose(Axis.XP.rotationDegrees(camera.getXRot()));
-
-
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
-
-        drawDamageNumber(gui, particle.renderString, 0, 0, 10);
-
-        matrix.popPose();
-    }
-
-    public static void renderNameTag(Camera camera, String name, DamageParticle particle, PoseStack matrix, float tickDelta, MultiBufferSource pBuffer) {
-        Minecraft mc = Minecraft.getInstance();
-
-
-        double x = Mth.lerp((double) tickDelta, particle.xPrev, particle.x);
-        double y = Mth.lerp((double) tickDelta, particle.yPrev, particle.y);
-        double z = Mth.lerp((double) tickDelta, particle.zPrev, particle.z);
-
-
-        Vec3 camPos = camera.getPosition();
-        double camX = camPos.x;
-        double camY = camPos.y;
-        double camZ = camPos.z;
-
-
-        int i = "deadmau5".equals(name) ? -10 : 0;
-        matrix.pushPose();
-
-        matrix.translate(x, y, z);
-        //   matrix.translate(x - camX, y - camY, z - camZ);
-
-        //matrix.translate(0.0F, y, 0.0F);
-
-        matrix.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
-        matrix.scale(-0.025F, -0.025F, 0.025F);
         Matrix4f matrix4f = matrix.last().pose();
-        float f1 = Minecraft.getInstance().options.getBackgroundOpacity(0.25F);
-        int j = (int) (f1 * 255.0F) << 24;
-        Font font = Minecraft.getInstance().font;
-        float f2 = (float) (-font.width(name) / 2);
+        int color = particle.packet.format.getColor() != null ? particle.packet.format.getColor() : 0xFFFFFF;
 
-        // gui.drawString(mc.font, name, 0, 0, ChatFormatting.RED.getColor());
+        float bgOpacity = client.options.getBackgroundOpacity(0.25F);
+        int bgColor = (int)(bgOpacity * 255.0F) << 24;
 
-
-        font.drawInBatch(name, f2, (float) i, 553648127, false, matrix4f, pBuffer, Font.DisplayMode.NORMAL, j, 10000);
-
+        MultiBufferSource textBuffers = new HudTextBufferSource(bufferSource);
+        RenderSystem.enableDepthTest();
+        RenderSystem.depthFunc(GL11.GL_ALWAYS);
+        try {
+            font.drawInBatch(text, f2, 0, color, false, matrix4f, textBuffers, Font.DisplayMode.SEE_THROUGH, bgColor, 15728880);
+            bufferSource.endBatch();
+        } finally {
+            RenderSystem.depthFunc(GL11.GL_LEQUAL);
+        }
 
         matrix.popPose();
-
     }
 
-    public static void drawDamageNumber(GuiGraphics gui, String s, double x, double y,
-                                        float width) {
-
-        Minecraft minecraft = Minecraft.getInstance();
-        int sw = minecraft.font.width(s);
-
-
-        //gui.drawString(minecraft.font, s, (int) (x + (width / 2) - sw), (int) y + 5, ChatFormatting.RED.getColor());
-        gui.drawString(minecraft.font, s, 0, 0, ChatFormatting.RED.getColor());
+    private record HudTextBufferSource(MultiBufferSource delegate) implements MultiBufferSource {
+        @Override
+        public VertexConsumer getBuffer(RenderType renderType) {
+            return delegate.getBuffer(NeatRenderType.getHudTextType(renderType));
+        }
     }
-
-
-    /*
-    public static void drawDamageNumber(GuiGraphics gui,PoseStack matrix, String s, double x, double y,
-                                        float width) {
-
-           Minecraft minecraft = Minecraft.getInstance();
-        int sw = minecraft.tex.getWidth(s);
-         minecraft.font.drawInBatch(matrix, s, (int) (x + (width / 2) - sw), (int) y + 5, ChatFormatting.WHITE.getColor());
-    }
-
-
-
-     */
-
 }

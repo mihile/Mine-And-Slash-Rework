@@ -32,7 +32,7 @@ public class AllocateClassPointPacket extends MyPacket<AllocateClassPointPacket>
 
     @Override
     public ResourceLocation getIdentifier() {
-        return new ResourceLocation(SlashRef.MODID, "spell_alloc");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "spell_alloc");
     }
 
     @Override

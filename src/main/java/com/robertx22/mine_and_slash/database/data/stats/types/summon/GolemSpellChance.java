@@ -78,7 +78,7 @@ public class GolemSpellChance extends Stat {
                 if (dmg.petEntity instanceof GolemSummon sum) {
                     if (!Load.Unit(sum).getCooldowns().isOnCooldown("golem_spell")) {
                         Load.Unit(sum).getCooldowns().setOnCooldown("golem_spell", 20);
-                        int chance = (int) effect.sourceData.getUnit().getCalculatedStat(GolemSpellChance.getInstance()).getValue();
+                        int chance = (int) effect.sourceData.getUnit().getCalculatedStat(GolemSpellChance.getInstance()).get();
 
                         if (RandomUtils.roll(chance)) {
                             var spell = ExileDB.Spells().get(sum.aoeSpell());

@@ -98,7 +98,6 @@ public class SpellPassives implements ExileRegistryInit {
         PerkBuilder.passive(CAST_SPEED_SORC, 8, new OptScaleExactStat(3, SpellChangeStats.CAST_SPEED.get(), ModType.FLAT));
         PerkBuilder.passive(ELE_RES, 8, new OptScaleExactStat(4, new ElementalResist(Elements.Elemental)));
         PerkBuilder.passive(GOLEM_CHANCE, 8, new OptScaleExactStat(3, GolemSpellChance.getInstance(), ModType.FLAT));
-//        PerkBuilder.passive(MISSILE_BARRAGE, 8, new OptScaleExactStat(5, AscensionStats.BARRAGE_SELF_BUFF_ON_SPELL_CRIT.get(), ModType.FLAT));
 
         // Warlock
         PerkBuilder.passive(POISON_CHANCE, 8, new OptScaleExactStat(4, new AilmentChance(Ailments.POISON)));

@@ -11,7 +11,7 @@ import com.robertx22.mine_and_slash.uncommon.datasaving.Load;
 import com.robertx22.mine_and_slash.uncommon.utilityclasses.NumberUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
@@ -20,7 +20,7 @@ import net.minecraft.network.chat.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CharacterStatsButtons extends ImageButton {
+public class CharacterStatsButtons extends OldImageButton {
 
     public static int BUTTON_SIZE_X = 16;
     public static int BUTTON_SIZE_Y = 16;
@@ -33,22 +33,20 @@ public class CharacterStatsButtons extends ImageButton {
         });
         this.type = type;
     }
-
-    @Override
     protected ClientTooltipPositioner createTooltipPositioner() {
         return DefaultTooltipPositioner.INSTANCE;
     }
 
     @Override
-    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
-        setModTooltip();
-        super.render(gui, mouseX, mouseY, delta);
-    }
-
-    @Override
     public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
         gui.setColor(1.0F, 1.0F, 1.0F, 1.0F);
-        gui.blit(type.getIcon(), getX(), getY(), BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X);
+        gui.blit(type.getIcon(), getX(), getY(), 0, 0, BUTTON_SIZE_X, BUTTON_SIZE_Y, BUTTON_SIZE_X, BUTTON_SIZE_Y);
+
+        if (this.isHovered()) {
+            setModTooltip();
+        } else {
+            this.setTooltip(null);
+        }
 
     }
 
@@ -79,12 +77,10 @@ public class CharacterStatsButtons extends ImageButton {
         StatData data = unitdata.getUnit().getCalculatedStat(stat);
 
         String str = "";
-        String v1 = NumberUtils.formatForTooltip(data.getValue());
+        String v1 = NumberUtils.formatForTooltip(data.get());
 
-        if (stat instanceof IUsableStat) {
-            IUsableStat usable = (IUsableStat) stat;
-
-            String value = NumberUtils.format(usable.getUsableValue(unitdata.getUnit(), (int) data.getValue(), unitdata.getLevel()) * 100);
+        if (stat instanceof IUsableStat usable) {
+            String value = NumberUtils.format(usable.getUsableValue(unitdata.getUnit(), (int) data.get(), unitdata.getLevel()) * 100);
 
             str += value + "%";
 
@@ -109,12 +105,10 @@ public class CharacterStatsButtons extends ImageButton {
         StatData data = unitdata.getUnit().getCalculatedStat(stat);
 
         String str = "";
-        String v1 = NumberUtils.formatForTooltip(data.getValue());
+        String v1 = NumberUtils.formatForTooltip(data.get());
 
-        if (stat instanceof IUsableStat) {
-            IUsableStat usable = (IUsableStat) stat;
-
-            String value = NumberUtils.format(usable.getUsableValue(unitdata.getUnit(), (int) data.getValue(), unitdata.getLevel()) * 100);
+        if (stat instanceof IUsableStat usable) {
+            String value = NumberUtils.format(usable.getUsableValue(unitdata.getUnit(), (int) data.get(), unitdata.getLevel()) * 100);
 
             str += value;
         } else {
@@ -125,3 +119,6 @@ public class CharacterStatsButtons extends ImageButton {
     }
 
 }
+
+
+

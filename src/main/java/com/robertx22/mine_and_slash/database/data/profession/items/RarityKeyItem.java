@@ -10,12 +10,11 @@ import com.robertx22.mine_and_slash.vanilla_mc.items.misc.AutoItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,9 +39,7 @@ public class RarityKeyItem extends AutoItem implements IShapedRecipe {
     public String GUID() {
         return "";
     }
-
-    @Override
-    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> tip, @NotNull TooltipFlag pIsAdvanced) {
+    public void appendHoverText(@NotNull ItemStack pStack, Item.TooltipContext pContext, List<Component> tip, @NotNull TooltipFlag pIsAdvanced) {
         tip.addAll(
                 new ExileTooltips()
                         .accept(new UsageBlock(Collections.singletonList(Itemtips.LOOT_CHEST_KEY_DESC.locName().withStyle(ChatFormatting.AQUA))))
@@ -61,3 +58,4 @@ public class RarityKeyItem extends AutoItem implements IShapedRecipe {
     }
 
 }
+

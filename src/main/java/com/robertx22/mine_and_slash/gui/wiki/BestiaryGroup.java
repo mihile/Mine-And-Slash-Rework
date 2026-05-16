@@ -179,7 +179,7 @@ public abstract class BestiaryGroup<T> {
     }
 
     public final ResourceLocation getTextureLoc() {
-        return new ResourceLocation(SlashRef.MODID, "textures/gui/bestiary/group_icons/" + texName() + ".png");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/bestiary/group_icons/" + texName() + ".png");
     }
 
     public abstract List<BestiaryEntry> getAll(int lvl);

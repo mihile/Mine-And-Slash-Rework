@@ -76,7 +76,7 @@ public enum Itemtips implements IAutoLocName {
     MAP_CREATOR_ITEM("Creates a Fresh Common Adventure Map"),
     UBER_BOSS_MAP_TIP("Right click to Generate Map Item\nLeads to a Boss Fight"),
     UBER_BOSS_FRAG_TIP("Combine with More Fragments in the Crafting Table\nCreates a Map That contains an Uber Boss"),
-    RUNE_ITEM_USAGE("Use on Gear with sockets to Insert\nIf same rune is already socketed, rerolls it\n\nAll Runewords are shown in the Wiki.\nUse to view craftable Runewords."),
+    RUNE_ITEM_USAGE("Use on Gear with empty sockets to insert it.\n\nAll Runewords are shown in the Wiki.\nUse to view craftable Runewords."),
     GEM_ITEM_USAGE("Use on Gear with sockets to Insert.\nCan also be Crafted"),
     STONE_REPAIRE_DURABILITY("Repairs %1$s durability."),
     NOT_A_RANDOM_MNS_DROP_CHECK_MODPACK("No normal Drop-rate, this item might be obtainable in other ways. Check your Modpack's guide."),

@@ -15,7 +15,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
 public class ProphecyScreen extends BaseScreen implements INamedScreen {
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(SlashRef.MODID, "textures/gui/prophecy/prophecy.png");
+    private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/prophecy/prophecy.png");
 
     static int sizeX = 177;
     static int sizeY = 180;
@@ -29,7 +29,7 @@ public class ProphecyScreen extends BaseScreen implements INamedScreen {
 
     @Override
     public ResourceLocation iconLocation() {
-        return new ResourceLocation(SlashRef.MODID, "textures/gui/main_hub/icons/prophecy.png");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/prophecy.png");
     }
 
     @Override
@@ -66,19 +66,6 @@ public class ProphecyScreen extends BaseScreen implements INamedScreen {
                 }
             }
 
-            i = 0;
-/*
-            if (data.numMobAffixesCanAdd > 0) {
-                for (String id : data.affixOffers) {
-                    MapAffix affix = ExileDB.MapAffixes().get(id);
-                    int x = this.guiLeft + 9 + (i * SLOT_SPACING);
-                    int y = this.guiTop + 107;
-                    this.addRenderableWidget(new ProphecyAffixButton(affix, ProphecyAffixButton.Info.IS_OFFER, true, x, y));
-                    i++;
-                }
-            }
-
- */
             i = 0;
             for (String id : data.affixesTaken) {
                 MapAffix affix = ExileDB.MapAffixes().get(id);

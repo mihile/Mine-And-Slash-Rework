@@ -1,7 +1,7 @@
 package com.robertx22.mine_and_slash.mmorpg;
 
 import com.robertx22.library_of_exile.main.Ref;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 
 
 public class MnsAddons {

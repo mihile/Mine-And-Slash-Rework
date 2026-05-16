@@ -49,7 +49,7 @@ public class ListStatSourcesCommand {
                         if (!ctx.gear_slot.isEmpty()) {
                             s += ctx.gear_slot + ". ";
                         }
-                        s += stat.getValue() + " " + stat.getType().name() + "";
+                        s += stat.get() + " " + stat.getType().name() + "";
 
                         en.sendSystemMessage(Component.literal(s).withStyle(ChatFormatting.YELLOW));
                     }

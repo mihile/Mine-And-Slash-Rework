@@ -53,9 +53,6 @@ public class MapItemData implements ICommonDataItem<GearRarity> {
 
     private static MapItemData empty;
 
-    // todo this is in dungeon mod
-    // public String uber = "";
-
     public int lvl = 1;
     public int tier = 0;
     public String rar = IRarity.COMMON_ID;
@@ -154,12 +151,12 @@ public class MapItemData implements ICommonDataItem<GearRarity> {
 
     public List<Component> getTooltip(ExileStack stack) {
 
-        int lvl = Load.Unit(ClientOnly.getPlayer()).getLevel();
+        int displayLvl = this.lvl;
 
         int min = ServerContainer.get().MIN_LEVEL_MAP_DROPS.get();
 
-        if (lvl < min) {
-            lvl = min;
+        if (displayLvl < min) {
+            displayLvl = min;
         }
 
         MapItemData thisMapItemData = this;
@@ -167,7 +164,7 @@ public class MapItemData implements ICommonDataItem<GearRarity> {
         var tip = new ExileTooltips()
                 .accept(new NameBlock(Collections.singletonList(Component.translatable("item.mmorpg.map"))))
                 .accept(new RequirementBlock()
-                        .setLevelRequirement(lvl)
+                        .setLevelRequirement(displayLvl)
                         .setStatRequirement(getStatReq()))
                 .accept(new RarityBlock(this.getRarity()))
                 .accept(new StatBlock() {

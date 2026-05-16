@@ -99,18 +99,5 @@ public abstract class LivingEntityMixin implements LivingEntityAccesor {
         }
     }
 
-/*
-    @ModifyVariable(method = "actuallyHurt", at = @At(value = "HEAD", ordinal = 0), argsOnly = false, ordinal = 0)
-    public float reduceHealPerLevel(float amount, DamageSource source) {
-        if (source instanceof DamageSourceDuck du) {
-            if (du.hasMnsDamageOverride()) {
-                return du.getMnsDamage();
-            }
-        }
-        return amount;
-
-    }
-
- */
 
 }

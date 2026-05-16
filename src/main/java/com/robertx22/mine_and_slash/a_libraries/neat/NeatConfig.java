@@ -52,6 +52,17 @@ public class NeatConfig {
 
         boolean enableDebugInfo();
 
+        int backgroundAlpha();
+
+        int barAlpha();
+
+        double debuffIconYOffset();
+        double debuffIconXOffset();
+
+        int wikiListY0();
+        int wikiListY1Offset();
+        int wikiListItemHeight();
+
         List<String> blacklist();
     }
 

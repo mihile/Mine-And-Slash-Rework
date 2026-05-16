@@ -15,8 +15,8 @@ import net.minecraft.world.entity.player.Player;
 
 public class RPGGuiOverlay {
 
-    static ResourceLocation BASETEX = new ResourceLocation(SlashRef.MODID, "textures/gui/overlay/base.png");
-    static ResourceLocation MANA_RESERVE = new ResourceLocation(SlashRef.MODID, "textures/gui/overlay/mana_reserve.png");
+    static ResourceLocation BASETEX = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/overlay/base.png");
+    static ResourceLocation MANA_RESERVE = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/overlay/mana_reserve.png");
 
     public RPGGuiOverlay() {
         super();
@@ -47,7 +47,7 @@ public class RPGGuiOverlay {
             if (mc.player == null) {
                 return;
             }
-            if (mc.options.renderDebug || mc.player.isSpectator()) {
+            if (mc.getDebugOverlay().showDebugScreen() || mc.player.isSpectator()) {
                 return;
             }
 

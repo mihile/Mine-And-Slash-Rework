@@ -51,7 +51,7 @@ public class PerkBuilder {
         perk.type = Perk.PerkType.STAT;
         perk.id = id;
         perk.max_lvls = maxlvl;
-        perk.icon = new ResourceLocation(SlashRef.MODID, "textures/gui/spells/passives/" + id + ".png").toString();
+        perk.icon = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/spells/passives/" + id + ".png").toString();
 
         perk.addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
         return perk;
@@ -64,7 +64,7 @@ public class PerkBuilder {
         perk.stats = list;
         perk.type = Perk.PerkType.STAT;
         perk.id = id;
-        perk.icon = new ResourceLocation(SlashRef.MODID, "textures/gui/asc_classes/perk/" + id + ".png").toString();
+        perk.icon = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/asc_classes/perk/" + id + ".png").toString();
 
         perk.addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
         return perk;
@@ -96,7 +96,7 @@ public class PerkBuilder {
         perk.locname = locname;
         perk.type = Perk.PerkType.MAJOR;
         perk.id = id;
-        perk.icon = new ResourceLocation(SlashRef.MODID, "textures/gui/stat_icons/game_changers/" + id + ".png")
+        perk.icon = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/stat_icons/game_changers/" + id + ".png")
                 .toString();
         perk.addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
         return perk;
@@ -111,15 +111,10 @@ public class PerkBuilder {
         perk.type = Perk.PerkType.SPECIAL;
         perk.locname = locname;
 
-        if (true) {
-            perk.icon = list.get(0)
-                    .getStat()
-                    .getIconLocation()
-                    .toString();
-        } else {
-            perk.icon = new ResourceLocation(SlashRef.MODID, "textures/gui/talent_icons/" + perk.id + ".png")
-                    .toString();
-        }
+        perk.icon = list.get(0)
+                .getStat()
+                .getIconLocation()
+                .toString();
         return perk;
     }
 
@@ -134,15 +129,10 @@ public class PerkBuilder {
         perk.type = Perk.PerkType.SPECIAL;
         perk.locname = JewelSocketStat.getInstance().locNameForLangFile();
 
-        if (true) {
-            perk.icon = list.get(0)
-                    .getStat()
-                    .getIconLocation()
-                    .toString();
-        } else {
-            perk.icon = new ResourceLocation(SlashRef.MODID, "textures/gui/talent_icons/" + perk.id + ".png")
-                    .toString();
-        }
+        perk.icon = list.get(0)
+                .getStat()
+                .getIconLocation()
+                .toString();
         return perk;
     }
 

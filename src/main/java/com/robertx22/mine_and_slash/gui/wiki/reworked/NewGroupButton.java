@@ -7,7 +7,7 @@ import com.robertx22.mine_and_slash.gui.wiki.BestiaryGroup;
 import com.robertx22.mine_and_slash.mmorpg.SlashRef;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -15,10 +15,10 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewGroupButton extends ImageButton {
+public class NewGroupButton extends OldImageButton {
     public static int SIZE = 20;
 
-    static ResourceLocation GROUP_BUTTON_TEXTURE = new ResourceLocation(SlashRef.MODID, "textures/gui/bestiary/bestiary_group_buttons.png");
+    static ResourceLocation GROUP_BUTTON_TEXTURE = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/bestiary/bestiary_group_buttons.png");
 
 
     BestiaryGroup group;
@@ -41,9 +41,9 @@ public class NewGroupButton extends ImageButton {
 
 
     @Override
-    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
+    public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
         setModTooltip();
-        super.render(gui, mouseX, mouseY, delta);
+        super.renderWidget(gui, mouseX, mouseY, delta);
         RenderUtils.render16Icon(gui, group.getTextureLoc(), this.getX() + 2, this.getY() + 2);
     }
 

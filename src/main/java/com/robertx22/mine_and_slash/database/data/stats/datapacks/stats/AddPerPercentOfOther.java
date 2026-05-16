@@ -69,10 +69,10 @@ public class AddPerPercentOfOther extends BaseDatapackStat implements AddToAfter
         StatData adder = copy.getOrCreateCalculatedStat(adder_stat);
         StatData thisstat = copy.getCalculatedStat(this.GUID());
 
-        float multi = thisstat.getValue() / 100F;
-        float val = adder.getValue() * multi;
+        float multi = thisstat.get() / 100F;
+        float val = adder.get() * multi;
 
-        add_to.setValue(add_to.getValue() + val);
+        add_to.setValue(add_to.get() + val);
     }
 
     @Override

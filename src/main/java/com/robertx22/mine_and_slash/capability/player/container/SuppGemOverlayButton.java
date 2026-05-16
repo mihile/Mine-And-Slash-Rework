@@ -6,18 +6,20 @@ import com.robertx22.mine_and_slash.uncommon.localization.Words;
 import com.robertx22.library_of_exile.utils.TextUTIL;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SuppGemOverlayButton extends ImageButton {
+public class SuppGemOverlayButton extends OldImageButton {
 
     public static int BUTTON_SIZE_X = 20;
     public static int BUTTON_SIZE_Y = 19;
+    private static final WidgetSprites BLOCKED_SPRITES = new WidgetSprites(SlashRef.guiId("blocked_slot"), SlashRef.guiId("blocked_slot"));
 
 
     boolean can;
@@ -25,15 +27,13 @@ public class SuppGemOverlayButton extends ImageButton {
     MaxLinks links;
 
     public SuppGemOverlayButton(boolean can, MaxLinks links, int xPos, int yPos) {
-        super(xPos, yPos, BUTTON_SIZE_X, BUTTON_SIZE_Y, 0, 0, BUTTON_SIZE_Y, SlashRef.guiId("blocked_slot"), (button) -> {
-            //Minecraft.getInstance().setScreen(new InvGuiScreen(GuiInventoryGrids.ofSelectableSpells(ClientOnly.getPlayer(), slot)));
-        });
+        super(xPos, yPos, BUTTON_SIZE_X, BUTTON_SIZE_Y, BLOCKED_SPRITES, (button) -> {
+        }, Component.empty());
         this.can = can;
         this.links = links;
     }
 
-    @Override
-    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
+    private void updateTooltip() {
 
         List<Component> tooltip = new ArrayList<>();
         if (!can) {
@@ -54,8 +54,6 @@ public class SuppGemOverlayButton extends ImageButton {
             }
         }
         this.setTooltip(Tooltip.create(TextUTIL.mergeList(tooltip)));
-
-        super.render(gui, mouseX, mouseY, delta);
     }
 
 
@@ -68,8 +66,7 @@ public class SuppGemOverlayButton extends ImageButton {
 
     @Override
     public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
-
-        //  super.renderWidget(gui, mouseX, mouseY, delta);
+        updateTooltip();
 
         if (!can) {
             gui.setColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -79,3 +76,4 @@ public class SuppGemOverlayButton extends ImageButton {
 
 
 }
+

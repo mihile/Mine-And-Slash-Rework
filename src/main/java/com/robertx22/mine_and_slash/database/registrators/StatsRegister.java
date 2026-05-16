@@ -61,8 +61,6 @@ public class StatsRegister implements ExileRegistryInit {
     @Override
     public void registerAll() {
 
-        // SpecialStats.init();
-
         List<Stat> All = new ArrayList<>();
 
         List<Stat> generated = new ArrayList<Stat>() {

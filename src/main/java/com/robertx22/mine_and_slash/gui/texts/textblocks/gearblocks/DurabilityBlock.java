@@ -23,15 +23,14 @@ public class DurabilityBlock extends AbstractTextBlock {
 
     @Override
     public List<? extends Component> getAvailableComponents() {
-        if (ClientConfigs.getConfig().SHOW_DURABILITY.get()) {
-            if (stack.isDamageableItem()) {
-                return Collections.singletonList(Itemtips.Durability.locName().withStyle(ChatFormatting.GRAY)
-                        .append(stack.getMaxDamage() - stack.getDamageValue() + "/" + stack.getMaxDamage()));
-            } else {
-                return Collections.singletonList(Itemtips.Unbreakable.locName().withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
-            }
+        if (!ClientConfigs.getConfig().SHOW_DURABILITY.get()) {
+            return Collections.emptyList();
         }
-        return Collections.emptyList();
+        if (stack.isDamageableItem()) {
+            return Collections.singletonList(Itemtips.Durability.locName().withStyle(ChatFormatting.GRAY)
+                    .append(stack.getMaxDamage() - stack.getDamageValue() + "/" + stack.getMaxDamage()));
+        }
+        return Collections.singletonList(Itemtips.Unbreakable.locName().withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
     }
 
     @Override

@@ -25,7 +25,7 @@ public class MapCompletePacket extends MyPacket<MapCompletePacket> {
 
     @Override
     public ResourceLocation getIdentifier() {
-        return new ResourceLocation(SlashRef.MODID, "completemapsyncdata");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "completemapsyncdata");
     }
 
     @Override

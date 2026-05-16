@@ -33,10 +33,6 @@ public class DirtySync {
             sync.accept(p);
 
             onSynced(p);
-
-            if (p instanceof Player pl) {
-                //  pl.sendSystemMessage(Component.literal(id));
-            }
         }
     }
 

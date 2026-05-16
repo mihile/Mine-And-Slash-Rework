@@ -29,7 +29,7 @@ public class LockTogglePacket extends MyPacket<LockTogglePacket> {
 
     @Override
     public ResourceLocation getIdentifier() {
-        return new ResourceLocation(SlashRef.MODID, "locktoggle");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "locktoggle");
     }
 
     @Override
@@ -61,9 +61,7 @@ public class LockTogglePacket extends MyPacket<LockTogglePacket> {
             } else if (pbe.craftingState == Crafting_State.STOPPED && pbe.recipe_locked) {
                 pbe.recipe_locked = false;
                 pbe.last_recipe = null;
-                //pbe.show.clearContent();
                 if (pbe.ownerUUID != null && pbe.ownerUUID.compareTo(exilePacketContext.getPlayer().getUUID()) != 0) {
-                    // pbe.ownerUUID = null;
                 }
             } else if (pbe.craftingState == Crafting_State.ACTIVE && !pbe.recipe_locked) {
                 exilePacketContext.getPlayer().sendSystemMessage(Component.literal("Stop auto crafting before locking the recipe").withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
@@ -81,9 +79,6 @@ public class LockTogglePacket extends MyPacket<LockTogglePacket> {
                 }
                 pbe.recipe_locked = true;
                 pbe.last_recipe = recipe;
-                var showstack = recipe.toResultStackForJei();
-                showstack.setCount(1);
-                //pbe.show.setItem(0, showstack);
             } else {
                 exilePacketContext.getPlayer().sendSystemMessage(Component.literal("Unhandled Case(Report The Following):  " + pbe.recipe_locked + " + " + pbe.craftingState.name()).withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
             }

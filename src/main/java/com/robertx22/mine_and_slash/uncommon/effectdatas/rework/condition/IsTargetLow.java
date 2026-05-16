@@ -34,7 +34,7 @@ public class IsTargetLow extends StatCondition {
 
 
         float ms = endata.getResources().getMagicShield();
-        float msmax = endata.getUnit().magicShieldData().getValue();
+        float msmax = endata.getUnit().magicShieldData().get();
 
         float hp = HealthUtils.getCurrentHealth(en);
         float maxhp = HealthUtils.getMaxHealth(en);

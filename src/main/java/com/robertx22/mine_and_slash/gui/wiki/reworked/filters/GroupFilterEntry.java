@@ -2,7 +2,6 @@ package com.robertx22.mine_and_slash.gui.wiki.reworked.filters;
 
 import com.robertx22.mine_and_slash.gui.wiki.BestiaryEntry;
 import com.robertx22.mine_and_slash.uncommon.localization.Gui;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public abstract class GroupFilterEntry {
@@ -23,6 +22,6 @@ public abstract class GroupFilterEntry {
     public abstract boolean isValid(BestiaryEntry e);
 
     public abstract MutableComponent getName();
-    
+
 
 }

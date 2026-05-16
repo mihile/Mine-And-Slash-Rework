@@ -19,9 +19,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -59,9 +57,7 @@ public class TagForceSoulItem extends AutoItem implements IShapelessRecipe {
                 .requires(Items.IRON_INGOT, 1)
                 .requires(middle, 1);
     }
-
-    @Override
-    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+    public void appendHoverText(@NotNull ItemStack pStack, Item.TooltipContext pContext, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
 
         pTooltipComponents.addAll(
                 new ExileTooltips()
@@ -86,3 +82,4 @@ public class TagForceSoulItem extends AutoItem implements IShapelessRecipe {
         }
     }
 }
+

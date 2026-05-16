@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static java.util.Collections.EMPTY_LIST;
-
 
 public class AdditionalBlock extends AbstractTextBlock {
 
@@ -36,16 +34,16 @@ public class AdditionalBlock extends AbstractTextBlock {
 
     @Override
     public List<? extends Component> getAvailableComponents() {
-        if (ifShow != null && ifShow.get()) {
-            ArrayList<MutableComponent> components1 = new ArrayList<>();
-            for (Component component : components) {
-                components1.add(component.copy());
-            }
-            components1.add(ExileText.emptyLine().get());
-            return components1;
-        } else {
-            return EMPTY_LIST;
+        if (ifShow == null || !ifShow.get()) {
+            return List.of();
         }
+
+        ArrayList<MutableComponent> components1 = new ArrayList<>();
+        for (Component component : components) {
+            components1.add(component.copy());
+        }
+        components1.add(ExileText.emptyLine().get());
+        return components1;
     }
 
     @Override

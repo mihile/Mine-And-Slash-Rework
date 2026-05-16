@@ -16,7 +16,11 @@ public class MnsMapContents extends ExileKeyHolder<MapContent> {
         super(info);
     }
 
-    public ExileKey<MapContent, KeyInfo> PROPHECY = ExileKey.ofId(this, "prophecy", x -> MapContent.of(x.GUID(), 1000, SlashBlocks.PROPHECY_ALTAR.getRegistryObject().getKey().location().toString(), 3, 5));
+    public ExileKey<MapContent, KeyInfo> PROPHECY = ExileKey.ofId(this, "prophecy", x -> {
+        var c = MapContent.of(x.GUID(), 1000, "mmorpg:prophecy_altar", 3, 5);
+        c.always_spawn = false;
+        return c;
+    });
 
 
     @Override

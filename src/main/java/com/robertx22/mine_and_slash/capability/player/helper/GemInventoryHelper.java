@@ -44,19 +44,6 @@ public class GemInventoryHelper {
     }
 
 
-    /*
-    public List<SkillGemData> getAllSkillGems() {
-        List<SkillGemData> list = new ArrayList<>();
-        for (int i = 0; i < MAX_SKILL_GEMS; i++) {
-            list.add(this.getHotbarGem(i).getSkillData());
-        }
-        list.removeIf(x -> x == null || x.getSpell() == null);
-        return list;
-
-    }
-
-     */
-
     public void removeSupportGemsIfTooMany(Player p) {
         for (int i = 0; i < MAX_SKILL_GEMS; i++) {
             this.getHotbarGem(i).removeSupportGemsIfTooMany(p);
@@ -166,7 +153,7 @@ public class GemInventoryHelper {
     }
 
     public int getTotalSpirit(Player p) {
-        int num = (int) Load.Unit(p).getUnit().getCalculatedStat(AuraCapacity.getInstance()).getValue();
+        int num = (int) Load.Unit(p).getUnit().getCalculatedStat(AuraCapacity.getInstance()).get();
         if (num < 1) {
             num = (int) AuraCapacity.getInstance().base;
         }
@@ -204,11 +191,7 @@ public class GemInventoryHelper {
     private boolean hasDuplicates() {
         List<String> list = getAurasGems().stream().map(x -> x.id).collect(Collectors.toList());
         Set<String> set = new HashSet<String>(list);
-
-        if (set.size() < list.size()) {
-            return true;
-        }
-        return false;
+        return set.size() < list.size();
     }
 
     public List<StatContext> getAuraStats(LivingEntity en) {
@@ -219,6 +202,28 @@ public class GemInventoryHelper {
             if (data != null) {
                 AuraGem aura = data.getAura();
                 ctx.add(new SimpleStatCtx(StatContext.StatCtxType.AURA, aura.GetAllStats(Load.Unit(en), data)));
+            }
+        }
+
+        return ctx;
+    }
+
+    public List<StatContext> getSkillGemStats(LivingEntity en) {
+        List<StatContext> ctx = new ArrayList<>();
+
+        for (int i = 0; i < MAX_SKILL_GEMS; i++) {
+            int invindex = i * (SUPPORT_GEMS_PER_SKILL + 1);
+            ItemStack stack = inv.getItem(invindex);
+            if (!stack.isEmpty()) {
+                SkillGemData data = StackSaving.SKILL_GEM.loadFrom(stack);
+                if (data != null && data.getSpell() != null) {
+                    ctx.add(new SimpleStatCtx(StatContext.StatCtxType.INNATE_SPELL,
+                            java.util.Arrays.asList(com.robertx22.mine_and_slash.saveclasses.ExactStatData.noScaling(
+                                    data.perc,
+                                    com.robertx22.mine_and_slash.uncommon.enumclasses.ModType.FLAT,
+                                    new com.robertx22.mine_and_slash.database.data.stats.types.LearnSpellStat(data.getSpell()).GUID()
+                            ))));
+                }
             }
         }
 

@@ -51,6 +51,10 @@ public class NumberProvider {
         return num;
     }
 
+    public float get(EffectEvent event, LivingEntity source, StatData data) {
+        return getValue(event, source, data);
+    }
+
     public enum Type {
         SPECIFIC_NUMBER() {
             @Override
@@ -62,7 +66,7 @@ public class NumberProvider {
         STAT_DATA() {
             @Override
             public float getValue(EffectEvent event, LivingEntity source, StatData data, String calc) {
-                return data.getValue();
+                return data.get();
             }
         }, STAT_PERCENT() {
             @Override
@@ -70,13 +74,13 @@ public class NumberProvider {
                 float val = Load.Unit(source)
                         .getUnit()
                         .getCalculatedStat(calc)
-                        .getValue() * data.getValue() / 100F;
+                        .get() * data.get() / 100F;
                 return val;
             }
         }, NUMBER_PERCENT() {
             @Override
             public float getValue(EffectEvent event, LivingEntity source, StatData data, String calc) {
-                float val = event.data.getNumber(calc).number * data.getValue() / 100F;
+                float val = event.data.getNumber(calc).number * data.get() / 100F;
                 return val;
             }
         };

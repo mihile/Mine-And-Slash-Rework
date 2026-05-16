@@ -35,12 +35,8 @@ public enum BarGuiType {
     EXP {
         @Override
         public boolean shouldRenderCustom(EntityData data, Player en) {
-            if (ClientConfigs.getConfig().RENDER_FILLED_GUI_BARS.get().getReal() == GuiBarRenderOption.WHEN_NOT_FULL) {
-                if (OnClientTick.expChangedRecentlyTicks < 1) {
-                    return false;
-                }
-            }
-            return true;
+            return ClientConfigs.getConfig().RENDER_FILLED_GUI_BARS.get().getReal() != GuiBarRenderOption.WHEN_NOT_FULL
+                    || OnClientTick.expChangedRecentlyTicks >= 1;
         }
 
         @Override
@@ -81,7 +77,7 @@ public enum BarGuiType {
         public float getMax(EntityData data, Player en) {
             return data.getUnit()
                     .energyData()
-                    .getValue();
+                    .get();
         }
 
         @Override
@@ -102,7 +98,7 @@ public enum BarGuiType {
         public float getMax(EntityData data, Player en) {
             return data.getUnit()
                     .magicShieldData()
-                    .getValue();
+                    .get();
         }
 
         @Override
@@ -112,7 +108,7 @@ public enum BarGuiType {
 
         @Override
         public boolean shouldRenderCustom(EntityData data, Player en) {
-            return data.getUnit().magicShieldData().getValue() > 0;
+            return data.getUnit().magicShieldData().get() > 0;
         }
     },
 
@@ -134,18 +130,18 @@ public enum BarGuiType {
                     .isBloodMage()) {
                 return data.getUnit()
                         .bloodData()
-                        .getValue();
+                        .get();
             }
             return data.getUnit()
                     .manaData()
-                    .getValue();
+                    .get();
         }
 
         @Override
         public ResourceLocation getTexture(EntityData data, Player en) {
             if (data.getUnit()
                     .getCalculatedStat(BloodUser.getInstance())
-                    .getValue() > 0) {
+                    .get() > 0) {
                 return SlashRef.id("textures/gui/overlay/blood.png");
             } else {
                 return SlashRef.id("textures/gui/overlay/mana.png");
@@ -226,7 +222,7 @@ public enum BarGuiType {
     }
 
     public ResourceLocation getIcon(EntityData data, Player en) {
-        return new ResourceLocation(getTexture(data, en).toString()
+        return ResourceLocation.parse(getTexture(data, en).toString()
                 .replaceAll(".png", "_icon.png"));
     }
 
@@ -252,12 +248,8 @@ public enum BarGuiType {
             return false;
         }
 
-        if (ClientConfigs.getConfig().RENDER_FILLED_GUI_BARS.get().getReal() == GuiBarRenderOption.WHEN_NOT_FULL) {
-            if (isFull(data, en)) {
-                if (isRechargable()) {
-                    return false;
-                }
-            }
+        if (ClientConfigs.getConfig().RENDER_FILLED_GUI_BARS.get().getReal() == GuiBarRenderOption.WHEN_NOT_FULL && isFull(data, en) && isRechargable()) {
+            return false;
         }
 
         return true;

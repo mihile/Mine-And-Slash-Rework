@@ -42,7 +42,7 @@ public class MissingResourceScalingEffect extends StatEffect {
         if (missingPercent <= 0) return;
 
         // Use the stat's value for scaling
-        float statValue = data.getValue();
+        float statValue = data.get();
 
         // Calculate scaling based on the stat's configuration
         float effectiveScaling = (missingPercent / scalingPer) * statValue;

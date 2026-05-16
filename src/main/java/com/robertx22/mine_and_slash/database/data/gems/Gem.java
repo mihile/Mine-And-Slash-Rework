@@ -49,7 +49,7 @@ public class Gem extends BaseGem implements IAutoGson<Gem>, JsonExileRegistry<Ge
     }
 
     public Item getItem() {
-        return VanillaUTIL.REGISTRY.items().get(new ResourceLocation(item_id));
+        return VanillaUTIL.REGISTRY.items().get(ResourceLocation.parse(item_id));
     }
 
     @Override

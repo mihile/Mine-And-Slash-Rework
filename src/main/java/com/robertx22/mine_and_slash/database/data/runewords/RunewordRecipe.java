@@ -29,7 +29,7 @@ public class RunewordRecipe implements IAutoLocName {
     }
 
     private ItemStack toRuneStackForJei(String runeId) {
-        return new ItemStack(VanillaUTIL.REGISTRY.items().get(new ResourceLocation(SlashRef.MODID, RUNES_PATH + runeId)), 1);
+        return new ItemStack(VanillaUTIL.REGISTRY.items().get(ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, RUNES_PATH + runeId)), 1);
     }
 
     public List<List<ItemStack>> toResultSlotsForJei() {

@@ -5,14 +5,13 @@ import com.robertx22.mine_and_slash.uncommon.IShapedRecipe;
 import com.robertx22.mine_and_slash.vanilla_mc.items.gearitems.VanillaMaterial;
 import com.robertx22.mine_and_slash.vanilla_mc.items.gearitems.bases.BaseBaublesItem;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.world.item.ArmorItem;
 
 public class ItemNecklace extends BaseBaublesItem implements INecklace, IShapedRecipe {
 
     VanillaMaterial mat;
 
     public ItemNecklace(VanillaMaterial mat) {
-        super(new Properties().durability(500 + (int) (mat.armormat.getDurabilityForType(ArmorItem.Type.CHESTPLATE) * 3)), "Necklace");
+        super(new Properties().durability(1500), "Necklace");
         this.mat = mat;
     }
 

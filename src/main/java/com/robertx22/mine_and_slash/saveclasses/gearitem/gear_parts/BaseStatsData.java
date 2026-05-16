@@ -121,14 +121,14 @@ public class BaseStatsData implements IRerollable, IStatsContainer, IGearPartToo
             for (IStatsContainer cont : list) {
                 allstats.addAll(cont.GetAllStats(stack));
             }
-            allstats.removeIf(x -> x.getStat() instanceof IBaseStatModifier == false);
+            allstats.removeIf(x -> !(x.getStat() instanceof IBaseStatModifier));
 
             for (ExactStatData affixStatData : allstats) {
                 if (affixStatData.getStat() instanceof IBaseStatModifier mod) {
                     for (ExactStatData baseStat : baseStats) {
                         if (mod.canModifyBaseStat(baseStat.getStat())) {
                             if (affixStatData.getType() == ModType.FLAT) {
-                                baseStat.add(ExactStatData.noScaling(affixStatData.getValue(), ModType.FLAT, baseStat.getStatId()));
+                                baseStat.add(ExactStatData.noScaling(affixStatData.get(), ModType.FLAT, baseStat.getStatId()));
                             }
                         }
                     }
@@ -141,7 +141,7 @@ public class BaseStatsData implements IRerollable, IStatsContainer, IGearPartToo
                     for (ExactStatData baseStat : baseStats) {
                         if (mod.canModifyBaseStat(baseStat.getStat())) {
                             if (affixStatData.getType() == ModType.PERCENT) {
-                                baseStat.percentIncrease = affixStatData.getValue();
+                                baseStat.percentIncrease = affixStatData.get();
                                 baseStat.increaseByAddedPercent();
                             }
                         }
@@ -159,16 +159,6 @@ public class BaseStatsData implements IRerollable, IStatsContainer, IGearPartToo
         return baseStats;
     }
 
-    /*
-    @Override
-    public List<ExactStatData> GetAllStats(GearItemData gear) {
-
-        return getBaseItemStats(gear).stream().map(x -> ExactStatData.noScaling(x.getFirstValue(), x.getType(), x.getStatId())).collect(Collectors.toList());
-
-    }
-
-
-     */
     @Override
     public Part getPart() {
         return Part.BASE_STATS;

@@ -27,7 +27,7 @@ public class SpellHotbarOverlay {
     static ResourceLocation hotbarTex(Boolean horizontal, Boolean swap, Integer swapnum) {
         String swaptex = swap ? "_swap" + swapnum : "";
         String horizontaltex = horizontal ? "_horizontal" : "";
-        return new ResourceLocation(SlashRef.MODID, "textures/gui/spells/hotbar/" + "hotbar" + swaptex + horizontaltex + ".png");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/spells/hotbar/" + "hotbar" + swaptex + horizontaltex + ".png");
     }
 
     Minecraft mc = Minecraft.getInstance();
@@ -37,7 +37,7 @@ public class SpellHotbarOverlay {
 
         try {
 
-            if (mc.options.renderDebug) {
+            if (mc.getDebugOverlay().showDebugScreen()) {
                 return;
             }
             if (mc.player.isSpectator()) {
@@ -64,12 +64,8 @@ public class SpellHotbarOverlay {
                 int yp = y + 3;
                 list.add(new SpellOnHotbarRender(type == OverlayType.SPELL_HOTBAR_HORIZONTAL, place, gui, xp, yp)) ;
             }
-            if (ClientConfigs.getConfig().HIDE_SPELL_HOTBAR_WHEN_NO_SPELL.get()){
-                if (list.stream().anyMatch(spell -> spell.spell != null)){
-                    renderHotbarBackground(type, type.getSize(), gui, x, y);
-                    list.forEach(SpellOnHotbarRender::render);
-                }
-            } else {
+            boolean shouldRender = !ClientConfigs.getConfig().HIDE_SPELL_HOTBAR_WHEN_NO_SPELL.get() || list.stream().anyMatch(spell -> spell.spell != null);
+            if (shouldRender) {
                 renderHotbarBackground(type, type.getSize(), gui, x, y);
                 list.forEach(SpellOnHotbarRender::render);
             }

@@ -24,7 +24,7 @@ public class ExileStack {
     }
 
     public List<StackData> getAll() {
-        return map.values().stream().toList();
+        return List.copyOf(map.values());
     }
 
     public <T> StackData<T> get(StackKey<T> key) {

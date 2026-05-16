@@ -73,15 +73,9 @@ public abstract class CodeCurrency implements IWeighted, IAutoLocName, IAutoLocD
     public ResultItem modifyItem(LocReqContext context) {
         if (context.Currency.getItem() instanceof IItemAsCurrency cur) {
             var effect = cur.currencyEffect(context.Currency);
-
-            var can = effect.canItemBeModified(context);
-            if (can.can) {
-                //ExileStack copy = ExileStack.of(context.stack.getStack());
-                effect.internalModifyMethod(context);
-                return new ResultItem(context.stack, ModifyResult.SUCCESS, can);
-            } else {
-                return new ResultItem(ItemStack.EMPTY, ModifyResult.NONE, can);
-            }
+            // canItemBeModified already checked by caller (OnItemInteract) - do not re-check here
+            effect.internalModifyMethod(context);
+            return new ResultItem(context.stack, ModifyResult.SUCCESS, ExplainedResult.success());
         }
         return new ResultItem(ItemStack.EMPTY, ModifyResult.NONE, ExplainedResult.silentlyFail());
 

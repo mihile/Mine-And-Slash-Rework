@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 
 
 public class ModSpiderRender<T extends SummonEntity> extends MobRenderer<T, SpiderModel<T>> {
-    private ResourceLocation SPIDER_LOCATION = new ResourceLocation("textures/entity/spider/spider.png");
+    private ResourceLocation SPIDER_LOCATION = ResourceLocation.parse("textures/entity/spider/spider.png");
 
     public ModSpiderRender(ResourceLocation id, EntityRendererProvider.Context p_174401_) {
         this(p_174401_, ModelLayers.SPIDER);

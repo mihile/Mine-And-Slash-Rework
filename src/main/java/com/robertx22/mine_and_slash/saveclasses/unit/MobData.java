@@ -17,12 +17,8 @@ public class MobData {
     public List<MobAffix> getAffixes() {
         try {
             return affixes.stream()
-                    .filter(x -> ExileDB.MobAffixes()
-                            .isRegistered(x))
-                    .map(x -> {
-                        return ExileDB.MobAffixes()
-                                .get(x);
-                    })
+                    .filter(x -> ExileDB.MobAffixes().isRegistered(x))
+                    .map(x -> ExileDB.MobAffixes().get(x))
                     .collect(Collectors.toList());
         } catch (Exception e) {
             e.printStackTrace();

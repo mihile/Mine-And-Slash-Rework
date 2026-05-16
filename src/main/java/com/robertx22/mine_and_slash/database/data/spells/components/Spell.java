@@ -106,7 +106,7 @@ public final class Spell implements ISkillGem, IGUID, IAutoGson<Spell>, JsonExil
             return true;
         }
         return disabled_dims.stream()
-                .map(x -> new ResourceLocation(x))
+                .map(x -> ResourceLocation.parse(x))
                 .noneMatch(x -> x.equals(MapManager.getResourceLocation(world)));
     }
 
@@ -139,7 +139,7 @@ public final class Spell implements ISkillGem, IGUID, IAutoGson<Spell>, JsonExil
     }
 
     public static final ResourceLocation getIconLoc(String id) {
-        return new ResourceLocation(SlashRef.MODID, "textures/gui/spells/icons/" + id + ".png");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/spells/icons/" + id + ".png");
     }
 
     public WeaponTypes getWeapon(LivingEntity en) {
@@ -178,12 +178,6 @@ public final class Spell implements ISkillGem, IGUID, IAutoGson<Spell>, JsonExil
     public void cast(SpellCastContext ctx) {
         LivingEntity caster = ctx.caster;
         ctx.castedThisTick = true;
-        /*
-        if (MMORPG.RUN_DEV_TOOLS_REMOVE_WHEN_DONE && this.config.swing_arm) {
-            //    caster.swingTime = -1; // this makes sure hand swings
-            //   caster.swing(InteractionHand.MAIN_HAND);
-        }
-        */
         attached.onCast(SpellCtx.onCast(caster, ctx.calcData));
     }
 
@@ -249,10 +243,8 @@ public final class Spell implements ISkillGem, IGUID, IAutoGson<Spell>, JsonExil
         list.add(locName().withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
         list.add(ExileText.emptyLine().get());
 
-        if (true || Screen.hasShiftDown()) {
-            SpellDesc.getTooltip(ctx.caster, this)
-                    .forEach(x -> list.add(Component.literal(x)));
-        }
+        SpellDesc.getTooltip(ctx.caster, this)
+                .forEach(x -> list.add(Component.literal(x)));
 
         list.add(ExileText.emptyLine().get());
 

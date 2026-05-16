@@ -81,7 +81,7 @@ public class BonusFlatElementalDamage extends ElementalStat {
 
         @Override
         public DamageEvent activate(DamageEvent effect, StatData data, Stat stat) {
-            float num = NumberModifier.ModifierType.SPELL_DAMAGE_EFFECTIVENESS_MULTI.modify(effect, data.getValue());
+            float num = NumberModifier.ModifierType.SPELL_DAMAGE_EFFECTIVENESS_MULTI.modify(effect, data.get());
             effect.addBonusEleDmg(stat.getElement(), num, Side());
             return effect;
         }

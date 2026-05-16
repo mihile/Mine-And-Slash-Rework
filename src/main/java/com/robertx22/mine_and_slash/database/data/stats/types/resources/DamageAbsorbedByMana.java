@@ -53,7 +53,7 @@ public class DamageAbsorbedByMana extends Stat {
         StatData data = effect.targetData.getUnit()
                 .getCalculatedStat(DamageAbsorbedByMana.getInstance());
 
-        if (data.getValue() <= 0) {
+        if (data.get() <= 0) {
             return dmg;
         }
 
@@ -62,13 +62,13 @@ public class DamageAbsorbedByMana extends Stat {
 
         if (currentMana / effect.targetData.getUnit()
                 .manaData()
-                .getValue() > 0.5F) {
+                .get() > 0.5F) {
 
             float maxMana = effect.targetData.getUnit()
                     .manaData()
-                    .getValue();
+                    .get();
 
-            float dmgReduced = Mth.clamp(dmg * data.getValue() / 100F, 0, currentMana - (maxMana * 0.5F));
+            float dmgReduced = Mth.clamp(dmg * data.get() / 100F, 0, currentMana - (maxMana * 0.5F));
 
             if (dmgReduced > 0) {
                 effect.targetData.getResources()

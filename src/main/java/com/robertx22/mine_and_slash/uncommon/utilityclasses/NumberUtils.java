@@ -49,20 +49,19 @@ public class NumberUtils {
     public static String formatForTooltip(float num) {
         if (Math.abs(num) < ClientConfigs.getConfig().SHOW_DECIMALS_ON_NUMBER_SMALLER_THAN.get()) {
             return format.format(num);
-        } else {
-            return (int) num + "";
         }
+        return (int) num + "";
     }
 
     public static String format(int number) {
 
         if (Math.abs(number / MILLS) >= 1) {
             return format(number, MILLS, "m");
-        } else if (Math.abs(number / THOUSANDS) >= 1) {
-            return format(number, THOUSANDS, "k");
-        } else {
-            return number + "";
         }
+        if (Math.abs(number / THOUSANDS) >= 1) {
+            return format(number, THOUSANDS, "k");
+        }
+        return number + "";
 
     }
 

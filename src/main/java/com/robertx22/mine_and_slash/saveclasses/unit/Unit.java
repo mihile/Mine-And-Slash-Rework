@@ -41,7 +41,7 @@ public class Unit {
         int i = 0;
         for (StatData stat : stats.stats.values()) {
             CompoundTag tag = new CompoundTag();
-            tag.putFloat("v", stat.getValue());
+            tag.putFloat("v", stat.get());
             tag.putFloat("m", stat.getMoreStatTypeMulti());
             tag.putString("i", stat.getId());
             nbt.put("" + i, tag);
@@ -72,11 +72,11 @@ public class Unit {
     }
 
     public boolean isBloodMage() {
-        return getCalculatedStat(BloodUser.getInstance()).getValue() > 0;
+        return getCalculatedStat(BloodUser.getInstance()).get() > 0;
     }
 
     public boolean isBattlemage() {
-        return getCalculatedStat(BattlemageUser.getInstance()).getValue() > 0;
+        return getCalculatedStat(BattlemageUser.getInstance()).get() > 0;
     }
 
     public void clearStats() {
@@ -105,18 +105,6 @@ public class Unit {
         }
         return getStats().stats.getOrDefault(guid, new StatData(guid, 0, 1));
     }
-
-    /*
-    public StatData getOrCreateCalculatedStat(String guid) {
-        if (getStats().stats == null) {
-            this.initStats();
-        }
-        var data = getStats().stats.getOrDefault(guid, new StatData(guid, 0, 1));
-        getStats().stats.put(guid, data);
-        return data;
-    }
-
-     */
 
     public Unit() {
 

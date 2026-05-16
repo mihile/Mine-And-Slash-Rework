@@ -2,6 +2,7 @@ package com.robertx22.mine_and_slash.vanilla_mc.items.gearitems.bases.armor_mate
 
 import com.robertx22.mine_and_slash.database.data.level_ranges.LevelRange;
 import com.robertx22.mine_and_slash.database.registrators.LevelRanges;
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ArmorMaterials;
 
@@ -13,10 +14,10 @@ public enum ArmorTier {
     FOUR(4, ArmorMaterials.NETHERITE, LevelRanges.ENDGAME_4);
 
     int tier;
-    ArmorMaterial vanillaMat;
+    Holder<ArmorMaterial> vanillaMat;
     LevelRange lvl;
 
-    ArmorTier(int tier, ArmorMaterial vanillaMat, LevelRange lvl) {
+    ArmorTier(int tier, Holder<ArmorMaterial> vanillaMat, LevelRange lvl) {
         this.tier = tier;
         this.vanillaMat = vanillaMat;
         this.lvl = lvl;

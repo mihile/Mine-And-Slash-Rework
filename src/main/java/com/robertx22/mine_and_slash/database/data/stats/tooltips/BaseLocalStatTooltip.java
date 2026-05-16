@@ -35,36 +35,5 @@ public class BaseLocalStatTooltip implements IStatTooltipType {
 
         return list;
 
-        
-        /*
-        String icon = ChatFormatting.RED + info.stat.icon + " ";
-
-        if (ctx.statinfo.stat.is_long) {
-            icon = "";
-        }
-
-        MutableComponent txt = Component.literal(StatNameRegex.BASIC_LOCAL
-                .translate(format, ctx, info.type, info.firstValue, info.stat));
-
-        if (ctx.statinfo.stat.is_long) {
-            return longStat(ctx, txt);
-        }
-
-        if (ctx.showStatRanges()) {
-            txt.append(" ")
-                    .append(NormalStatTooltip.getPercentageView(ctx.statinfo.percent));
-        }
-
-
-        list.add(txt);
-
-        if (info.shouldShowDescriptions()) {
-            list.addAll(info.stat.getCutDescTooltip());
-        }
-
-        return list;
-        
-         */
-
     }
 }

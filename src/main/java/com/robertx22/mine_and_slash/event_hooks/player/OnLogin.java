@@ -12,7 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 
 public class OnLogin {
 
@@ -26,24 +26,9 @@ public class OnLogin {
 
         try {
 
-        
-            if (ModList.get().isLoaded("majruszlibrary")) {
-                player.sendSystemMessage(Component.literal("[WARNING] You have majruszlibrary mod installed, which currently has a bug and makes Mine and Slash professions not work! It's recommended to remove the mod (and all the mods that depend on that library), until the issue is fixed."));
-            }
-            if (ModList.get().isLoaded("enchantments_plus")) {
-                player.sendSystemMessage(Component.literal("[WARNING] You have Mo' Enchantments mod installed, which currently has a bug and makes Mine and Slash NBT on items break!!! It's recommended to remove the mod, until the issue is fixed."));
-            }
-
-
-            if (!player.getServer()
-                    .isCommandBlockEnabled()) {
-                player.displayClientMessage(Chats.COMMAND_BLOCK_UNAVALIABLE.locName().withStyle(ChatFormatting.RED), false);
-                player.displayClientMessage(Chats.HOW_TO_ENABLE_COMMAND_BLOCK.locName().withStyle(ChatFormatting.GREEN), false);
-            }
-
-            if (MMORPG.RUN_DEV_TOOLS) {
-                player.displayClientMessage(Chats.Dev_tools_enabled_contact_the_author.locName(), false);
-            }
+            warnAboutKnownIncompatibleMods(player);
+            warnAboutCommandBlocks(player);
+            notifyDevToolsEnabled(player);
 
             EntityData data = Load.Unit(player);
 
@@ -64,6 +49,29 @@ public class OnLogin {
 
         if (MMORPG.RUN_DEV_TOOLS) {
             total.print("Total on login actions took ");
+        }
+    }
+
+    private static void warnAboutKnownIncompatibleMods(ServerPlayer player) {
+        if (ModList.get().isLoaded("majruszlibrary")) {
+            player.sendSystemMessage(Component.literal("[WARNING] You have majruszlibrary mod installed, which currently has a bug and makes Mine and Slash professions not work! It's recommended to remove the mod (and all the mods that depend on that library), until the issue is fixed."));
+        }
+        if (ModList.get().isLoaded("enchantments_plus")) {
+            player.sendSystemMessage(Component.literal("[WARNING] You have Mo' Enchantments mod installed, which currently has a bug and makes Mine and Slash NBT on items break!!! It's recommended to remove the mod, until the issue is fixed."));
+        }
+    }
+
+    private static void warnAboutCommandBlocks(ServerPlayer player) {
+        if (!player.getServer()
+                .isCommandBlockEnabled()) {
+            player.displayClientMessage(Chats.COMMAND_BLOCK_UNAVALIABLE.locName().withStyle(ChatFormatting.RED), false);
+            player.displayClientMessage(Chats.HOW_TO_ENABLE_COMMAND_BLOCK.locName().withStyle(ChatFormatting.GREEN), false);
+        }
+    }
+
+    private static void notifyDevToolsEnabled(ServerPlayer player) {
+        if (MMORPG.RUN_DEV_TOOLS) {
+            player.displayClientMessage(Chats.Dev_tools_enabled_contact_the_author.locName(), false);
         }
     }
 

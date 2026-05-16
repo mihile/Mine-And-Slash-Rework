@@ -46,7 +46,6 @@ public class C2SPacketRegister {
         Packets.registerClientToServerPacket(MMORPG.NETWORK, new QuickUsePotionPacket(), i++);
    
 
-        // Packets.registerClientToServerPacket(MMORPG.NETWORK, new SetupHotbarPacket(), i++);
     }
 
 }

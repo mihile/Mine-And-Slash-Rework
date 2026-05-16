@@ -21,10 +21,6 @@ public class RenderItemGlints {
 
             var mc = Minecraft.getInstance();
 
-            if (mc.screen == null) {
-                return;
-            }
-
             if (ClientConfigs.getConfig().RENDER_ITEM_RARITY_BACKGROUND.get()) {
                 ItemStack stack = pStack;//slot.getItem();
 
@@ -47,7 +43,6 @@ public class RenderItemGlints {
                 }
 
                 RenderSystem.enableBlend();
-                gui.setColor(1.0F, 1.0F, 1.0F, ClientConfigs.getConfig().ITEM_RARITY_OPACITY.get().floatValue()); // transparency
 
                 ResourceLocation tex = rar.getGlintTextureFull();
 
@@ -58,7 +53,9 @@ public class RenderItemGlints {
                     tex = rar.getGlintTextureCircle();
                 }
 
+                gui.setColor(1.0F, 1.0F, 1.0F, ClientConfigs.getConfig().ITEM_RARITY_OPACITY.get().floatValue());
                 gui.blit(tex, pX, pY, 0, 0, 16, 16, 16, 16);
+
                 gui.setColor(1.0F, 1.0F, 1.0F, 1F);
                 RenderSystem.disableBlend();
             }

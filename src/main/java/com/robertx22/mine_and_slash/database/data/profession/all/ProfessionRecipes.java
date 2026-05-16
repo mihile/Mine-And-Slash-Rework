@@ -149,18 +149,6 @@ public class ProfessionRecipes {
 
         }
 
-        /* todo
-        ProfessionRecipe.TierBuilder.of(x -> ExileCurrencies.INSTANCE.getItem(e -> e.)
-        new ProfDropTierPickerCurrency(x).getCurrencyItem(), Professions.GEAR_CRAFTING, 1)
-                .onlyOnTier(x -> new ItemStack(RarityItems.RARITY_STONE.get(x.rar).get(), 1 * (x.tier + 1)))
-                .onTierOrAbove(SkillItemTier.TIER0, Items.PAPER, 1)
-                .onTierOrAbove(SkillItemTier.TIER0, Items.INK_SAC, 1)
-                .exp(5)
-                .custom(x -> x.recipe.tier = SkillItemTier.TIER0.tier)
-                .buildEachTier();
-
-         */
-
         ProfessionRecipe.TierBuilder.of(x -> ExileCurrencies.INSTANCE.SHARPEN_STONE_QUALITY.get(new SkillItemTierKey(x)).getItem(), Professions.GEAR_CRAFTING, 1)
                 .onlyOnTier(x -> new ItemStack(ProfessionMatItems.TIERED_MAIN_MATS.get(Professions.MINING).get(x).get(), 3 * (x.tier + 1)))
                 .onTierOrAbove(SkillItemTier.TIER0, Items.COAL, 1)

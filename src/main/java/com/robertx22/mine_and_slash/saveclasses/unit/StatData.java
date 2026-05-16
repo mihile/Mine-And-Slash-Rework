@@ -53,6 +53,10 @@ public class StatData {
         // todo this shouldnt be needed return Mth.clamp(v1, stat.min, stat.max);
     }
 
+    public float get() {
+        return getValue();
+    }
+
     public float getValueOrBase(Stat stat) {
 
         if (this.isNotZero()) {

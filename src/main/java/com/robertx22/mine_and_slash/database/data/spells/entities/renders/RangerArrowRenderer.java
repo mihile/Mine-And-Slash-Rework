@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 
 public class RangerArrowRenderer<T extends AbstractArrow> extends ArrowRenderer<T> {
-    public static final ResourceLocation RES_ARROW = new ResourceLocation("textures/entity/projectiles/arrow.png");
+    public static final ResourceLocation RES_ARROW = ResourceLocation.parse("textures/entity/projectiles/arrow.png");
 
     public RangerArrowRenderer(EntityRendererProvider.Context manager) {
         super(manager);

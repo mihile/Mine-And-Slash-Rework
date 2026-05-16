@@ -61,8 +61,6 @@ public class StatLayerData {
             this.percent = percent;
         }
     }
-    //private Set<String> statsThatModifiedThis = new HashSet<>();
-
     public StatLayerData(String layer, String numberID, float number, EffectSides side) {
         this.layer = layer;
         this.numberID = numberID;

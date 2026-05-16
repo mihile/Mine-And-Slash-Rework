@@ -38,28 +38,28 @@ public class RarityListData {
             String block = "\u25A0";
             allRarities
                     .forEach(x -> {
-                        if (rar.contains(x)) {
-                            starter.append(Component.literal(block).withStyle(x.textFormatting()));
-                        } else {
-                            starter.append(Component.literal(block).withStyle(ChatFormatting.DARK_GRAY));
-                        }
+                        starter.append(Component.literal(block).withStyle(rarityBlockColor(x)));
                     });
             tip.add(starter);
             return tip;
         } else {
             List<MutableComponent> list = allRarities
-                    .stream().map(x -> {
-                        if (rar.contains(x)) {
-                            return x.locName().withStyle(x.textFormatting());
-                        } else {
-                            return x.locName().withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC, ChatFormatting.STRIKETHROUGH);
-                        }
-                    })
+                    .stream().map(this::rarityName)
                     .toList();
 
             tip.add(ExileTooltipUtils.joinMutableComps(list.iterator(), Gui.COMMA_SEPARATOR.locName()));
             return tip;
 
         }
+    }
+
+    private ChatFormatting rarityBlockColor(GearRarity rarity) {
+        return rar.contains(rarity) ? rarity.textFormatting() : ChatFormatting.DARK_GRAY;
+    }
+
+    private MutableComponent rarityName(GearRarity rarity) {
+        return rar.contains(rarity)
+                ? rarity.locName().withStyle(rarity.textFormatting())
+                : rarity.locName().withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC, ChatFormatting.STRIKETHROUGH);
     }
 }

@@ -20,7 +20,7 @@ public class CheckRunewordConflictTest extends CommandTest {
 
             for (RuneWord other : ExileDB.RuneWords().getList()) {
 
-                if (other.GUID().equals(word.GUID()) == false) {
+                if (!other.GUID().equals(word.GUID())) {
                     String s2 = other.getRunesString();
 
                     if (s2.contains(s)) {

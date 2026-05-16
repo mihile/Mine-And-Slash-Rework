@@ -13,7 +13,7 @@ public class GearExceptUniqueFilter extends ItemFilter {
         
         GearItemData gear = StackSaving.GEARS.loadFrom(stack);
 
-        return gear != null && gear.isUnique() == false;
+        return gear != null && !gear.isUnique();
 
     }
 }

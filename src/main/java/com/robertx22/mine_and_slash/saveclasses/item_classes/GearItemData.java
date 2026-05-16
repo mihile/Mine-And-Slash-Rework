@@ -38,9 +38,9 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -107,14 +107,7 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
         if (PlayerUTIL.isFake((Player) data.getEntity())) {
             return true;
         }
-        if (this.getLevel() > data.getLevel()) {
-            return false;
-        }
-        if (!getRequirement().meetsReq(this.getLevel(), data)) {
-            return false;
-        }
-        return true;
-
+        return this.getLevel() <= data.getLevel() && getRequirement().meetsReq(this.getLevel(), data);
     }
 
     public boolean isValidItem() {
@@ -275,9 +268,9 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
     }
 
     public List<IStatsContainer> GetAllStatContainersExceptBase() {
-        return this.GetAllStatContainers().stream().filter(x -> x instanceof BaseStatsData == false).collect(Collectors.toList());
-
-
+        List<IStatsContainer> list = this.GetAllStatContainers();
+        list.removeIf(x -> x instanceof BaseStatsData);
+        return list;
     }
 
     public List<MutableComponent> getEnchantCompatTooltip(ItemStack stack) {
@@ -299,65 +292,17 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
     }
 
     public StatContext getEnchantCompatStats(ItemStack stack) {
-        var list = new ArrayList<ExactStatData>();
-
-        for (Map.Entry<Enchantment, Integer> en : stack.getAllEnchantments().entrySet()) {
-            var id = ForgeRegistries.ENCHANTMENTS.getKey(en.getKey()).toString();
-            // todo this could be cached
-            for (StatCompat compat : ExileDB.StatCompat().getFilterWrapped(x -> x.isEnchantCompat() && x.enchant_id.equals(id)).list) {
-                var result = compat.getEnchantCompatResult(Arrays.asList(stack), lvl);
-                if (result != null) {
-                    list.add(result);
-                }
-            }
-        }
-        if (list.isEmpty()) {
-            return null;
-        }
-        StatContext ctx = new SimpleStatCtx(StatContext.StatCtxType.ENCHANT_COMPAT, list);
-        return ctx;
-
+        return null;
     }
 
     public static StatContext getEnchantCompatStats(Player p, List<GearData> gears) {
-        var list = new ArrayList<ExactStatData>();
-
-        Set<Enchantment> enchants = new HashSet<>();
-
-        for (GearData gear : gears) {
-            enchants.addAll(gear.stack.getAllEnchantments().keySet());
-        }
-
-        int lvl = Load.Unit(p).getLevel();
-        var stacks = gears.stream().map(x -> x.stack).collect(Collectors.toList());
-
-        for (Enchantment enchant : enchants) {
-            var id = ForgeRegistries.ENCHANTMENTS.getKey(enchant).toString();
-
-            for (StatCompat compat : ExileDB.StatCompat().getFilterWrapped(x -> x.isEnchantCompat() && x.enchant_id.equals(id)).list) {
-                var result = compat.getEnchantCompatResult(stacks, lvl);
-                if (result != null) {
-                    list.add(result);
-                }
-            }
-        }
-        if (list.isEmpty()) {
-            return null;
-        }
-
-        StatContext ctx = new SimpleStatCtx(StatContext.StatCtxType.ENCHANT_COMPAT, list);
-        return ctx;
-
+        return null;
     }
 
     public List<ExactStatData> GetAllStats(ExileStack stack) {
-
         List<ExactStatData> list = new ArrayList<>();
         for (IStatsContainer x : GetAllStatContainers()) {
-            List<ExactStatData> stats = x.GetAllStats(stack);
-            stats.forEach(s -> {
-                list.add(s);
-            });
+            list.addAll(x.GetAllStats(stack));
         }
         return list;
     }
@@ -381,7 +326,7 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
 
         if (!stack.get(StackKeys.CUSTOM).getOrCreate().data.get(CustomItemData.KEYS.SALVAGING_DISABLED)) {
             if (this.isUnique()) {
-                return Arrays.asList(new ItemStack(RandomUtils.randomFromList(RarityItems.RARITY_STONE.values().stream().toList()).get(), RandomUtils.RandomRange(2, 9)));
+                return Arrays.asList(new ItemStack(RandomUtils.randomFromList(new ArrayList<>(RarityItems.RARITY_STONE.values())).get(), RandomUtils.RandomRange(2, 9)));
             }
             int amount = 1;
 
@@ -404,15 +349,11 @@ public class GearItemData implements ICommonDataItem<GearRarity> {
 
     public boolean isWeapon() {
         try {
-            if (GetBaseGearType()
-                    .family()
-                    .equals(SlotFamily.Weapon)) {
-                return true;
-            }
+            return GetBaseGearType().family().equals(SlotFamily.Weapon);
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
 

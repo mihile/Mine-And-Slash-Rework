@@ -11,6 +11,8 @@ import com.robertx22.mine_and_slash.uncommon.datasaving.StackSaving;
 import com.robertx22.orbs_of_crafting.misc.StackHolder;
 import com.robertx22.orbs_of_crafting.register.mods.base.ItemModification;
 import com.robertx22.orbs_of_crafting.register.mods.base.ItemModificationResult;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.network.chat.MutableComponent;
 
 public class ForceGearSlotSoulMod extends ItemModification {
@@ -49,7 +51,7 @@ public class ForceGearSlotSoulMod extends ItemModification {
             if (craftedStack.getItem() instanceof CraftedSoulItem i) {
                 var craftedSoul = i.getSoul(craftedStack);
                 if (craftedSoul != null) {
-                    craftedStack.getOrCreateTag().putString("force_tag", this.data.gear_tag);
+                    craftedStack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, data -> data.update(tag -> tag.putString("force_tag", this.data.gear_tag)));
                 }
             }
         }

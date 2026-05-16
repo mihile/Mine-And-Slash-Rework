@@ -61,7 +61,7 @@ public class CoreStat extends BaseDatapackStat implements ICoreStat {
     }
 
     public float getValue(StatData data) {
-        return data.getValue();
+        return data.get();
     }
 
     public List<Component> getCoreStatTooltip(EntityData unitdata, StatData data) {
@@ -110,7 +110,7 @@ public class CoreStat extends BaseDatapackStat implements ICoreStat {
 
     @Override
     public void affectStats(EntityData endata, StatData data, InCalcStatContainer incalc) {
-        for (ExactStatData x : getMods((int) data.getValue())) {
+        for (ExactStatData x : getMods((int) data.get())) {
             x.applyToStatInCalc(incalc);
         }
     }

@@ -2,6 +2,7 @@ package com.robertx22.mine_and_slash.mixin_methods;
 
 import com.robertx22.addons.orbs_of_crafting.currency.IItemAsCurrency;
 import com.robertx22.library_of_exile.utils.SoundUtils;
+import com.robertx22.orbs_of_crafting.register.ExileCurrency;
 import com.robertx22.mine_and_slash.config.forge.ServerContainer;
 import com.robertx22.mine_and_slash.database.data.auto_item.AutoItem;
 import com.robertx22.mine_and_slash.database.data.profession.items.CraftedSoulItem;
@@ -25,9 +26,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.ItemStackedOnOtherEvent;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.ItemStackedOnOtherEvent;
+import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,9 +97,9 @@ public class OnItemInteract {
             public Result tryApply(Player player, ItemStack craftedStack, ItemStack currency, Slot slot) {
                 if (craftedStack.isDamaged() && currency.getItem() instanceof RarityStoneItem) {
 
-                    if (!StackSaving.GEARS.has(craftedStack) && !StackSaving.OMEN.has(craftedStack)) {
+                    if (!StackSaving.GEARS.has(craftedStack) && !StackSaving.OMEN.has(craftedStack) && !StackSaving.TOOL.has(craftedStack)) {
                         player.sendSystemMessage(Chats.NOT_GEAR_OR_LACKS_SOUL.locName().withStyle(ChatFormatting.RED));
-                        return new Result(false);
+                        return new Result(true);
                     }
 
                     RarityStoneItem essence = (RarityStoneItem) currency.getItem();
@@ -137,8 +138,9 @@ public class OnItemInteract {
                             }
                         } else {
                             if (res.answer != null) {
-                                player.sendSystemMessage(res.answer);
+                                if (!player.level().isClientSide) player.sendSystemMessage(res.answer);
                             }
+                            return new Result(true);
                         }
                     }
 
@@ -159,14 +161,21 @@ public class OnItemInteract {
                             var effect = c.currencyEffect(ctx.Currency);
                             var can = effect.canItemBeModified(ctx);
                             if (can.can) {
-                                ItemStack result = effect.modifyItem(ctx).stack.copy();
+                                var modifyResult = effect.modifyItem(ctx);
+                                ItemStack result = modifyResult.stack;
+                                if (result == null || result.isEmpty()) {
+                                    // modifyItem returned empty - do not consume items
+                                    return new Result(true);
+                                }
+                                result = result.copy();
                                 craftedStack.shrink(1); // seems the currency creates a copy of a new item, so we delete the old one
                                 currency.shrink(1);
                                 // PlayerUtils.giveItem(result, player);
                                 slot.set(result);
                                 return new Result(true);
                             } else {
-                                player.sendSystemMessage(can.answer);
+                                if (!player.level().isClientSide) player.sendSystemMessage(can.answer);
+                                return new Result(true);
                             }
                         }
                     }
@@ -175,6 +184,40 @@ public class OnItemInteract {
             }
         });
 
+
+        CLICKS.add(new ClickFeature() {
+            @Override
+            public Result tryApply(Player player, ItemStack craftedStack, ItemStack currency, Slot slot) {
+                if (craftedStack.isEmpty()) return new Result(false);
+                if (!(currency.getItem() instanceof IItemAsCurrency)) {
+                    var exileCur = ExileCurrency.get(currency);
+                    if (exileCur.isPresent()) {
+                        ExileCurrency cur = exileCur.get();
+                        LocReqContext ctx = new LocReqContext(player, craftedStack, currency);
+                        var can = cur.canItemBeModified(ctx);
+                        if (can.can) {
+                            ItemStack result = cur.modifyItem(ctx).stack.copy();
+                            craftedStack.shrink(1);
+                            currency.shrink(1);
+
+                            if (craftedStack.isEmpty()) {
+                                slot.set(result);
+                            } else {
+                                if (!player.getInventory().add(result)) {
+                                    player.drop(result, false);
+                                }
+                            }
+                            return new Result(true);
+                        }
+ else {
+                            if (!player.level().isClientSide) player.sendSystemMessage(can.answer);
+                            return new Result(true);
+                        }
+                    }
+                }
+                return new Result(false);
+            }
+        });
 
         CLICKS.add(new ClickFeature() {
             @Override
@@ -223,7 +266,7 @@ public class OnItemInteract {
 
                     if (gear != null && !ServerContainer.get().isSoulCleanBanned(craftedStack.getItem())) {
                         try {
-                            craftedStack.getOrCreateTag().remove(StackSaving.GEARS.GUID());
+                            StackSaving.GEARS.saveTo(craftedStack, null);
                             currency.shrink(1);
                             return new Result(true).ding();
                         } catch (Exception e) {
@@ -240,17 +283,30 @@ public class OnItemInteract {
             Player player = x.getPlayer();
 
             if (player.level().isClientSide) {
-                return;
+                // return; // removed to fix client desync (ghost items)
             }
             if (x.getClickAction() != ClickAction.SECONDARY) {
-                // return;
+                return; // ONLY allow Secondary Click (Right Click) for orbs/gems to avoid conflict with sort mods
             }
 
-            ItemStack currency = x.getStackedOnItem();
-            ItemStack craftedStack = x.getCarriedItem();
+            // currency MUST be the carried item (held by mouse)
+            // craftedStack MUST be the one in the slot
+            ItemStack currency = x.getCarriedItem();
+            ItemStack craftedStack = x.getStackedOnItem();
 
 
             for (ClickFeature click : CLICKS) {
+                // check if the currency is actually a currency item before trying to apply
+                boolean isCurrency = currency.getItem() instanceof IItemAsCurrency 
+                                     || ExileCurrency.get(currency).isPresent()
+                                     || currency.getItem() instanceof RarityStoneItem
+                                     || currency.getItem() instanceof SoulExtractorItem
+                                     || currency.is(SlashItems.SOUL_CLEANER.get())
+                                     || currency.getItem() instanceof com.robertx22.mine_and_slash.saveclasses.stat_soul.StatSoulItem
+                                     || currency.getItem() instanceof com.robertx22.mine_and_slash.database.data.profession.items.CraftedSoulItem;
+                
+                if (!isCurrency) continue;
+
                 var result = click.tryApply(player, craftedStack, currency, x.getSlot());
 
                 if (result.doDing) {
@@ -278,11 +334,11 @@ public class OnItemInteract {
             }
         });
 
-        ForgeEvents.registerForgeEvent(EntityItemPickupEvent.class, x -> {
+        ForgeEvents.registerForgeEvent(ItemEntityPickupEvent.Post.class, x -> {
             try {
-                if (!x.getEntity().level().isClientSide) {
-                    ItemStack stack = x.getItem().getItem();
-                    AutoItem.tryInsertTo(stack, x.getEntity());
+                if (!x.getPlayer().level().isClientSide) {
+                    ItemStack stack = x.getOriginalStack();
+                    AutoItem.tryInsertTo(stack, x.getPlayer());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

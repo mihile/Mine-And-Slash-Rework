@@ -41,14 +41,9 @@ public class ExileTooltips {
                 .map(AbstractTextBlock::getAvailableComponents)
                 .ifPresent(x -> {
                     List<AbstractTextBlock> rarity = collect.get(BlockCategories.RARITY);
-                    if (rarity != null) {
-                        for (Component component : x) {
-                            list.add(component.copy().withStyle(((RarityBlock) rarity.get(0)).rarity.textFormatting()));
-                        }
-                    } else {
-                        for (Component component : x) {
-                            list.add(component.copy().withStyle(ChatFormatting.WHITE));
-                        }
+                    ChatFormatting nameStyle = rarity != null ? ((RarityBlock) rarity.get(0)).rarity.textFormatting() : ChatFormatting.WHITE;
+                    for (Component component : x) {
+                        list.add(component.copy().withStyle(nameStyle));
                     }
                 });
 
@@ -96,17 +91,6 @@ public class ExileTooltips {
                 list.addAll(text.getAvailableComponents());
             }
         });
-        // why did he only allow 1 operation block?
-/*
-        Optional.ofNullable(collect.get(BlockCategories.OPERATION))
-                //also I don't think we need multiple operation blocks.
-                .map(x -> x.get(0))
-                .map(AbstractTextBlock::getAvailableComponents)
-                .ifPresent(list::addAll);
-
- */
-
-
         while (list.get(list.size() - 1).getString().isBlank()) {
             list.remove(list.size() - 1);
         }

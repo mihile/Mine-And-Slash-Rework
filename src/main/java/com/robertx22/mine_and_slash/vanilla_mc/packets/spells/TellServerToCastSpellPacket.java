@@ -20,7 +20,7 @@ public class TellServerToCastSpellPacket extends MyPacket<TellServerToCastSpellP
 
     @Override
     public ResourceLocation getIdentifier() {
-        return new ResourceLocation(SlashRef.MODID, "tell_server_castspell");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "tell_server_castspell");
     }
 
     @Override

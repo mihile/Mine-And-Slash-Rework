@@ -55,8 +55,8 @@ public class SpellStatsCalculationEvent extends EffectEvent {
             }
         }
         this.data.setupNumber(EventData.CAST_TICKS, spell.config.getCastTimeTicks());
-        this.data.setupNumber(EventData.MANA_COST, manamultilvl * spell.config.mana_cost.getValue(caster, spell));
-        this.data.setupNumber(EventData.ENERGY_COST, manamultilvl * spell.config.ene_cost.getValue(caster, spell));
+        this.data.setupNumber(EventData.MANA_COST, manamultilvl * spell.config.mana_cost.get(caster, spell));
+        this.data.setupNumber(EventData.ENERGY_COST, manamultilvl * spell.config.ene_cost.get(caster, spell));
         this.data.setupNumber(EventData.COOLDOWN_TICKS, spell.config.cooldown_ticks);
         this.data.setupNumber(EventData.CHARGE_COOLDOWN_TICKS, spell.config.charge_regen);
         this.data.setupNumber(EventData.PROJECTILE_SPEED_MULTI, 1F);

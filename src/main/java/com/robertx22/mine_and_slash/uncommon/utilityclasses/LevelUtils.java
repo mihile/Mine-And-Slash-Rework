@@ -30,10 +30,6 @@ public class LevelUtils {
 
 
     public static void runTests() {
-        if (MMORPG.RUN_DEV_TOOLS) {
-            // Preconditions.checkArgument(levelToTier(15) == 0);
-            //Preconditions.checkArgument(levelToTier(25) == 1);
-        }
     }
 
 

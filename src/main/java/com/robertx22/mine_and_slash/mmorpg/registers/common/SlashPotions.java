@@ -6,11 +6,13 @@ import com.robertx22.mine_and_slash.vanilla_mc.potion_effects.ModStatusEffect;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import com.robertx22.mine_and_slash.mmorpg.SlashRef;
+import net.minecraft.resources.ResourceLocation;
 
 public class SlashPotions {
 
     public static RegObj<MobEffect> KNOCKBACK_RESISTANCE = Def.potion("knockback_resist", () -> new ModStatusEffect(net.minecraft.world.effect.MobEffectCategory.BENEFICIAL, 1)
-            .addAttributeModifier(Attributes.KNOCKBACK_RESISTANCE, "648D7564-6A60-4F59-8ABE-C2C27A6DD7A9", 0.1F, AttributeModifier.Operation.ADDITION));
+            .addAttributeModifier(Attributes.KNOCKBACK_RESISTANCE, ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "knockback_resist"), 0.1F, AttributeModifier.Operation.ADD_VALUE));
 
     public static RegObj<MobEffect> MEAL = Def.potion("meal", () -> new ModStatusEffect(net.minecraft.world.effect.MobEffectCategory.BENEFICIAL, 1));
     public static RegObj<MobEffect> FISH = Def.potion("fish", () -> new ModStatusEffect(net.minecraft.world.effect.MobEffectCategory.BENEFICIAL, 1));

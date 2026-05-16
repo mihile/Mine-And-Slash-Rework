@@ -6,6 +6,7 @@ import com.robertx22.library_of_exile.utils.SoundUtils;
 import com.robertx22.mine_and_slash.capability.player.data.PlayerConfigData;
 import com.robertx22.mine_and_slash.database.data.rarities.GearRarity;
 import com.robertx22.mine_and_slash.loot.generators.*;
+import com.robertx22.mine_and_slash.mmorpg.MMORPG;
 import com.robertx22.mine_and_slash.uncommon.datasaving.Load;
 import com.robertx22.mine_and_slash.uncommon.datasaving.StackSaving;
 import com.robertx22.mine_and_slash.uncommon.localization.Words;
@@ -101,8 +102,6 @@ public class MasterLootGen {
         try {
             items.addAll(new GearLootGen(info).tryGenerate());
             items.addAll(new SoulLootGen(info).tryGenerate());
-            //           items.addAll(new UberFragLootGen(info).tryGenerate());
-
             items.addAll(new AuraGemLootGen(info).tryGenerate());
             items.addAll(new SuppGemLootGen(info).tryGenerate());
 
@@ -114,7 +113,6 @@ public class MasterLootGen {
             items.addAll(new RuneLootGen(info).tryGenerate());
             items.addAll(new LootChestGen(info).tryGenerate());
 
-//            items.addAll(new WatcherEyeLootGen(info).tryGenerate());
             items.addAll(new ProphecyCoinLootGen(info).tryGenerate());
             items.addAll(new OmenLootGen(info).tryGenerate());
 

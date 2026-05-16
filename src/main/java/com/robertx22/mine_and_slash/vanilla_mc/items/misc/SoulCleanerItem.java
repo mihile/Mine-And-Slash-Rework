@@ -38,10 +38,7 @@ public class SoulCleanerItem extends AutoItem implements IShapelessRecipe {
     public String GUID() {
         return "soul_cleaner";
     }
-
-
-    @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext world, List<Component> tooltip, TooltipFlag context) {
         ExileTooltips tip = new ExileTooltips();
         tip.accept(new AdditionalBlock(splitLongText(Itemtips.SOUL_CLEANER_USAGE_AND_WARNING.locName().withStyle(ChatFormatting.RED))));
         tip.accept(WorksOnBlock.usableOn(WorksOnBlock.ItemType.GEAR));
@@ -58,3 +55,4 @@ public class SoulCleanerItem extends AutoItem implements IShapelessRecipe {
                 .requires(middle, 1);
     }
 }
+

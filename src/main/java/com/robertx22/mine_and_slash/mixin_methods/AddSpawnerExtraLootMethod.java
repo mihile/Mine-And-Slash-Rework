@@ -52,7 +52,7 @@ public class AddSpawnerExtraLootMethod {
             }
 
             ItemStack stack = context.getParamOrNull(LootContextParams.TOOL);
-            if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) != 0) {
+            if (false) {
                 return;
             }
 

@@ -28,10 +28,9 @@ public class ChargeData {
     }
 
     public int getCurrentTicksChargingOf(String id) {
-        if (cds.containsKey(id)) {
-            if (cds.get(id).size() > 0) {
-                return cds.get(id).get(0).ticks;
-            }
+        List<CdData> list = cds.get(id);
+        if (list != null && !list.isEmpty()) {
+            return list.get(0).ticks;
         }
         return 0;
     }
@@ -47,9 +46,7 @@ public class ChargeData {
     }
 
     void addList(String id) {
-        if (!cds.containsKey(id)) {
-            cds.put(id, new ArrayList<>());
-        }
+        cds.computeIfAbsent(id, k -> new ArrayList<>());
     }
 
     public void spendCharge(Player player, Spell spell, int cd) {
@@ -70,7 +67,7 @@ public class ChargeData {
     static List<CdData> empty = new ArrayList<>();
 
     public int getCharges(String id) {
-        int oncd = (int) cds.getOrDefault(id, empty).stream().count();
+        int oncd = cds.getOrDefault(id, empty).size();
 
         if (!Cached.MAX_SPELL_CHARGES.containsKey(id)) {
             ExileLog.get().log("Spell has no charges possible or the max spell charges aren't cached!");
@@ -89,7 +86,7 @@ public class ChargeData {
     public void addOneCharges() {
 
         for (Map.Entry<String, List<CdData>> en : cds.entrySet()) {
-            if (en.getValue().size() > 0) {
+            if (!en.getValue().isEmpty()) {
                 en.getValue().remove(0);
             }
         }

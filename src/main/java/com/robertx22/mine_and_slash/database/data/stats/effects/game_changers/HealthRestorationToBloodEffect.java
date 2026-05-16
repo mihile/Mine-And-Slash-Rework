@@ -33,7 +33,7 @@ public class HealthRestorationToBloodEffect extends InCodeStatEffect<RestoreReso
     @Override
     public RestoreResourceEvent activate(RestoreResourceEvent effect, StatData data, Stat stat) {
 
-        float bloodrestored = effect.data.getNumber() * data.getValue() / 100F;
+        float bloodrestored = effect.data.getNumber() * data.get() / 100F;
 
         RestoreResourceEvent restore = EventBuilder.ofRestore(effect.source, effect.target, ResourceType.blood, RestoreType.regen, bloodrestored)
                 .build();

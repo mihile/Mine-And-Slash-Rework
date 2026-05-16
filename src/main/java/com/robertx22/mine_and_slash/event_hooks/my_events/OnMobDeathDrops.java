@@ -19,6 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
@@ -66,9 +67,13 @@ public class OnMobDeathDrops extends EventConsumer<ExileEvents.OnMobDeath> {
                     }
                 }
 
-                if (killerEntity instanceof ServerPlayer) {
+                ServerPlayer player = getPlayerKiller(killerEntity);
+                if (player == null) {
+                    player = getPlayerKiller(onMobDeath.killer);
+                }
 
-                    ServerPlayer player = (ServerPlayer) killerEntity;
+                if (player != null) {
+
                     EntityData playerData = Load.Unit(player);
 
                     EntityConfig config = ExileDB.getEntityConfig(mobKilled, mobKilledData);
@@ -84,9 +89,6 @@ public class OnMobDeathDrops extends EventConsumer<ExileEvents.OnMobDeath> {
 
                         if (map != null) {
                             if (!map.mobValidator.isValidMob(mobKilled)) {
-                                if (MMORPG.RUN_DEV_TOOLS) {
-                                    player.sendSystemMessage(Component.literal("Killed Mob wasn't properly spawned"));
-                                }
                                 return;
                             }
                         }
@@ -108,6 +110,16 @@ public class OnMobDeathDrops extends EventConsumer<ExileEvents.OnMobDeath> {
             e.printStackTrace();
         }
 
+    }
+
+    private static ServerPlayer getPlayerKiller(LivingEntity entity) {
+        if (entity instanceof ServerPlayer player) {
+            return player;
+        }
+        if (entity instanceof TamableAnimal tamable && tamable.getOwner() instanceof ServerPlayer player) {
+            return player;
+        }
+        return null;
     }
 
 

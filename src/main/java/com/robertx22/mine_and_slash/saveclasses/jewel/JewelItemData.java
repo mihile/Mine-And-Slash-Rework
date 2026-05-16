@@ -68,9 +68,7 @@ public class JewelItemData implements ICommonDataItem<GearRarity>, IStatCtx {
             int num = RandomUtils.roll(10) ? 2 : 1;
 
             for (int i = 0; i < num; i++) {
-                Affix affix = ExileDB.Affixes().getFilterWrapped(x -> {
-                    return x.type == Affix.AffixSlot.jewel_corruption;
-                }).random();
+                Affix affix = ExileDB.Affixes().getFilterWrapped(x -> x.type == Affix.AffixSlot.jewel_corruption).random();
                 var data = new AffixData(Affix.AffixSlot.jewel_corruption);
                 data.randomizeTier(getRarity());
                 data.p = data.getMinMax().random();
@@ -87,9 +85,10 @@ public class JewelItemData implements ICommonDataItem<GearRarity>, IStatCtx {
         affixes.clear();
 
         for (int i = 0; i < num; i++) {
-            Affix affix = ExileDB.Affixes().getFilterWrapped(x -> {
-                return x.type == Affix.AffixSlot.jewel && x.getAllTagReq().contains(SlotTags.any_jewel.GUID()) || x.getAllTagReq().contains(getStyle().getJewelAffixTag().GUID());
-            }).random();
+            Affix affix = ExileDB.Affixes().getFilterWrapped(x -> 
+                x.type == Affix.AffixSlot.jewel && 
+                (x.getAllTagReq().contains(SlotTags.any_jewel.GUID()) || x.getAllTagReq().contains(getStyle().getJewelAffixTag().GUID()))
+            ).random();
 
             var data = new AffixData(Affix.AffixSlot.jewel);
             data.randomizeTier(getRarity());
@@ -97,8 +96,6 @@ public class JewelItemData implements ICommonDataItem<GearRarity>, IStatCtx {
             data.id = affix.guid;
             affixes.add(data);
         }
-
-
     }
 
 
@@ -227,7 +224,7 @@ public class JewelItemData implements ICommonDataItem<GearRarity>, IStatCtx {
         if (RarityItems.RARITY_STONE.containsKey(getRarity().GUID())) {
             return Arrays.asList(new ItemStack(RarityItems.RARITY_STONE.get(getRarity().GUID()).get(), amount));
         }
-        return Arrays.asList(new ItemStack(RandomUtils.randomFromList(RarityItems.RARITY_STONE.values().stream().toList()).get(), RandomUtils.RandomRange(1, 5)));
+        return Arrays.asList(new ItemStack(RandomUtils.randomFromList(new ArrayList<>(RarityItems.RARITY_STONE.values())).get(), RandomUtils.RandomRange(1, 5)));
     }
 
 

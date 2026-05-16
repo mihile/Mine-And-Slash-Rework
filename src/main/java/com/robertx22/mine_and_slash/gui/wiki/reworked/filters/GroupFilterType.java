@@ -27,8 +27,6 @@ public class GroupFilterType {
 
     public static GroupFilterType RUNEWORD_SLOTS = new GroupFilterType(BestiaryGroup.RUNEWORD, Words.ON_SLOTS, () -> ExileDB.GearSlots().getList().stream().map(x -> new RunewordSlotFilter(x)).collect(Collectors.toList()));
     public static GroupFilterType SPELL_TAGS = new GroupFilterType(BestiaryGroup.SPELL, Words.TAGS, () -> SpellTag.getAll().stream().map(x -> new SpellTagFilter(x)).collect(Collectors.toList()));
-    //public static GroupFilterType CURRENCY_FOR_ITEM_TYPES = new GroupFilterType(BestiaryGroup.CURRENCY, Words.ITEM_TYPES, () -> Arrays.stream(WorksOnBlock.ItemType.values()).map(x -> new ItemTypeTargetFilter(x)).collect(Collectors.toList()));
-
     static {
         init();
     }
@@ -54,8 +52,8 @@ public class GroupFilterType {
 
 
     public List<GroupFilterEntry> getEntriesWithAtLeastOneResult(NewWikiScreen screen) {
-
-        return entries.get().stream().filter(x -> screen.group.getAll(1).stream().anyMatch(e -> x.isValid(e))).collect(Collectors.toList());
+        var allEntries = screen.group.getAll(1);
+        return entries.get().stream().filter(x -> allEntries.stream().anyMatch(e -> x.isValid(e))).collect(Collectors.toList());
     }
 
     public GroupFilterType(BestiaryGroup forGroup, Words word, Supplier<List<GroupFilterEntry>> entries) {

@@ -20,6 +20,8 @@ import com.robertx22.orbs_of_crafting.register.ExileCurrency;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -28,8 +30,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,8 +53,7 @@ public class LootCrateItem extends Item implements IGUID {
         data.type = data.type;
         ItemStack stack = new ItemStack(SlashItems.LOOT_CRATE.get());
         StackSaving.GEM_CRATE.saveTo(stack, data);
-        stack.getTag()
-                .putInt("CustomModelData", data.type.custommodeldata);
+        stack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(data.type.custommodeldata));
 
         return stack;
 
@@ -103,36 +104,8 @@ public class LootCrateItem extends Item implements IGUID {
     }
 
 
-    // todo
-    /*
-    @Override
-    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> stacks) {
-        if (this.allowdedIn(group)) {
-
-            for (int tier : LevelUtils.getAllTiers()) {
-                for (LootType type : LOOT_TYPES) {
-                    ItemStack stack = new ItemStack(this);
-
-                    LootCrateData data = new LootCrateData();
-                    data.type = type;
-                    data.tier = tier;
-
-                    StackSaving.GEM_CRATE.saveTo(stack, data);
-
-                    stack.getTag()
-                            .putInt("CustomModelData", type.custommodeldata);
-
-                    stacks.add(stack);
-                }
-            }
-        }
-    }
-
-     */
-
     @OnlyIn(Dist.CLIENT)
-    @Override
-    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip,
+    public void appendHoverText(ItemStack stack, Item.TooltipContext worldIn, List<Component> tooltip,
                                 TooltipFlag flagIn) {
         LootCrateData data = getData(stack);
 
@@ -172,3 +145,4 @@ public class LootCrateItem extends Item implements IGUID {
         return "loot_crate/default";
     }
 }
+

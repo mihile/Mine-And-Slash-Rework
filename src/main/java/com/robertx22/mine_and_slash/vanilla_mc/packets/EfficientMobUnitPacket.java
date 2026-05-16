@@ -30,7 +30,7 @@ public class EfficientMobUnitPacket extends MyPacket<EfficientMobUnitPacket> {
 
     @Override
     public ResourceLocation getIdentifier() {
-        return new ResourceLocation(SlashRef.MODID, "effmob");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "effmob");
     }
 
     @Override

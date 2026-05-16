@@ -10,8 +10,9 @@ import com.robertx22.mine_and_slash.uncommon.utilityclasses.ClientOnly;
 import com.robertx22.library_of_exile.utils.TextUTIL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.network.chat.Component;
@@ -19,26 +20,19 @@ import net.minecraft.network.chat.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpellButton extends ImageButton {
+public class SpellButton extends OldImageButton {
 
     public static int BUTTON_SIZE_X = 16;
     public static int BUTTON_SIZE_Y = 16;
+    private static final WidgetSprites EMPTY_SPRITES = new WidgetSprites(SlashRef.guiId("empty_spell"), SlashRef.guiId("empty_spell"));
 
     int slot;
 
     public SpellButton(int slot, int xPos, int yPos) {
-        super(xPos, yPos, BUTTON_SIZE_X, BUTTON_SIZE_Y, 0, 0, BUTTON_SIZE_Y, SlashRef.guiId("empty_spell"), (button) -> {
+        super(xPos, yPos, BUTTON_SIZE_X, BUTTON_SIZE_Y, EMPTY_SPRITES, (button) -> {
             Minecraft.getInstance().setScreen(new InvGuiScreen(GuiInventoryGrids.ofSelectableSpells(ClientOnly.getPlayer(), slot)));
-        });
+        }, Component.empty());
         this.slot = slot;
-    }
-
-    @Override
-    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
-        if (this.isHovered()) {
-            setModTooltip();
-        }
-        super.render(gui, mouseX, mouseY, delta);
     }
 
     public SkillGemData getSpell() {
@@ -47,15 +41,16 @@ public class SpellButton extends ImageButton {
 
     @Override
     public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
-        //  super.renderWidget(gui, mouseX, mouseY, delta);
-
-
         boolean flicker = Load.player(ClientOnly.getPlayer()).spellCastingData.learnedSpellButHotbarIsEmpty();
 
         var mc = Minecraft.getInstance();
 
         // todo check if this causes seizures
-        float color = flicker ? MathHelper.clamp((mc.player.tickCount % 25 + mc.getPartialTick()) * 0.13f, 0, 3) : 1F;
+        float color = flicker ? MathHelper.clamp((mc.player.tickCount % 25 + mc.getTimer().getGameTimeDeltaPartialTick(false)) * 0.13f, 0, 3) : 1F;
+
+        if (this.isHovered()) {
+            setModTooltip();
+        }
 
         gui.setColor(1.0F, color, 1.0F, 1.0F);
         if (hasSpell()) {
@@ -80,9 +75,9 @@ public class SpellButton extends ImageButton {
 
     }
 
-    @Override
     protected ClientTooltipPositioner createTooltipPositioner() {
         return DefaultTooltipPositioner.INSTANCE;
     }
 
 }
+

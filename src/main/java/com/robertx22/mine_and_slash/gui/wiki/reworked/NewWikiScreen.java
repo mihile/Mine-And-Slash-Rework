@@ -78,7 +78,10 @@ public class NewWikiScreen extends Screen implements INamedScreen {
     }
 
     public void tick() {
-        this.searchBox.tick();
+    }
+
+    @Override
+    public void renderBackground(GuiGraphics pGuiGraphics, int mouseX, int mouseY, float partialTick) {
     }
 
     public Checkbox searchTooltipsCheckbox;
@@ -98,21 +101,20 @@ public class NewWikiScreen extends Screen implements INamedScreen {
             this.list.tryFilter(p_232980_);
         });
 
-        this.searchTooltipsCheckbox = new Checkbox(searchBox.getX() + searchBox.getWidth() + 5, searchBox.getY(), 20, 20, Component.literal("Search Tooltips"), false) {
-            @Override
-            public void onPress() {
-                super.onPress();
-                String old = searchBox.getValue();
-
-                searchBox.setValue(old + " "); // this is dumb but it works
-                searchBox.setValue(old);
-
-            }
-        };
+        this.searchTooltipsCheckbox = Checkbox.builder(Component.literal("Search Tooltips"), this.font)
+                .pos(searchBox.getX() + searchBox.getWidth() + 5, searchBox.getY())
+                .selected(false)
+                .onValueChange((checkbox, selected) -> {
+                    String old = searchBox.getValue();
+                    searchBox.setValue(old + " ");
+                    searchBox.setValue(old);
+                })
+                .build();
         this.addRenderableWidget(searchTooltipsCheckbox);
 
 
-        this.list = new WikiEntryList(this, this.minecraft, this.width, this.height, 48, this.height - 64, 36);
+        var config = com.robertx22.mine_and_slash.a_libraries.neat.NeatConfig.instance;
+        this.list = new WikiEntryList(this, this.minecraft, this.width, this.height, config.wikiListY0(), this.height - config.wikiListY1Offset(), config.wikiListItemHeight());
 
 
         this.addWidget(this.searchBox);
@@ -168,15 +170,11 @@ public class NewWikiScreen extends Screen implements INamedScreen {
     }
 
     public void removed() {
-        if (this.list != null) {
-            //  this.list.children().forEach(WorldSelectionList.Entry::close);
-        }
-
     }
 
     @Override
     public ResourceLocation iconLocation() {
-        return new ResourceLocation(SlashRef.MODID, "textures/gui/main_hub/icons/wiki.png");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/wiki.png");
     }
 
     @Override

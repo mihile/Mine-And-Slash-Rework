@@ -25,13 +25,6 @@ public class LeveledItemBlock extends AbstractTextBlock {
         return Arrays.asList(
                 Itemtips.LEVEL_RANGE.locName(Component.literal(tier.levelRange.getMinLevel() + " - " + tier.levelRange.getMaxLevel()).withStyle(ChatFormatting.YELLOW)).withStyle(ChatFormatting.GREEN)
         );
-        /*
-        return ImmutableList.of(
-                Itemtips.LEVEL_TIP.locName(Component.literal("" + LeveledItem.getLevel(stack)).withStyle(ChatFormatting.GOLD)).withStyle(ChatFormatting.GOLD),
-                Itemtips.TIER_TIP.locName(Component.literal("" + LeveledItem.getTierNum(stack)).withStyle(ChatFormatting.GOLD)).withStyle(ChatFormatting.GOLD)
-        );
-
-         */
     }
 
     @Override

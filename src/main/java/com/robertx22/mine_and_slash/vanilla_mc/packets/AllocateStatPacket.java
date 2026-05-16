@@ -32,7 +32,7 @@ public class AllocateStatPacket extends MyPacket<AllocateStatPacket> {
 
     @Override
     public ResourceLocation getIdentifier() {
-        return new ResourceLocation(SlashRef.MODID, "stat_alloc");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "stat_alloc");
     }
 
     @Override

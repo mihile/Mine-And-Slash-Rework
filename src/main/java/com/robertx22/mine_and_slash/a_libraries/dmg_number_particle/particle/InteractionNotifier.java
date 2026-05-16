@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 public class InteractionNotifier {
 
     public static void notifyClient(IParticleSpawnMaterial notifier, ServerPlayer source, LivingEntity target){
-        Packets.sendToClient(source, new ExileInteractionResultPacket(target.getId(), notifier));
+        Packets.sendToTracking(new ExileInteractionResultPacket(target.getId(), notifier), target);
     }
 
 }

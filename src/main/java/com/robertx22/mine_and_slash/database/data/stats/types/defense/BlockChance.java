@@ -72,7 +72,7 @@ public class BlockChance extends Stat {
 
         @Override
         public DamageEvent activate(DamageEvent effect, StatData data, Stat stat) {
-            float chance = data.getValue();
+            float chance = data.get();
             if (RandomUtils.roll(chance)) {
                 effect.getLayer(StatLayers.Defensive.DAMAGE_SUPPRESSION, EventData.NUMBER, Side()).reduce(50);
                 effect.data.setBoolean(EventData.IS_BLOCKED, true);

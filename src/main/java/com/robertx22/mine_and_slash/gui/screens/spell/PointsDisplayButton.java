@@ -9,7 +9,7 @@ import com.robertx22.mine_and_slash.uncommon.utilityclasses.ClientOnly;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
@@ -18,7 +18,7 @@ import net.minecraft.network.chat.MutableComponent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PointsDisplayButton extends ImageButton {
+public class PointsDisplayButton extends OldImageButton {
 
     PlayerPointsType type;
 
@@ -32,8 +32,6 @@ public class PointsDisplayButton extends ImageButton {
     public void onPress() {
 
     }
-
-    @Override
     protected ClientTooltipPositioner createTooltipPositioner() {
         return DefaultTooltipPositioner.INSTANCE;
     }
@@ -57,3 +55,4 @@ public class PointsDisplayButton extends ImageButton {
 
 
 }
+

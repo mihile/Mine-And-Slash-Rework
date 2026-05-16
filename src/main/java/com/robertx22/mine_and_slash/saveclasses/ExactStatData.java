@@ -110,6 +110,10 @@ public class ExactStatData implements ISerializable<ExactStatData>, ITooltipList
         return v1;
     }
 
+    public float get() {
+        return getValue();
+    }
+
     public void add(ExactStatData other) {
         if (type == other.type) {
             v1 += other.v1;

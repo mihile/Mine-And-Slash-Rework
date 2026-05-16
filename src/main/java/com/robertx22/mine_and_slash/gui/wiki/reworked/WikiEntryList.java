@@ -16,7 +16,7 @@ public class WikiEntryList extends ObjectSelectionList<WikiEntry> {
     NewWikiScreen screen;
 
     public WikiEntryList(NewWikiScreen screen, Minecraft mc, int pWidth, int pHeight, int pY0, int pY1, int pItemHeight) {
-        super(mc, pWidth, pHeight, 48, screen.height - 64, 36);
+        super(mc, pWidth, pY1 - pY0, pY0, pItemHeight);
         this.screen = screen;
 
         tryFilter("");
@@ -64,12 +64,10 @@ public class WikiEntryList extends ObjectSelectionList<WikiEntry> {
         }
 
         if (screen.searchTooltipsCheckbox.selected()) {
-
-            List<String> list = new ArrayList<>();
-            for (Component o : en.getTooltip()) {
-                list.add(o.getString().toLowerCase(Locale.ROOT));
-            }
-            return list.stream().anyMatch(x -> x.contains(str));
+            return en.getTooltip()
+                    .stream()
+                    .map(x -> x.getString().toLowerCase(Locale.ROOT))
+                    .anyMatch(x -> x.contains(str));
         }
 
         return false;

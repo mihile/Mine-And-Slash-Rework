@@ -36,7 +36,7 @@ public class StartPerksAddtl implements ExileRegistryInit {
         perk.is_entry = true;
         perk.type = Perk.PerkType.START;
         perk.one_kind = "start";
-        perk.icon = new ResourceLocation(SlashRef.MODID, "textures/gui/stat_icons/start/" + id + ".png")
+        perk.icon = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/stat_icons/start/" + id + ".png")
                 .toString();
         return perk;
     }

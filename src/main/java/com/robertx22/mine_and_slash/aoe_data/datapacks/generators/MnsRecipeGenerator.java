@@ -17,7 +17,7 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.HashMap;
 
@@ -25,7 +25,7 @@ public class MnsRecipeGenerator {
 
     public static void addRecipes() {
 
-        for (Item item : ForgeRegistries.ITEMS) {
+        for (Item item : BuiltInRegistries.ITEM) {
             if (item instanceof IShapedRecipe) {
                 IShapedRecipe ir = (IShapedRecipe) item;
                 RecipeGenerator.addRecipe(SlashRef.MODID, () -> ir.getRecipe());

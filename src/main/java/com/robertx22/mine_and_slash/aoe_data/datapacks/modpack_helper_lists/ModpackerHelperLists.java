@@ -17,8 +17,6 @@ public class ModpackerHelperLists {
 
     public static void generate() {
 
-        //  ExileLog.get().log("Starting to create lang file");
-
         Database.getAllRegistries()
                 .forEach(x -> {
                     try {

@@ -25,7 +25,6 @@ public class UnequipGear {
     public static List<EquipmentSlot> SLOTS = Arrays.asList(EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD, EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND);
 
     static void drop(Player player, EquipmentSlot slot, ItemStack stack, MutableComponent txt) {
-        //ItemStack old = player.getItemBySlot(slot);
         ItemStack copy = stack.copy();
 
         player.setItemSlot(slot, ItemStack.EMPTY); // todo is this good?
@@ -71,12 +70,9 @@ public class UnequipGear {
 
         for (ICurioStacksHandler handler : MyCurioUtils.getHandlers(player)) {
 
-            for (int i = 0; i < handler
-                    .getSlots(); i++) {
+            for (int i = 0; i < handler.getSlots(); i++) {
 
-                ItemStack stack = handler
-                        .getStacks()
-                        .getStackInSlot(i);
+                ItemStack stack = handler.getStacks().getStackInSlot(i);
 
                 if (!stack.isEmpty()) {
                     GearItemData gear = StackSaving.GEARS.loadFrom(stack);

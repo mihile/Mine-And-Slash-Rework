@@ -7,7 +7,7 @@ import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import com.robertx22.library_of_exile.registry.IAutoGson;
 import com.robertx22.library_of_exile.registry.JsonExileRegistry;
 import net.minecraft.world.entity.EntityType;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +27,7 @@ public class EntityConfig implements JsonExileRegistry<EntityConfig>, IAutoGson<
     }
 
     public EntityConfig(EntityType type, float loot) {
-        this.identifier = ForgeRegistries.ENTITY_TYPES.getKey(type).toString();
+        this.identifier = BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();
         this.loot_multi = loot;
         this.exp_multi = loot;
 

@@ -16,7 +16,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -89,12 +88,10 @@ public class ResetPotion extends AutoItem implements IShapedRecipe {
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack stack, net.minecraft.world.entity.LivingEntity entity) {
         return 30;
     }
-
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> l, TooltipFlag pIsAdvanced) {
+    public void appendHoverText(ItemStack pStack, Item.TooltipContext pContext, List<Component> l, TooltipFlag pIsAdvanced) {
         if (reset == ResetType.ADD_POINTS) {
             l.addAll(ExileTooltipUtils.splitLongText(Chats.RESET_POINTS_POTION_DESC.locName().withStyle(ChatFormatting.AQUA)));
         } else {
@@ -120,3 +117,4 @@ public class ResetPotion extends AutoItem implements IShapedRecipe {
     }
 
 }
+

@@ -32,9 +32,6 @@ public class MapHasHigherRarityReq extends MapRequirement {
         if (!data.getRarity().hasHigherRarity()) {
             return false;
         }
-        //if (data.lvl >= data.getRarity().getHigherRarity().min_lvl == false) {
-        //    return false;
-        //} <-- this block of code doesn't actually work since map lvl is always 1
         return true;
     }
 

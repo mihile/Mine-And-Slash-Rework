@@ -73,8 +73,6 @@ public class DimensionConfig implements JsonExileRegistry<DimensionConfig>, IAut
     public float all_drop_multi = 1F;
     public float exp_multi = 1F;
 
-    //public float unique_gear_drop_multi = 1F;
-
     public float mob_strength_multi = 1F;
 
     public int min_lvl = 1;

@@ -21,7 +21,7 @@ public class TeamUtils {
 
         if (player != null) {
             TeamUtils.getOnlineMembers(player)
-                    .forEach(x -> action.accept(x));
+                    .forEach(action);
         }
 
     }
@@ -66,19 +66,11 @@ public class TeamUtils {
         if (p1 == p2) {
             return true;
         }
-        if (doDistanceCheck) {
-            if (p1.distanceTo(p2) > ServerContainer.get().MAX_TEAM_DISTANCE.get()) {
-                return false;
-            }
+        if (doDistanceCheck && p1.distanceTo(p2) > ServerContainer.get().MAX_TEAM_DISTANCE.get()) {
+            return false;
         }
-        if (Load.player(p1).config.isConfigEnabled(PlayerConfigData.Config.AUTO_PVE) && Load.player(p2).config.isConfigEnabled(PlayerConfigData.Config.AUTO_PVE)) {
-            return true;
-        }
-        if (Load.player(p1).team.isOnSameTeam(p2)) {
-            return true;
-        }
-
-        return false;
+        return Load.player(p1).config.isConfigEnabled(PlayerConfigData.Config.AUTO_PVE) && Load.player(p2).config.isConfigEnabled(PlayerConfigData.Config.AUTO_PVE)
+                || Load.player(p1).team.isOnSameTeam(p2);
 
     }
 

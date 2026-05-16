@@ -28,7 +28,7 @@ public class PlayerUtils {
 
 
     public static void giveItem(ItemStack stack, Player player) {
-        if (player.addItem(stack) == false) {
+        if (!player.addItem(stack)) {
             player.spawnAtLocation(stack, 1F);
         }
         player.getInventory().setChanged();

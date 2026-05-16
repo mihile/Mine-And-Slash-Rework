@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.robertx22.mine_and_slash.database.data.stats.datapacks.base.IStatSerializer;
 import com.robertx22.mine_and_slash.database.data.stats.datapacks.stats.AttributeStat;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -27,9 +28,9 @@ public class AttributeStatSer implements IStatSerializer<AttributeStat> {
     @Override
     public AttributeStat getStatFromJson(JsonObject json) {
 
-        ResourceLocation ide = new ResourceLocation(json.get("attribute_id").getAsString());
+        ResourceLocation ide = ResourceLocation.parse(json.get("attribute_id").getAsString());
 
-        Attribute attri = BuiltInRegistries.ATTRIBUTE.get(ide);
+        Holder<Attribute> attri = BuiltInRegistries.ATTRIBUTE.getHolder(ide).orElseThrow();
 
         var oper = AttributeModifier.Operation.valueOf(json.get("operation").getAsString());
 

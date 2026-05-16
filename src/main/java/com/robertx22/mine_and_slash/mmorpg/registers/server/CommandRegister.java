@@ -34,9 +34,6 @@ import net.minecraft.commands.CommandSourceStack;
 public class CommandRegister {
 
     public static void Register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        //ExileLog.get().log("Registering Mine and slash Commands.");
-
-
         EntityCommands.init(dispatcher);
         PlayerCommands.init(dispatcher);
         DevCommands.init(dispatcher);
@@ -45,7 +42,6 @@ public class CommandRegister {
         GiveExactUnique.register(dispatcher);
         GiveMap.register(dispatcher);
 
-        //new GenericGive("spell", ExileRegistryTypes.SPELL, x -> new SkillGemBlueprint(x, SkillGemData.SkillGemType.SKILL)).register(dispatcher);
         new GenericGive("aura", ExileRegistryTypes.AURA, x -> new SkillGemBlueprint(x, SkillGemData.SkillGemType.AURA)).register(dispatcher);
         new GenericGive("support_gem", ExileRegistryTypes.SUPPORT_GEM, x -> new SkillGemBlueprint(x, SkillGemData.SkillGemType.SUPPORT)).register(dispatcher);
         new GenericGive("jewel", null, x -> new JewelBlueprint(x)).register(dispatcher);

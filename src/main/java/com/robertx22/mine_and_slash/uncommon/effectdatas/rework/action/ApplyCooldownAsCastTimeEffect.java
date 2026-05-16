@@ -15,8 +15,8 @@ public class ApplyCooldownAsCastTimeEffect extends StatEffect {
 
     @Override
     public void activate(EffectEvent event, EffectSides statSource, StatData data, Stat stat) {
-        event.data.getNumber(EventData.COOLDOWN_TICKS).number -= event.data.getOriginalNumber(EventData.COOLDOWN_TICKS).number * data.getValue() / 100F;
-        event.data.getNumber(EventData.CHARGE_COOLDOWN_TICKS).number -= event.data.getOriginalNumber(EventData.CHARGE_COOLDOWN_TICKS).number * data.getValue() / 100F;
+        event.data.getNumber(EventData.COOLDOWN_TICKS).number -= event.data.getOriginalNumber(EventData.COOLDOWN_TICKS).number * data.get() / 100F;
+        event.data.getNumber(EventData.CHARGE_COOLDOWN_TICKS).number -= event.data.getOriginalNumber(EventData.CHARGE_COOLDOWN_TICKS).number * data.get() / 100F;
     }
     
     @Override

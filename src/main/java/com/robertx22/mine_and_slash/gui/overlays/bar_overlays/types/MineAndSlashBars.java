@@ -14,7 +14,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 public class MineAndSlashBars {
-    static ResourceLocation BASETEX = new ResourceLocation(SlashRef.MODID, "textures/gui/overlay/base.png");
+    static ResourceLocation BASETEX = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/overlay/base.png");
 
     static int BAR_HEIGHT = 11;
     static int BAR_WIDTH = 107;

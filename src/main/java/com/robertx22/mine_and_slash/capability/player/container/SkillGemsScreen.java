@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class SkillGemsScreen extends AbstractContainerScreen<SkillGemsMenu> {
-    public static final ResourceLocation BACKGROUND_LOCATION = new ResourceLocation(SlashRef.MODID, "textures/gui/skill_gems.png");
+    public static final ResourceLocation BACKGROUND_LOCATION = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/skill_gems.png");
 
     public SkillGemsScreen(SkillGemsMenu pMenu, Inventory pPlayerInventory, Component txt) {
         super(pMenu, pPlayerInventory, Component.literal(""));
@@ -59,7 +59,7 @@ public class SkillGemsScreen extends AbstractContainerScreen<SkillGemsMenu> {
     }
 
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(pGuiGraphics);
+        this.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
     }

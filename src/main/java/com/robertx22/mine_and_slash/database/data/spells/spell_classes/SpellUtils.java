@@ -4,7 +4,6 @@ import com.robertx22.mine_and_slash.database.data.spells.components.MapHolder;
 import com.robertx22.mine_and_slash.database.data.spells.entities.CalculatedSpellData;
 import com.robertx22.mine_and_slash.database.data.spells.entities.IDatapackSpellEntity;
 import com.robertx22.library_of_exile.utils.SoundUtils;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
@@ -34,10 +33,7 @@ public class SpellUtils {
     }
 
     public static void addLightningBolt(ServerLevel world, LightningBolt entityIn) {
-        world.getServer()
-                .getPlayerList()
-                .broadcast((Player) null, entityIn.getX(), entityIn.getY(), entityIn.getZ(), 50, world.dimension()
-                        , new ClientboundAddEntityPacket(entityIn));
+        world.addFreshEntity(entityIn);
     }
 
     public static void shootProjectile(Vec3 pos, AbstractArrow projectile, Entity caster, float speed,

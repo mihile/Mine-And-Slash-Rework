@@ -35,7 +35,7 @@ public class ArmorEffect extends InCodeStatEffect<DamageEvent> {
 
         IUsableStat armor = (IUsableStat) stat;
 
-        int afterPene = (int) (data.getValue() - pene);
+        int afterPene = (int) (data.get() - pene);
 
         if (afterPene == 0) {
             return effect;

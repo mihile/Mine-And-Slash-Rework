@@ -18,7 +18,7 @@ import com.robertx22.mine_and_slash.uncommon.utilityclasses.ClientOnly;
 import com.robertx22.mine_and_slash.uncommon.utilityclasses.NumberUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class StatInfoButton extends ImageButton implements IStatInfoButton {
+public class StatInfoButton extends OldImageButton implements IStatInfoButton {
 
     public static int xSize = 20;
     public static int ySize = 20;
@@ -47,8 +47,8 @@ public class StatInfoButton extends ImageButton implements IStatInfoButton {
     }
 
     @Override
-    public void render(GuiGraphics gui, int x, int y, float ticks) {
-        super.render(gui, x, y, ticks);
+    public void renderWidget(GuiGraphics gui, int x, int y, float ticks) {
+        super.renderWidget(gui, x, y, ticks);
 
 
         if (stat == null || stat.GetStat() == null) {
@@ -82,7 +82,7 @@ public class StatInfoButton extends ImageButton implements IStatInfoButton {
             @Override
             public MutableComponent getRenderText(StatData data, EntityData unit) {
                 String p = data.GetStat().IsPercent() ? "%" : "";
-                return Component.literal(MMORPG.DECIMAL_FORMAT.format(data.getValue()) + p);
+                return Component.literal(MMORPG.DECIMAL_FORMAT.format(data.get()) + p);
             }
 
             @Override
@@ -115,7 +115,7 @@ public class StatInfoButton extends ImageButton implements IStatInfoButton {
         USABLE_VALUE("usable_value", true) {
             @Override
             public MutableComponent getRenderText(StatData data, EntityData unit) {
-                return Component.literal(data.GetStat() instanceof IUsableStat u ? NumberUtils.singleDigitFloat(u.getUsableValue(unit.getUnit(), (int) data.getValue(), unit.getLevel()) * 100F) + "%" : "");
+                return Component.literal(data.GetStat() instanceof IUsableStat u ? NumberUtils.singleDigitFloat(u.getUsableValue(unit.getUnit(), (int) data.get(), unit.getLevel()) * 100F) + "%" : "");
             }
 
             @Override
@@ -232,3 +232,4 @@ public class StatInfoButton extends ImageButton implements IStatInfoButton {
     }
 
 }
+

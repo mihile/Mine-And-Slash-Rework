@@ -40,13 +40,5 @@ public class InCalc {
             }
         });
         // apply core stats
-        /*
-        calc.modifyInCalc(calcStat -> {
-            if (calcStat.GetStat() instanceof ICoreStat core) {
-                core.addToOtherStats(data, calc, calcStat);
-            }
-        });
-
-         */
     }
 }

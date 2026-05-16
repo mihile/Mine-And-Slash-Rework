@@ -3,6 +3,8 @@ package com.robertx22.mine_and_slash.capability.entity;
 import com.robertx22.library_of_exile.components.ICap;
 import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.library_of_exile.utils.CLOC;
+import net.minecraft.nbt.CompoundTag;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 import com.robertx22.library_of_exile.utils.LoadSave;
 import com.robertx22.library_of_exile.wrappers.ExileText;
 import com.robertx22.mine_and_slash.capability.DirtySync;
@@ -36,6 +38,7 @@ import com.robertx22.mine_and_slash.saveclasses.unit.ResourceType;
 import com.robertx22.mine_and_slash.saveclasses.unit.ResourcesData;
 import com.robertx22.mine_and_slash.saveclasses.unit.Unit;
 import com.robertx22.mine_and_slash.saveclasses.unit.stat_calc.StatCalculation;
+import com.robertx22.mine_and_slash.saveclasses.unit.stat_ctx.StatContext;
 import com.robertx22.mine_and_slash.uncommon.MathHelper;
 import com.robertx22.mine_and_slash.uncommon.datasaving.CustomExactStats;
 import com.robertx22.mine_and_slash.uncommon.datasaving.Load;
@@ -72,10 +75,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.util.LazyOptional;
+import com.robertx22.library_of_exile.compat.capability.Capability;
+import com.robertx22.library_of_exile.compat.capability.CapabilityManager;
+import com.robertx22.library_of_exile.compat.capability.CapabilityToken;
+import com.robertx22.library_of_exile.compat.capability.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,20 +88,40 @@ import java.util.List;
 import java.util.UUID;
 
 
-public class EntityData implements ICap, INeededForClient {
+public class EntityData implements ICap, INeededForClient, INBTSerializable<CompoundTag> {
 
-    public static final ResourceLocation RESOURCE = new ResourceLocation(SlashRef.MODID, "entity_data");
+    public static final ResourceLocation RESOURCE = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "entity_data");
     public static Capability<EntityData> INSTANCE = CapabilityManager.get(new CapabilityToken<>() {
     });
 
+    /**
+     * NeoForge Attachment 기본 생성자. getData() 후 반드시 init(entity)를 호출해야 합니다.
+     */
+    public EntityData() {
+        this.equipmentCache = new CachedEntityStats(null);
+    }
+
+    /**
+     * Attachment에서 꺼낸 후 entity를 주입합니다.
+     */
+    public EntityData init(LivingEntity entity) {
+        if (entity != null) {
+            this.entity = entity;
+            if (this.equipmentCache == null || this.equipmentCache.entity == null) {
+                this.equipmentCache = new CachedEntityStats(entity);
+            } else {
+                this.equipmentCache.entity = entity;
+            }
+        }
+        return this;
+    }
+
     public static EntityData get(LivingEntity entity) {
-        return entity.getCapability(INSTANCE)
-                .orElse(null);
+        return entity.getData(com.robertx22.mine_and_slash.mmorpg.registers.common.SlashAttachments.ENTITY_DATA.get()).init(entity);
     }
 
     transient final LazyOptional<EntityData> supp = LazyOptional.of(() -> this);
 
-    @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if (cap == INSTANCE) {
             return supp.cast();
@@ -111,6 +134,22 @@ public class EntityData implements ICap, INeededForClient {
     public EntityData(LivingEntity entity) {
         this.entity = entity;
         this.equipmentCache = new CachedEntityStats(entity);
+    }
+
+    @Override
+    public CompoundTag serializeNBT(net.minecraft.core.HolderLookup.Provider provider) {
+        CompoundTag nbt = new CompoundTag();
+
+        addClientNBT(nbt, provider);
+
+        savePersistentNBT(nbt, provider);
+
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(net.minecraft.core.HolderLookup.Provider provider, CompoundTag nbt) {
+        loadPersistentNBT(nbt, provider);
     }
 
     public CachedEntityStats equipmentCache;
@@ -144,7 +183,7 @@ public class EntityData implements ICap, INeededForClient {
         @Override
         public void onSynced(Entity p) {
             super.onSynced(p);
-            if (entity instanceof Player == false) {
+            if (!(entity instanceof Player)) {
                 dontSyncTicks = 20; // let's not sync mob data too often
             }
         }
@@ -158,9 +197,6 @@ public class EntityData implements ICap, INeededForClient {
         }
 
     };
-    // public DirtySync gear = new DirtySync("gear_recalc", x -> recalcStats());
-
-
     public int immuneTicks = 0;
 
     public UnsavedMaxEffectStacksData maxCharges = new UnsavedMaxEffectStacksData();
@@ -208,8 +244,7 @@ public class EntityData implements ICap, INeededForClient {
     CustomExactStatsData customExactStats = new CustomExactStatsData();
 
 
-    @Override
-    public void addClientNBT(CompoundTag nbt) {
+    public void addClientNBT(CompoundTag nbt, net.minecraft.core.HolderLookup.Provider provider) {
 
         try {
             nbt.putInt(LEVEL, level);
@@ -231,7 +266,16 @@ public class EntityData implements ICap, INeededForClient {
     }
 
     @Override
+    public void addClientNBT(CompoundTag nbt) {
+        addClientNBT(nbt, entity != null ? entity.level().registryAccess() : null);
+    }
+
+    @Override
     public void loadFromClientNBT(CompoundTag nbt) {
+        loadFromClientNBT(nbt, entity != null ? entity.level().registryAccess() : null);
+    }
+
+    public void loadFromClientNBT(CompoundTag nbt, net.minecraft.core.HolderLookup.Provider provider) {
 
         try {
             this.rarity = nbt.getString(RARITY);
@@ -268,10 +312,11 @@ public class EntityData implements ICap, INeededForClient {
 
     @Override
     public CompoundTag serializeNBT() {
-        CompoundTag nbt = new CompoundTag();
+        return serializeNBT(entity != null ? entity.level().registryAccess() : null);
 
-        addClientNBT(nbt);
+    }
 
+    private void savePersistentNBT(CompoundTag nbt, net.minecraft.core.HolderLookup.Provider provider) {
         try {
             nbt.putInt(EXP, exp);
             nbt.putInt(EXP_DEBT, expDebt);
@@ -280,7 +325,6 @@ public class EntityData implements ICap, INeededForClient {
             nbt.putBoolean(SET_MOB_STATS, setMobStats);
             nbt.putBoolean(NEWBIE_STATUS, this.isNewbie);
             LoadSave.Save(cooldowns, nbt, COOLDOWNS);
-            // LoadSave.Save(ailments, nbt, AILMENTS);
             LoadSave.Save(summonedPetData, nbt, PET);
             LoadSave.Save(leech, nbt, LEECH);
             LoadSave.Save(customExactStats, nbt, CUSTOM_STATS);
@@ -304,18 +348,16 @@ public class EntityData implements ICap, INeededForClient {
         }
 
 
-        return nbt;
+    }
 
+    private void savePersistentNBT(CompoundTag nbt) {
+        savePersistentNBT(nbt, entity != null ? entity.level().registryAccess() : null);
     }
 
     public static <OBJ> OBJ loadOrBlank(Class theclass, OBJ newobj, CompoundTag nbt, String loc, OBJ blank) {
         try {
             OBJ data = LoadSave.Load(theclass, newobj, nbt, loc);
-            if (data == null) {
-                return blank;
-            } else {
-                return data;
-            }
+            return data == null ? blank : data;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -324,9 +366,12 @@ public class EntityData implements ICap, INeededForClient {
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
+        deserializeNBT(entity != null ? entity.level().registryAccess() : null, nbt);
+    }
 
+    private void loadPersistentNBT(CompoundTag nbt, net.minecraft.core.HolderLookup.Provider provider) {
         try {
-            loadFromClientNBT(nbt);
+            loadFromClientNBT(nbt, provider);
 
             this.exp = nbt.getInt(EXP);
             this.expDebt = nbt.getInt(EXP_DEBT);
@@ -343,7 +388,6 @@ public class EntityData implements ICap, INeededForClient {
 
         try {
             this.summonedPetData = loadOrBlank(SummonedPetData.class, new SummonedPetData(), nbt, PET, new SummonedPetData());
-            // this.ailments = loadOrBlank(EntityAilmentData.class, new EntityAilmentData(), nbt, AILMENTS, new EntityAilmentData());
             this.threat = loadOrBlank(ThreatData.class, new ThreatData(), nbt, THREAT, new ThreatData());
             this.customExactStats = loadOrBlank(CustomExactStatsData.class, new CustomExactStatsData(), nbt, CUSTOM_STATS, new CustomExactStatsData());
             this.resources = loadOrBlank(ResourcesData.class, new ResourcesData(), nbt, RESOURCES_LOC, new ResourcesData());
@@ -354,8 +398,10 @@ public class EntityData implements ICap, INeededForClient {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
-
+    private void loadPersistentNBT(CompoundTag nbt) {
+        loadPersistentNBT(nbt, entity != null ? entity.level().registryAccess() : null);
     }
 
     public void setAllDirtyOnLoginEtc() {
@@ -367,7 +413,6 @@ public class EntityData implements ICap, INeededForClient {
             Load.player(p).playerDataSync.setDirty();
         }
 
-        //this.recalcStats_DONT_CALL();
     }
 
     public void setEquipsChanged() {
@@ -383,20 +428,14 @@ public class EntityData implements ICap, INeededForClient {
     }
 
     public float getMaximumResource(ResourceType type) {
-
-        if (type == ResourceType.blood) {
-            return getUnit().bloodData().getValue();
-        } else if (type == ResourceType.mana) {
-            return getUnit().manaData().getValue();
-        } else if (type == ResourceType.health) {
-            return getUnit().healthData().getValue();
-        } else if (type == ResourceType.energy) {
-            return getUnit().energyData().getValue();
-        } else if (type == ResourceType.magic_shield) {
-            return getUnit().magicShieldData().getValue();
-        }
-        return 0;
-
+        return switch (type) {
+            case blood -> getUnit().bloodData().get();
+            case mana -> getUnit().manaData().get();
+            case health -> getUnit().healthData().get();
+            case energy -> getUnit().energyData().get();
+            case magic_shield -> getUnit().magicShieldData().get();
+            default -> 0;
+        };
     }
 
     public void onDeathDoPenalty() {
@@ -443,24 +482,14 @@ public class EntityData implements ICap, INeededForClient {
     }
 
     public void unarmedAttack(AttackInformation data) {
-        float cost = ServerContainer.get().UNARMED_ENERGY_COST.get().floatValue();
-
-        cost = Energy.getInstance().scale(ModType.FLAT, cost, getLevel());
+        float cost = getUnarmedEnergyCost();
 
 
-        SpendResourceEvent event = new SpendResourceEvent(entity, null, ResourceType.energy, cost);
-        event.calculateEffects();
+        SpendResourceEvent event = createEnergySpendEvent(cost);
 
 
-        if (data.getAttackerEntity() instanceof Player p && PlayerUTIL.isFake(p)) {
-            // this is a bit jank but it solves 2 things: fake players not having energy to attack, and fake players not having stats because they dont tick
-            // and stats are calc on tick..
-            Load.Unit(p).equipmentCache.setAllDirty();
-        } else {
-            if (event.data.getNumber() > resources.getEnergy()) {
-                data.setCanceled(true);
-                return;
-            }
+        if (!prepareFakePlayerAttack(data, false) && cancelIfInsufficientEnergy(data, event)) {
+            return;
         }
 
         event.Activate();
@@ -470,7 +499,7 @@ public class EntityData implements ICap, INeededForClient {
         int num = (int) data.getAttackerEntityData()
                 .getUnit()
                 .getCalculatedStat(WeaponDamage.getInstance())
-                .getValue();
+                .get();
 
         if (num > 0) {
             DamageEvent dmg = EventBuilder.ofDamage(data, data.getAttackerEntity(), data.getTargetEntity(), num)
@@ -483,6 +512,39 @@ public class EntityData implements ICap, INeededForClient {
             data.setAmount(0);
             data.setCanceled(true);
         }
+    }
+
+    private float getUnarmedEnergyCost() {
+        float cost = ServerContainer.get().UNARMED_ENERGY_COST.get().floatValue();
+
+        return Energy.getInstance().scale(ModType.FLAT, cost, getLevel());
+    }
+
+    private boolean prepareFakePlayerAttack(AttackInformation data, boolean recalcStats) {
+        if (data.getAttackerEntity() instanceof Player p && PlayerUTIL.isFake(p)) {
+            // this is a bit jank but it solves 2 things: fake players not having energy to attack, and fake players not having stats because they dont tick
+            // and stats are calc on tick..
+            Load.Unit(p).equipmentCache.setAllDirty();
+            if (recalcStats) {
+                Load.Unit(p).recalcStats_DONT_CALL();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private SpendResourceEvent createEnergySpendEvent(float cost) {
+        SpendResourceEvent event = new SpendResourceEvent(entity, null, ResourceType.energy, cost);
+        event.calculateEffects();
+        return event;
+    }
+
+    private boolean cancelIfInsufficientEnergy(AttackInformation data, SpendResourceEvent event) {
+        if (event.data.getNumber() > resources.getEnergy()) {
+            data.setCanceled(true);
+            return true;
+        }
+        return false;
     }
 
     public void setUnit(Unit unit) {
@@ -578,21 +640,14 @@ public class EntityData implements ICap, INeededForClient {
             return;
         }
 
+        ensureUnit();
 
-        if (unit == null) {
-            unit = new Unit();
-        }
-
-        if (entity instanceof Player p && didStatCalcThisTickForPlayer) {
-            if (MMORPG.RUN_DEV_TOOLS) {
-                //   p.sendSystemMessage(Component.literal("Stats Skipped because done this tick already!").withStyle(ChatFormatting.GREEN));
-            }
+        if (shouldSkipPlayerStatCalc()) {
             return;
         }
 
         int oldhp = this.maxHealth;
 
-        //Watch watch = new Watch();
         this.unit = new Unit();
 
         var stats = StatCalculation.getStatsWithoutSuppGems(entity, this);
@@ -600,36 +655,51 @@ public class EntityData implements ICap, INeededForClient {
         StatCalculation.calc(unit, stats, entity, null, -1);
 
         if (entity instanceof Player p) {
-            this.didStatCalcThisTickForPlayer = true;
-
-            var data = Load.player(p);
-
-            data.cachedStats.allStatsWithoutSuppGems = stats;
-
-            data.setSpellUnitsDirty();
-
-            Load.player(p).spellCastingData.calcSpellLevels(unit);
-            Load.player(p).getSkillGemInventory().removeAurasIfCantWear(p);
-
-            UnequipGear.check(p);
-
-            data.getSkillGemInventory().removeSupportGemsIfTooMany(p);
-            data.getJewels().checkRemoveJewels(p);
-
-            this.maxCharges.calc(this.unit.getStats());
-
-            this.sync.setDirty();
+            applyPlayerStatCalcResults(p, stats);
 
         } else {
-            if (true || oldhp != maxHealth) {
-                this.sync.setDirty();
-            }
+            syncMobStatsIfNeeded(oldhp);
         }
 
-        this.maxHealth = (int) getUnit().getCalculatedStat(Health.getInstance()).getValue();
-        //watch.print("stat calc for " + (entity instanceof PlayerEntity ? "player " : "mob "));
+        this.maxHealth = (int) getUnit().getCalculatedStat(Health.getInstance()).get();
 
         HealthUtils.addHearts(entity);
+    }
+
+    private void ensureUnit() {
+        if (unit == null) {
+            unit = new Unit();
+        }
+    }
+
+    private boolean shouldSkipPlayerStatCalc() {
+        return entity instanceof Player && didStatCalcThisTickForPlayer;
+    }
+
+    private void applyPlayerStatCalcResults(Player p, List<StatContext> stats) {
+        this.didStatCalcThisTickForPlayer = true;
+
+        var data = Load.player(p);
+
+        data.cachedStats.allStatsWithoutSuppGems = stats;
+
+        data.setSpellUnitsDirty();
+
+        Load.player(p).spellCastingData.calcSpellLevels(unit);
+        Load.player(p).getSkillGemInventory().removeAurasIfCantWear(p);
+
+        UnequipGear.check(p);
+
+        data.getSkillGemInventory().removeSupportGemsIfTooMany(p);
+        data.getJewels().checkRemoveJewels(p);
+
+        this.maxCharges.calc(this.unit.getStats());
+
+        this.sync.setDirty();
+    }
+
+    private void syncMobStatsIfNeeded(int oldhp) {
+        this.sync.setDirty();
     }
 
 
@@ -691,26 +761,12 @@ public class EntityData implements ICap, INeededForClient {
 
             GearSlot slot = data.weaponData.GetBaseGearType().getGearSlot();
 
-            float cost = Energy.getInstance().scale(ModType.FLAT, slot.weapon_data.energy_cost_per_mob_attacked, getLevel());
+            float cost = calculateWeaponEnergyCostAndApplySwingCooldown(slot);
 
-            if (!Load.Unit(entity).cooldowns.isOnCooldown("swing_cost")) {
-                Load.Unit(entity).cooldowns.setOnCooldown("swing_cost", 3);
-                cost += Energy.getInstance().scale(ModType.FLAT, slot.weapon_data.energy_cost_per_swing, getLevel());
-            }
+            SpendResourceEvent event = createEnergySpendEvent(cost);
 
-            SpendResourceEvent event = new SpendResourceEvent(entity, null, ResourceType.energy, cost);
-            event.calculateEffects();
-
-            if (data.getAttackerEntity() instanceof Player p && PlayerUTIL.isFake(p)) {
-                // this is a bit jank but it solves 2 things: fake players not having energy to attack, and fake players not having stats because they dont tick
-                // and stats are calc on tick..
-                Load.Unit(p).equipmentCache.setAllDirty();
-                Load.Unit(p).recalcStats_DONT_CALL();
-            } else {
-                if (event.data.getNumber() > resources.getEnergy()) {
-                    data.setCanceled(true);
-                    return;
-                }
+            if (!prepareFakePlayerAttack(data, true) && cancelIfInsufficientEnergy(data, event)) {
+                return;
             }
 
             event.Activate();
@@ -720,6 +776,17 @@ public class EntityData implements ICap, INeededForClient {
         } else {
             data.setCanceled(true);
         }
+    }
+
+    private float calculateWeaponEnergyCostAndApplySwingCooldown(GearSlot slot) {
+        float cost = Energy.getInstance().scale(ModType.FLAT, slot.weapon_data.energy_cost_per_mob_attacked, getLevel());
+
+        if (!Load.Unit(entity).cooldowns.isOnCooldown("swing_cost")) {
+            Load.Unit(entity).cooldowns.setOnCooldown("swing_cost", 3);
+            cost += Energy.getInstance().scale(ModType.FLAT, slot.weapon_data.energy_cost_per_swing, getLevel());
+        }
+
+        return cost;
     }
 
 
@@ -778,7 +845,7 @@ public class EntityData implements ICap, INeededForClient {
     }
 
     public boolean needsToBeGivenStats() {
-        return this.setMobStats == false;
+        return !this.setMobStats;
     }
 
     public int getExpRequiredForLevelUp() {
@@ -813,11 +880,28 @@ public class EntityData implements ICap, INeededForClient {
         if (player.isDeadOrDying()) {
             return i;
         }
+
+        i = applyExpDebtReduction(i);
+        i = applyRestedCombatExp(player, i);
+
+        setExp(exp + i);
+
+        sendExpGainMessages(player, i, mods);
+        tryLevelUpAfterExpGain(player);
+
+        return i;
+    }
+
+    private int applyExpDebtReduction(int i) {
         if (expDebt > 0) {
             int reduced = MathHelper.clamp(i / 2, 0, expDebt);
             i -= reduced;
             this.expDebt -= reduced;
         }
+        return i;
+    }
+
+    private int applyRestedCombatExp(Player player, int i) {
         var rested = Load.player(player).rested_xp;
 
         rested.onGiveCombatExp(i);
@@ -827,9 +911,10 @@ public class EntityData implements ICap, INeededForClient {
             rested.bonusCombatExp -= added;
             i += added;
         }
+        return i;
+    }
 
-        setExp(exp + i);
-
+    private void sendExpGainMessages(Player player, int i, LootModifiersList mods) {
         float perc = MathHelper.clamp(1.0f * exp / getExpRequiredForLevelUp() * 100F, 0.0f, 100.0f);
         var msg = Gui.EXP_GAIN_PERCENT.locName(i, "", NumberUtils.singleDigitFloat(perc)).withStyle(ChatFormatting.GREEN);
 
@@ -840,14 +925,14 @@ public class EntityData implements ICap, INeededForClient {
             }
         }
         OnScreenMessageUtils.actionBar((ServerPlayer) player, msg);
+    }
 
+    private void tryLevelUpAfterExpGain(Player player) {
         if (exp >= this.getExpRequiredForLevelUp()) {
             if (this.CheckIfCanLevelUp() && this.CheckLevelCap()) {
                 this.LevelUp(player);
             }
-            return i;
         }
-        return i;
     }
 
     public boolean isSummon() {
@@ -881,33 +966,29 @@ public class EntityData implements ICap, INeededForClient {
 
         if (!CheckIfCanLevelUp()) {
             player.displayClientMessage(Chats.Not_enough_experience.locName(), false);
-        } else if (!CheckLevelCap()) {
+            return false;
+        }
+
+        if (!CheckLevelCap()) {
             player.displayClientMessage(Chats.Can_not_go_over_maximum_level.locName(), false);
+            return false;
         }
 
-        if (CheckIfCanLevelUp() && CheckLevelCap()) {
+        // fully restore on lvlup
+        restoreResourcesOnLevelUp(player);
 
-            if (player instanceof ServerPlayer) {
-                //ModCriteria.PLAYER_LEVEL.trigger((ServerPlayerEntity) player);
-            }
+        setExp(getRemainingExp());
+        this.setLevel(level + 1);
 
-            // fully restore on lvlup
+        OnScreenMessageUtils.sendLevelUpMessage(player, Words.LEVEL_UP_TYPE_PLAYER.locName(), level - 1, level);
 
-            getResources().restore(player, ResourceType.mana, Integer.MAX_VALUE);
-            getResources().restore(player, ResourceType.health, Integer.MAX_VALUE);
-            getResources().restore(player, ResourceType.blood, Integer.MAX_VALUE);
+        return true;
+    }
 
-            // fully restore on lvlup
-
-            setExp(getRemainingExp());
-            this.setLevel(level + 1);
-
-
-            OnScreenMessageUtils.sendLevelUpMessage(player, Words.LEVEL_UP_TYPE_PLAYER.locName(), level - 1, level);
-
-            return true;
-        }
-        return false;
+    private void restoreResourcesOnLevelUp(Player player) {
+        getResources().restore(player, ResourceType.mana, Integer.MAX_VALUE);
+        getResources().restore(player, ResourceType.health, Integer.MAX_VALUE);
+        getResources().restore(player, ResourceType.blood, Integer.MAX_VALUE);
     }
 
     public int getLevel() {

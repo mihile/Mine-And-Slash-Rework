@@ -31,7 +31,7 @@ public class ClearFilterButton extends AbstractButton {
         gui.setColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         int off = (HEIGHT - 16) / 2;
-        gui.blit(tex, getX() + off, getY() + off, 16, 16, 16, 16, 16, 16);
+        gui.blit(tex, getX() + off, getY() + off, 0, 0, 16, 16, 16, 16);
 
     }
 

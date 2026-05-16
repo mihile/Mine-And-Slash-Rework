@@ -21,7 +21,7 @@ import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.*;
 
@@ -55,7 +55,7 @@ public class JeiIntegration implements IModPlugin {
     public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
 
         List<ItemStack> itemsToHide = new ArrayList<>();
-        for (var item : ForgeRegistries.ITEMS) {
+        for (var item : BuiltInRegistries.ITEM) {
             if (item instanceof iHideJei) {
                 itemsToHide.add(item.getDefaultInstance());
             }
@@ -117,9 +117,7 @@ public class JeiIntegration implements IModPlugin {
     public void init() {
         if (map.isEmpty()) {
             for (String pro : Professions.STATION_PROFESSIONS) {
-                if (true) {
-                    map.put(pro, RecipeType.create(SlashRef.MODID, pro, ProfessionRecipe.class));
-                }
+                map.put(pro, RecipeType.create(SlashRef.MODID, pro, ProfessionRecipe.class));
             }
         }
     }

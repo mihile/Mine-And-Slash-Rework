@@ -15,7 +15,7 @@ public class TalentsScreen extends SkillTreeScreen {
 
     @Override
     public ResourceLocation iconLocation() {
-        return new ResourceLocation(SlashRef.MODID, "textures/gui/main_hub/icons/talents.png");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/talents.png");
     }
 
     @Override

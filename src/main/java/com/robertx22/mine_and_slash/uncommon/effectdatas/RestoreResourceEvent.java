@@ -62,9 +62,6 @@ public class RestoreResourceEvent extends EffectEvent {
 
                     if (source != target) {
                         InteractionNotifier.notifyClient(new IParticleSpawnMaterial.HealNumber(num), p, target);
-                        /*String text = NumberUtils.format(num);
-                        DmgNumPacket packet = new DmgNumPacket(target, text, data.isCrit(), ChatFormatting.GREEN);
-                        Packets.sendToClient((Player) source, packet);*/
                     }
                 }
             }

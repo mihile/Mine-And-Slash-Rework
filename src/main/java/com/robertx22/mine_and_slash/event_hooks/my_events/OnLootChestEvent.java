@@ -27,9 +27,24 @@ public class OnLootChestEvent extends EventConsumer<ExileEvents.OnChestLooted> {
 
         List<ItemStack> items = MasterLootGen.generateLoot(info);
 
+        com.robertx22.library_of_exile.main.ExileLog.get().log("OnLootChestEvent: Generated " + items.size() + " items for chest at " + event.pos + " for player " + player.getName().getString());
+        if (items.isEmpty()) {
+            com.robertx22.library_of_exile.main.ExileLog.get().log("OnLootChestEvent: items list is EMPTY!");
+        }
+
+        if (com.robertx22.mine_and_slash.mmorpg.MMORPG.RUN_DEV_TOOLS) {
+            com.robertx22.library_of_exile.main.ExileLog.get().log("OnLootChestEvent: Detailed list:");
+            for (ItemStack s : items) {
+                com.robertx22.library_of_exile.main.ExileLog.get().log("  - " + s.getDisplayName().getString());
+            }
+        }
+
         List<Integer> list1 = mygetEmptySlotsRandomized(event.inventory, new Random());
 
         if (list1.isEmpty()) {
+            if (com.robertx22.mine_and_slash.mmorpg.MMORPG.RUN_DEV_TOOLS) {
+                System.out.println("OnLootChestEvent: No empty slots in inventory!");
+            }
             return;
         }
 

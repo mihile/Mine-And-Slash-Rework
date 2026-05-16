@@ -5,36 +5,30 @@ import com.robertx22.mine_and_slash.database.data.stats.types.resources.energy.E
 import com.robertx22.mine_and_slash.database.data.stats.types.resources.health.Health;
 import com.robertx22.mine_and_slash.database.data.stats.types.resources.magic_shield.MagicShield;
 import com.robertx22.mine_and_slash.database.data.stats.types.resources.mana.Mana;
+import com.robertx22.mine_and_slash.mmorpg.MMORPG;
 import com.robertx22.mine_and_slash.mmorpg.SlashRef;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.stats.StatFormatter;
-import net.minecraft.stats.Stats;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerStats {
-    public static final ResourceLocation LEVELS_GAINED = new ResourceLocation(SlashRef.MODID, "levels_gained");
+    public static final ResourceLocation LEVELS_GAINED = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "levels_gained");
     public static final HashMap<String, ResourceLocation> REGISTERED_STATS = new HashMap<>();
 
     private static class Registrations {
-        public final List<ResourceLocation> customStats = new ArrayList<>();
+        public final Set<ResourceLocation> customStats = new LinkedHashSet<>();
 
         @SubscribeEvent
-        public void commonSetup(FMLCommonSetupEvent event) {
-            event.enqueueWork(() -> customStats.forEach(it -> {
-                Registry.register(BuiltInRegistries.CUSTOM_STAT, it.getPath(), it);
-                Stats.CUSTOM.get(it, StatFormatter.DEFAULT);
-            }));
+        public void register(RegisterEvent event) {
+            event.register(Registries.CUSTOM_STAT, helper -> customStats.forEach(it -> helper.register(it, it)));
         }
     }
 
@@ -45,7 +39,7 @@ public class PlayerStats {
     }
 
     public static void register() {
-        FMLJavaModLoadingContext.get().getModEventBus().register(getActiveRegistrations());
+        MMORPG.MOD_BUS.register(getActiveRegistrations());
     }
 
     private static Registrations getActiveRegistrations() {
@@ -53,7 +47,7 @@ public class PlayerStats {
     }
 
     public static void addReg(String id) {
-        REGISTERED_STATS.put(id, new ResourceLocation(SlashRef.MODID, id));
+        REGISTERED_STATS.put(id, ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, id));
     }
 
     public static void initialize() {
@@ -62,14 +56,6 @@ public class PlayerStats {
         addReg(Blood.getInstance().GUID());
         addReg(Energy.getInstance().GUID());
         addReg(MagicShield.getInstance().GUID());
-        /*
-        addReg(DatapackStats.DEX.GUID());
-        addReg(DatapackStats.INT.GUID());
-        addReg(DatapackStats.STR.GUID());
-        addReg(DatapackStats.MOVE_SPEED.GUID());
-
-         */
-
         registerCustomStat(LEVELS_GAINED);
         for (ResourceLocation rl : REGISTERED_STATS.values())
             registerCustomStat(rl);

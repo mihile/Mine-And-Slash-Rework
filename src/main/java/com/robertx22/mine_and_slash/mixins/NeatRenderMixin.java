@@ -17,11 +17,6 @@ public abstract class NeatRenderMixin {
     @Shadow
     public abstract Quaternionf cameraOrientation();
 
-    /**
-     * Hooks right after the main entity renderer runs.
-     * Here we have a good GL state set up, the buffers are still available for fabulous mode, etc.
-     * It's a much better point to render our bars than something like RenderLevelLastEvent.
-     */
     @Inject(
             method = "render", at = @At(
             value = "INVOKE",

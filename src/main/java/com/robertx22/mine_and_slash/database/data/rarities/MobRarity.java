@@ -114,7 +114,6 @@ public final class MobRarity implements JsonExileRegistry<MobRarity>, IAutoGson<
         try {
             return ChatFormatting.valueOf(text_format);
         } catch (Exception e) {
-            //  e.printStackTrace();
         }
         return ChatFormatting.GRAY;
     }

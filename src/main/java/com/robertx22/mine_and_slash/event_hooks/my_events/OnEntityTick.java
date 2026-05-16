@@ -36,18 +36,7 @@ public class OnEntityTick {
                 data.summonedPetData.tick(entity);
             }
 
-            data.immuneTicks--;
-
-
-            data.ailments.onTick(entity);
-
-            data.getStatusEffectsData().tick(entity);
-
-            data.getCooldowns().onTicksPass(1);
-
-            if (entity.tickCount % 20 == 0) {
-                data.leech.onSecondUseLeeches(data);
-            }
+            tickEntityData(entity, data);
 
 
             // todo lets see if this works fine, no need to lag if mobs anyway recalculate stats when needed
@@ -55,33 +44,11 @@ public class OnEntityTick {
                 checkGearChanged(entity);
 
                 if (entity.tickCount % 100 == 0) {
-                    Player p = (Player) entity;
-                    for (Map.Entry<String, ResourceLocation> set : PlayerStats.REGISTERED_STATS.entrySet()) {
-                        int max = Math.round(data.getUnit().getCalculatedStat(set.getKey()).getValue());
-                        p.resetStat(Stats.CUSTOM.get(PlayerStats.REGISTERED_STATS.get(set.getKey())));
-                        p.awardStat(Stats.CUSTOM.get(PlayerStats.REGISTERED_STATS.get(set.getKey())), max);
-                    }
+                    syncPlayerStats((Player) entity, data);
                 }
             } else {
 
-                var rar = Load.Unit(entity).getMobRarity();
-
-                if (!rar.spells.isEmpty()) {
-                    for (String id : rar.spells) {
-
-                        // todo this is just a quick workaround, ideally mobs should be using the same cast code as players
-                        var spell = ExileDB.Spells().get(id);
-
-                        if (!data.getCooldowns().isOnCooldown(id)) {
-                            var ctx = new SpellCastContext(entity, 0, spell);
-                            spell.cast(ctx);
-
-                            int cd = ctx.spell.getCooldownTicks(ctx);
-                            ctx.data.getCooldowns().setOnCooldown(ctx.spell.GUID(), cd);
-                        }
-                    }
-
-                }
+                castMobRaritySpells(entity, data);
 
             }
 
@@ -91,6 +58,52 @@ public class OnEntityTick {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void tickEntityData(LivingEntity entity, EntityData data) {
+        data.immuneTicks--;
+
+        data.ailments.onTick(entity);
+
+        data.getStatusEffectsData().tick(entity);
+
+        data.getCooldowns().onTicksPass(1);
+
+        if (entity.tickCount % 20 == 0) {
+            data.leech.onSecondUseLeeches(data);
+        }
+    }
+
+    private static void syncPlayerStats(Player p, EntityData data) {
+        for (Map.Entry<String, ResourceLocation> set : PlayerStats.REGISTERED_STATS.entrySet()) {
+            int max = Math.round(data.getUnit().getCalculatedStat(set.getKey()).get());
+            p.resetStat(Stats.CUSTOM.get(PlayerStats.REGISTERED_STATS.get(set.getKey())));
+            p.awardStat(Stats.CUSTOM.get(PlayerStats.REGISTERED_STATS.get(set.getKey())), max);
+        }
+    }
+
+    private static void castMobRaritySpells(LivingEntity entity, EntityData data) {
+        var rar = Load.Unit(entity).getMobRarity();
+
+        if (!rar.spells.isEmpty()) {
+            for (String id : rar.spells) {
+                castMobRaritySpell(entity, data, id);
+            }
+
+        }
+    }
+
+    private static void castMobRaritySpell(LivingEntity entity, EntityData data, String id) {
+        // todo this is just a quick workaround, ideally mobs should be using the same cast code as players
+        var spell = ExileDB.Spells().get(id);
+
+        if (!data.getCooldowns().isOnCooldown(id)) {
+            var ctx = new SpellCastContext(entity, 0, spell);
+            spell.cast(ctx);
+
+            int cd = ctx.spell.getCooldownTicks(ctx);
+            ctx.data.getCooldowns().setOnCooldown(ctx.spell.GUID(), cd);
         }
     }
 

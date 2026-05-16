@@ -4,14 +4,14 @@ import com.robertx22.mine_and_slash.uncommon.utilityclasses.ClientOnly;
 import com.robertx22.library_of_exile.utils.TextUTIL;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatSectionButton extends ImageButton {
+public class StatSectionButton extends OldImageButton {
 
     public static int xSize = 16;
     public static int ySize = 16;
@@ -28,8 +28,8 @@ public class StatSectionButton extends ImageButton {
     }
 
     @Override
-    public void render(GuiGraphics gui, int x, int y, float ticks) {
-        super.render(gui, x, y, ticks);
+    public void renderWidget(GuiGraphics gui, int x, int y, float ticks) {
+        super.renderWidget(gui, x, y, ticks);
 
         if (this.isHoveredOrFocused()) {
             List<Component> tooltip = new ArrayList<>();
@@ -40,3 +40,4 @@ public class StatSectionButton extends ImageButton {
     }
 
 }
+

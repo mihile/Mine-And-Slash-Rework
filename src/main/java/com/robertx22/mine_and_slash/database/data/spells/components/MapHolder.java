@@ -22,7 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.HashMap;
 import java.util.function.Function;
@@ -77,7 +77,7 @@ public class MapHolder {
     }
 
     public MobEffect getPotion() {
-        return BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation(get(POTION_ID)));
+        return BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.parse(get(POTION_ID)));
     }
 
     public Elements getElement() {
@@ -118,16 +118,12 @@ public class MapHolder {
         }
     }
 
-    /*public SimpleParticleType getParticle() {
-        return (SimpleParticleType) BuiltInRegistries.PARTICLE_TYPE.get(new ResourceLocation(get(MapField.PARTICLE_TYPE)));
-    }*/
-
     public Block getBlock() {
-        return VanillaUTIL.REGISTRY.blocks().get(new ResourceLocation(get(MapField.BLOCK)));
+        return VanillaUTIL.REGISTRY.blocks().get(ResourceLocation.parse(get(MapField.BLOCK)));
     }
 
     public SoundEvent getSound() {
-        return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(get(MapField.SOUND)));
+        return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse(get(MapField.SOUND)));
     }
 
     public EntityFinder.SelectionType getSelectionType() {

@@ -13,8 +13,9 @@ import com.robertx22.mine_and_slash.vanilla_mc.packets.CraftPacket;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -22,29 +23,25 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CraftButton extends ImageButton {
+public class CraftButton extends OldImageButton {
 
     public static int XS = 18;
     public static int YS = 19;
     public static CraftingStationScreen pbe;
+    private static final WidgetSprites SPRITES = new WidgetSprites(SlashRef.guiId("craftbutton"), SlashRef.guiId("craftbutton"));
 
     Minecraft mc = Minecraft.getInstance();
 
     public CraftButton(int xPos, int yPos, CraftingStationScreen be) {
-        super(xPos, yPos, XS, YS, 0, 0, YS, SlashRef.guiId("craftbutton"), (button) -> {
+        super(xPos, yPos, XS, YS, SPRITES, (button) -> {
             Packets.sendToServer(new CraftPacket(be.getSyncedData().getBlockPos()));
-        });
+        }, Component.empty());
         pbe = be;
     }
 
     @Override
-    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
-        setModTooltip();
-        super.render(gui, mouseX, mouseY, delta);
-    }
-
-    @Override
     public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
+        setModTooltip();
         ResourceLocation tex = SlashRef.guiId("craftbutton");
         gui.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         gui.blit(tex, getX(), getY(), 0, (pbe.getSyncedData().craftingState == Crafting_State.ACTIVE || pbe.getSyncedData().craftingState == Crafting_State.IDLE) ? 0 : 19, 18, 19);
@@ -79,3 +76,4 @@ public class CraftButton extends ImageButton {
     }
 
 }
+

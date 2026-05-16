@@ -55,7 +55,7 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, IAutoLocN
     }
 
     public boolean isSpell() {
-        return this.stats.size() > 0 && stats.get(0).getStat() instanceof LearnSpellStat;
+        return !this.stats.isEmpty() && stats.get(0).getStat() instanceof LearnSpellStat;
     }
 
     public Spell getSpell() {
@@ -76,7 +76,7 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, IAutoLocN
 
     public ResourceLocation getIcon() {
         if (cachedIcon == null) {
-            ResourceLocation id = new ResourceLocation(icon);
+            ResourceLocation id = ResourceLocation.parse(icon);
             if (ClientTextureUtils.textureExists(id)) {
                 cachedIcon = id;
             } else {
@@ -104,10 +104,7 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, IAutoLocN
             if (type == PerkType.MAJOR) {
                 // to get rid of like 100 lines of lang file
                 list.add(this.locName().withStyle(ChatFormatting.DARK_PURPLE));
-                // list.add(Component.empty());
-
             }
-            //   info.statTooltipType = StatTooltipType.NORMAL;
 
 
             if (isPassive()) {
@@ -144,7 +141,7 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, IAutoLocN
                 list.add(Words.GAME_CHANGER.locName().withStyle(ChatFormatting.RED));
             }
 
-            if (stats.size() > 0) {
+            if (!stats.isEmpty()) {
                 if (stats.get(0).getStat() instanceof LearnSpellStat spell) {
                     var data = Load.player(ClientOnly.getPlayer()).spellCastingData.getSpellData(spell.spell.GUID());
                     if (data.rank > 0) {
@@ -155,7 +152,6 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, IAutoLocN
                 }
             }
 
-            //list.add(ExileText.newLine().get());
             if (!(stats.get(0).getStat() instanceof LearnSpellStat)) {
                 list.add(Words.PressAltForStatInfo.locName().withStyle(ChatFormatting.BLUE));
             }
@@ -244,10 +240,7 @@ public class Perk implements JsonExileRegistry<Perk>, IAutoGson<Perk>, IAutoLocN
 
 
         public float getOffset() {
-            if (true) {
-                return ((size - iconSize) * 0.5F) + 0.5F;
-            }
-            return off;
+            return ((size - iconSize) * 0.5F) + 0.5F;
         }
 
     }

@@ -103,12 +103,6 @@ public class StatSoulData implements ICommonDataItem<GearRarity>, ISettableLevel
 
         StackSaving.STAT_SOULS.saveTo(stack, this);
 
-        if (!slot.isEmpty()) {
-            stack.getOrCreateTag()
-                    .putInt("CustomModelData", ExileDB.GearSlots()
-                            .get(slot).model_num);
-        }
-
         return stack;
 
     }

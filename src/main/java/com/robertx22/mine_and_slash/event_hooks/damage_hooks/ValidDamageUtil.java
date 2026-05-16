@@ -9,8 +9,6 @@ import net.minecraft.world.entity.player.Player;
 
 public class ValidDamageUtil {
 
-    // private static List<String> VALID_PROJECTILE_NAMES = Arrays.asList("arrow", "bolt", "ammo", "bullet", "dart", "missile");
-
     public static boolean isValidAttack(AttackInformation event) {
         if (!(event.getSource().getEntity() instanceof Player)) {
             return true;

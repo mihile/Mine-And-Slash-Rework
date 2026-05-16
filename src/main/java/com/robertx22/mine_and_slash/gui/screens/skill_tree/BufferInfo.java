@@ -44,10 +44,10 @@ public record BufferInfo(float pX1, float pX2, float pY1, float pY2, float pBlit
     public void upload(VertexConsumer consumer){
         final int light = 0xF000F0;
         float opacity = Math.min(this.renderInfo().opacity, 1.0f);
-        consumer.vertex(matrix4f, pX1, pY1, pBlitOffset).color(1.0f, 1.0f, 1.0f, opacity).uv(pMinU, pMinV).uv2(light).endVertex();
-        consumer.vertex(matrix4f, pX1, pY2, pBlitOffset).color(1.0f, 1.0f, 1.0f, opacity).uv(pMinU, pMaxV).uv2(light).endVertex();
-        consumer.vertex(matrix4f, pX2, pY2, pBlitOffset).color(1.0f, 1.0f, 1.0f, opacity).uv(pMaxU, pMaxV).uv2(light).endVertex();
-        consumer.vertex(matrix4f, pX2, pY1, pBlitOffset).color(1.0f, 1.0f, 1.0f, opacity).uv(pMaxU, pMinV).uv2(light).endVertex();
+        consumer.addVertex(matrix4f, pX1, pY1, pBlitOffset).setColor(1.0f, 1.0f, 1.0f, opacity).setUv(pMinU, pMinV).setLight(light);
+        consumer.addVertex(matrix4f, pX1, pY2, pBlitOffset).setColor(1.0f, 1.0f, 1.0f, opacity).setUv(pMinU, pMaxV).setLight(light);
+        consumer.addVertex(matrix4f, pX2, pY2, pBlitOffset).setColor(1.0f, 1.0f, 1.0f, opacity).setUv(pMaxU, pMaxV).setLight(light);
+        consumer.addVertex(matrix4f, pX2, pY1, pBlitOffset).setColor(1.0f, 1.0f, 1.0f, opacity).setUv(pMaxU, pMinV).setLight(light);
     }
 
     public record RenderInfo(float opacity){

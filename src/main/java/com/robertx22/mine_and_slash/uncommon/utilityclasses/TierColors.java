@@ -15,10 +15,7 @@ public class TierColors {
         if (tier == 2) {
             return ChatFormatting.LIGHT_PURPLE;
         }
-        if (tier == 3) {
-            return ChatFormatting.DARK_PURPLE;
-        }
-        if (tier > 3) {
+        if (tier >= 3) {
             return ChatFormatting.DARK_PURPLE;
         }
 

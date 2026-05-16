@@ -11,8 +11,8 @@ import net.minecraft.resources.ResourceLocation;
 
 public class SpellCastBarOverlay {
 
-    static ResourceLocation GUI_BARS_TEXTURES = new ResourceLocation(SlashRef.MODID, "textures/gui/spells/cast_bar/cast_bar.png");
-    static ResourceLocation FILLED = new ResourceLocation(SlashRef.MODID, "textures/gui/spells/cast_bar/cast_bar_fill.png");
+    static ResourceLocation GUI_BARS_TEXTURES = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/spells/cast_bar/cast_bar.png");
+    static ResourceLocation FILLED = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/spells/cast_bar/cast_bar_fill.png");
 
     static int WIDTH = 172;
     static int HEIGHT = 20;

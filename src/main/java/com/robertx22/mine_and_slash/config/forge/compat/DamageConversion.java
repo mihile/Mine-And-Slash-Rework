@@ -52,7 +52,7 @@ public class DamageConversion {
             int num = (int) unit
                     .getUnit()
                     .getCalculatedStat(WeaponDamage.getInstance())
-                    .getValue();
+                    .get();
 
 
             num *= wepdmg;

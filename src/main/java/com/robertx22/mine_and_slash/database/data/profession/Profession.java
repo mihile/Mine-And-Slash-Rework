@@ -86,7 +86,6 @@ public class Profession implements JsonExileRegistry<Profession>, IAutoGson<Prof
 
         for (ChancedDrop chancedDrop : ALLDROPS) {
 
-            //float dailyMulti = Load.player(p).professions.daily_drop_multis.getMulti(this, chancedDrop.type);
             float statMuti = Load.Unit(p).getUnit().getCalculatedStat(new ProfCategoryDropStat(chancedDrop.type, GUID())).getMultiplier();
 
             float chance = dropChanceMulti * chancedDrop.chance * statMuti;
@@ -101,8 +100,8 @@ public class Profession implements JsonExileRegistry<Profession>, IAutoGson<Prof
         }
 
 
-        float doubleDrop = diff.doubleDropChance + Load.Unit(p).getUnit().getCalculatedStat(new DoubleDropChance(GUID())).getValue();
-        float tripleDrop = Load.Unit(p).getUnit().getCalculatedStat(new TripleDropChance(GUID())).getValue();
+        float doubleDrop = diff.doubleDropChance + Load.Unit(p).getUnit().getCalculatedStat(new DoubleDropChance(GUID())).get();
+        float tripleDrop = Load.Unit(p).getUnit().getCalculatedStat(new TripleDropChance(GUID())).get();
 
         if (RandomUtils.roll(doubleDrop)) {
             for (ItemStack stack : list) {
@@ -136,8 +135,6 @@ public class Profession implements JsonExileRegistry<Profession>, IAutoGson<Prof
 
     public static enum DropCategory {
         MAIN("core", "Core");
-
-        //  MISC("misc", "Misc");
 
         public String id;
         public String locname;
@@ -177,7 +174,7 @@ public class Profession implements JsonExileRegistry<Profession>, IAutoGson<Prof
         }
 
         public ItemStack get() {
-            return new ItemStack(VanillaUTIL.REGISTRY.items().get(new ResourceLocation(item_id)), num);
+            return new ItemStack(VanillaUTIL.REGISTRY.items().get(ResourceLocation.parse(item_id)), num);
         }
 
         private int getWeight(Player p, Profession pro) {

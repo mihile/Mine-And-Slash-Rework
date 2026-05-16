@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class CanEntityHavePotionMixin {
 
     public static void hook(LivingEntity en, MobEffectInstance effect, CallbackInfoReturnable<Boolean> ci) {
-        if (!canAddPotion(en, effect.getEffect())) {
+        if (!canAddPotion(en, effect.getEffect().value())) {
             ci.setReturnValue(false);
         }
     }
@@ -25,8 +25,8 @@ public class CanEntityHavePotionMixin {
                     if (en.getActiveEffects()
                         .stream()
                         .anyMatch(x -> {
-                            if (x.getEffect() instanceof IOneOfATypePotion) {
-                                IOneOfATypePotion ot = (IOneOfATypePotion) x.getEffect();
+                            if (x.getEffect().value() instanceof IOneOfATypePotion) {
+                                IOneOfATypePotion ot = (IOneOfATypePotion) x.getEffect().value();
                                 if (ot.getOneOfATypeType()
                                     .equals(one.getOneOfATypeType())) {
                                     return true;

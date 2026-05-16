@@ -22,7 +22,7 @@ public class Rune implements IAutoGson<Rune>, JsonExileRegistry<Rune> {
     public static Rune SERIALIZER = new Rune();
 
     public Item getItem() {
-        return VanillaUTIL.REGISTRY.items().get(new ResourceLocation(item_id));
+        return VanillaUTIL.REGISTRY.items().get(ResourceLocation.parse(item_id));
     }
 
     public List<StatMod> on_armor_stats = new ArrayList<>();
@@ -55,7 +55,6 @@ public class Rune implements IAutoGson<Rune>, JsonExileRegistry<Rune> {
             return ExileDB.GearRarities().getFilterWrapped(x -> x.stat_percents.isInRange(data.p)).list.get(0).textFormatting();
 
         } catch (IllegalArgumentException e) {
-            //  e.printStackTrace();
         }
         return ChatFormatting.GRAY;
     }

@@ -84,7 +84,7 @@ public class BonusStatPerEffectStacks extends BaseDatapackStat implements ICoreS
 
     @Override
     public void affectStats(EntityData endata, StatData data, InCalcStatContainer incalc) {
-        for (ExactStatData x : getMods(endata, (int) data.getValue())) {
+        for (ExactStatData x : getMods(endata, (int) data.get())) {
             x.applyToStatInCalc(incalc);
         }
     }

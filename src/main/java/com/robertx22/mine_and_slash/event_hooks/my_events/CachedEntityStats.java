@@ -40,7 +40,7 @@ public class CachedEntityStats {
     private StatContext statusEffects;
 
 
-    LazyClass<EntityData> unitdata = new LazyClass<>(() -> Load.Unit(entity));
+    LazyClass<EntityData> unitdata = new LazyClass<>(() -> entity != null ? Load.Unit(entity) : new EntityData());
 
 
     public GearData getWeapon() {
@@ -59,14 +59,7 @@ public class CachedEntityStats {
         recalcGears();
 
         if (x instanceof Player p) {
-            Load.player(p).cachedStats.ENCHANT_COMPAT.setDirty();
-
-            Load.player(p).cachedStats.omenStats = null;
-            Load.player(p).recalcOmensFilled();
-            var omen = Load.player(p).getOmen();
-            if (omen != null) {
-                Load.player(p).cachedStats.omenStats = new MiscStatCtx(new OmenSet(omen).getStats(p));
-            }
+            updatePlayerGearCaches(p);
         }
 
         recalcPlayerStuff();
@@ -92,6 +85,17 @@ public class CachedEntityStats {
     private void recalcPlayerStuff() {
         if (entity instanceof Player p) {
             Load.player(p).cachedStats.setAllDirty();
+        }
+    }
+
+    private void updatePlayerGearCaches(Player p) {
+        Load.player(p).cachedStats.ENCHANT_COMPAT.setDirty();
+
+        Load.player(p).cachedStats.omenStats = null;
+        Load.player(p).recalcOmensFilled();
+        var omen = Load.player(p).getOmen();
+        if (omen != null) {
+            Load.player(p).cachedStats.omenStats = new MiscStatCtx(new OmenSet(omen).getStats(p));
         }
     }
 

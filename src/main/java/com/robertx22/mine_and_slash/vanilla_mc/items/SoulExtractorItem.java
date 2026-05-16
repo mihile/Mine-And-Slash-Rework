@@ -53,9 +53,7 @@ public class SoulExtractorItem extends AutoItem implements IShapelessRecipe {
     public String GUID() {
         return rar + "_soul_extractor";
     }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext world, List<Component> tooltip, TooltipFlag context) {
         ExileTooltips tip = new ExileTooltips();
         tip.accept(new AdditionalBlock(splitLongText(Itemtips.SOUL_EXTRACTOR_TIP.locName().withStyle(ChatFormatting.RED))));
         tip.accept(WorksOnBlock.usableOn(WorksOnBlock.ItemType.GEAR).rarities(ExileDB.GearRarities().getFilterWrapped(x -> canExtract(x)).list));
@@ -77,3 +75,4 @@ public class SoulExtractorItem extends AutoItem implements IShapelessRecipe {
     }
 
 }
+

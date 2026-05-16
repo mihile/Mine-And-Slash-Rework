@@ -18,7 +18,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -33,7 +32,7 @@ public class WorksOnBlock extends AbstractTextBlock {
     List<ItemType> items = new ArrayList<>();
 
     public static WorksOnBlock usableOn(ItemType type) {
-        return new WorksOnBlock(Type.USABLE_ON).itemTypes(Arrays.asList(type));
+        return new WorksOnBlock(Type.USABLE_ON).itemTypes(List.of(type));
     }
 
     public static WorksOnBlock usableOn(List<ItemType> type) {
@@ -122,11 +121,12 @@ public class WorksOnBlock extends AbstractTextBlock {
         }
         if (draggable) {
 
-            all.add(Itemtips.DRAG_AND_DROP_TO_USE.locName().withStyle(ChatFormatting.BLUE));
+            all.add(Itemtips.DRAG_AND_DROP_TO_USE.locName().withStyle(ChatFormatting.GOLD));
 
             if (Screen.hasShiftDown()) {
                 all.add(Itemtips.DRAG_AND_DROP_TO_USE_DESC.locName().withStyle(ChatFormatting.AQUA));
             }
+
             if (ClientOnly.getPlayer().isCreative()) {
                 all.add(Words.DRAG_NO_WORK_CREATIVE.locName().withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
             }

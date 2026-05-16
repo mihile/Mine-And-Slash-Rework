@@ -4,32 +4,21 @@ import com.robertx22.mine_and_slash.capability.entity.EntityData;
 import com.robertx22.mine_and_slash.config.forge.compat.CompatConfig;
 import com.robertx22.mine_and_slash.uncommon.datasaving.Load;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-
-import java.util.UUID;
 
 public class HealthUtils {
 
 
     static AttributeModifier getHeartsAttributeMod(float num) {
         return new AttributeModifier(
-                UUID.fromString("3fb10485-f309-128f-afc6-a55b0d6cf4c1"),
-                BuiltInRegistries.ATTRIBUTE.getKey(Attributes.MAX_HEALTH).toString(),
+                ResourceLocation.fromNamespaceAndPath("mmorpg", "max_health"),
                 num,
-                AttributeModifier.Operation.ADDITION
+                AttributeModifier.Operation.ADD_VALUE
         );
     }
-
-    /*
-    public static void removeHeartsOnSpawnIfNotLiteMode(LivingEntity en) {
-        if (!CompatConfig.get().healthSystem().usesVanillaHearts()) {
-
-        }
-    }
-
-     */
 
     public static void addHearts(LivingEntity en) {
 
@@ -39,7 +28,7 @@ public class HealthUtils {
 
             var data = Load.Unit(en);
 
-            int cur = (int) data.getUnit().healthData().getValue();
+            int cur = (int) data.getUnit().healthData().get();
 
             if (data.lastHealth != cur) {
                 data.lastHealth = cur;
@@ -49,8 +38,8 @@ public class HealthUtils {
 
             var at = en.getAttribute(Attributes.MAX_HEALTH);
 
-            if (en.getAttributes().hasModifier(Attributes.MAX_HEALTH, mod.getId())) {
-                at.removeModifier(mod.getId());
+            if (en.getAttributes().hasModifier(Attributes.MAX_HEALTH, mod.id())) {
+                at.removeModifier(mod.id());
             }
             data.heartsWithoutMnsHealth = (int) en.getMaxHealth();
 
@@ -65,8 +54,8 @@ public class HealthUtils {
         } else {
             var mod = getHeartsAttributeMod(0);
             var at = en.getAttribute(Attributes.MAX_HEALTH);
-            if (en.getAttributes().hasModifier(Attributes.MAX_HEALTH, mod.getId())) {
-                at.removeModifier(mod.getId());
+            if (en.getAttributes().hasModifier(Attributes.MAX_HEALTH, mod.id())) {
+                at.removeModifier(mod.id());
             }
         }
     }
@@ -99,7 +88,7 @@ public class HealthUtils {
             return data.getSyncedMaxHealth(); // for client, health needs to be synced
         }
         try {
-            return data.getUnit().healthData().getValue();
+            return data.getUnit().healthData().get();
         } catch (Exception e) {
             return 1;
         }
@@ -121,7 +110,7 @@ public class HealthUtils {
     }
 
     public static int getMaxHealthPlusMagicShield(LivingEntity entity) {
-        int num = (int) (getMaxHealth(entity) + Load.Unit(entity).getUnit().magicShieldData().getValue());
+        int num = (int) (getMaxHealth(entity) + Load.Unit(entity).getUnit().magicShieldData().get());
         if (num <= 0) {
             return 1;
         }

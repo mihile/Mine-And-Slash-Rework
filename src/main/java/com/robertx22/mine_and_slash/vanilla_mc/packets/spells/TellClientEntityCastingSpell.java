@@ -22,7 +22,6 @@ public class TellClientEntityCastingSpell extends MyPacket<TellClientEntityCasti
         var packet = new TellClientEntityCastingSpell(e, p, spell);
         // i think tracking is only entities besides the player?
         Packets.sendToTracking(packet, p);
-        Packets.sendToClient(p, packet);
     }
 
     private TellClientEntityCastingSpell(PlayerAnimations.CastEnum e, LivingEntity en, Spell spell) {
@@ -36,7 +35,7 @@ public class TellClientEntityCastingSpell extends MyPacket<TellClientEntityCasti
 
     @Override
     public ResourceLocation getIdentifier() {
-        return new ResourceLocation(SlashRef.MODID, "tellclienttocastspell");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "tellclienttocastspell");
     }
 
     @Override

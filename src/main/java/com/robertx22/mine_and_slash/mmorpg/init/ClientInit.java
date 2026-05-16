@@ -13,6 +13,7 @@ import com.robertx22.mine_and_slash.gui.SocketTooltip;
 import com.robertx22.mine_and_slash.gui.overlays.GuiPosition;
 import com.robertx22.mine_and_slash.mmorpg.ForgeEvents;
 import com.robertx22.mine_and_slash.mmorpg.event_registers.Client;
+import com.robertx22.mine_and_slash.mmorpg.event_registers.GuiOverlays;
 import com.robertx22.mine_and_slash.mmorpg.registers.client.ClientSetup;
 import com.robertx22.mine_and_slash.saveclasses.gearitem.gear_bases.ModRange;
 import com.robertx22.mine_and_slash.saveclasses.gearitem.gear_bases.StatRangeInfo;
@@ -25,15 +26,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.LiteralContents;
+import net.minecraft.network.chat.contents.PlainTextContents.LiteralContents;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.client.event.sound.PlaySoundEvent;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.event.RenderLivingEvent;
+import net.neoforged.neoforge.client.event.RenderTooltipEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.client.event.sound.PlaySoundEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -42,7 +43,7 @@ public class ClientInit {
 
     public static void onInitializeClient(final FMLClientSetupEvent event) {
 
-        ForgeEvents.registerForgeEvent(ScreenEvent.Init.class, x -> {
+        ForgeEvents.registerForgeEvent(ScreenEvent.Init.Post.class, x -> {
             BackpackQuickLootButton.addLootButton(x);
         });
 
@@ -71,14 +72,14 @@ public class ClientInit {
 
 
         var todisable = Arrays.asList(
-                VanillaGuiOverlay.ARMOR_LEVEL,
-                VanillaGuiOverlay.MOUNT_HEALTH,
-                VanillaGuiOverlay.PLAYER_HEALTH
+                VanillaGuiLayers.ARMOR_LEVEL,
+                VanillaGuiLayers.VEHICLE_HEALTH,
+                VanillaGuiLayers.PLAYER_HEALTH
         );
 
-        ForgeEvents.registerForgeEvent(RenderGuiOverlayEvent.class, x -> {
+        ForgeEvents.registerForgeEvent(RenderGuiLayerEvent.Pre.class, x -> {
             if (ClientConfigs.getConfig().GUI_POSITION.get() == GuiPosition.OVER_VANILLA) {
-                if (todisable.stream().anyMatch(e -> e.id().equals(x.getOverlay().id()))) {
+                if (todisable.stream().anyMatch(e -> e.equals(x.getName()))) {
                     x.setCanceled(true);
                 }
             }
@@ -135,17 +136,35 @@ public class ClientInit {
 
         });
 
-        ForgeEvents.registerForgeEvent(RenderLivingEvent.class, x -> {
+        ForgeEvents.registerForgeEvent(net.neoforged.neoforge.client.event.RenderLevelStageEvent.class, e -> {
+            if (e.getStage() == net.neoforged.neoforge.client.event.RenderLevelStageEvent.Stage.AFTER_ENTITIES) {
+                if (ClientConfigs.getConfig().ENABLE_FLOATING_DMG.get().getReal()) {
+                    Minecraft mc = Minecraft.getInstance();
+                    com.mojang.blaze3d.vertex.PoseStack poseStack = e.getPoseStack(); // 1.21.1 올바른 이벤트 매트릭스
+                    net.minecraft.client.renderer.MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
+                    DamageParticleRenderer.renderParticles(poseStack, bufferSource, e.getCamera());
+                    bufferSource.endBatch(); // 렌더링 Flush
+                }
+            }
+        });
+
+        ForgeEvents.registerForgeEvent(net.neoforged.neoforge.client.event.RenderLivingEvent.Post.class, x -> {
+            // 데미지 렌더링 코드를 RenderLevelStageEvent로 완전히 이전함
+        });
+
+        ForgeEvents.registerForgeEvent(net.neoforged.neoforge.client.event.ClientTickEvent.Post.class, x -> {
             for (DamageParticle p : DamageParticleRenderer.PARTICLES) {
-                Minecraft mc = Minecraft.getInstance();
-                DamageParticleRenderer.renderNameTag(mc.getEntityRenderDispatcher().camera, p.renderString, p, x.getPoseStack(), x.getPartialTick(), x.getMultiBufferSource());
                 p.tick();
             }
-
             DamageParticleRenderer.PARTICLES.removeIf(e -> e.age > 50);
         });
 
-        // RenderMobInfo.register();
+        // 클라이언트 전용: SyncPlayerCapToClient 패킷 수신 시 capid → Attachment 역직렬화 등록
+        // PlayerData.init()에서 서버 스레드에 접근하지 않도록 여기서만 등록합니다.
+        com.robertx22.library_of_exile.packets.SyncPlayerCapToClient.ATTACHMENT_LOOKUP.putIfAbsent(
+                "rpg_player_data",
+                p -> com.robertx22.mine_and_slash.uncommon.datasaving.Load.player(p)
+        );
 
         ClientSetup.setup();
         Client.register();

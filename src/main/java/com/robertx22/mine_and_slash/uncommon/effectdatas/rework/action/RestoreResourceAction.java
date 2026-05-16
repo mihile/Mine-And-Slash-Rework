@@ -32,7 +32,7 @@ public class RestoreResourceAction extends StatEffect {
     @Override
     public void activate(EffectEvent event, EffectSides statSource, StatData data, Stat stat) {
 
-        float val = num_provider.getValue(event, event.getSide(statSource), data);
+        float val = num_provider.get(event, event.getSide(statSource), data);
         val *= event.data.getNumber(EventData.ATTACK_COOLDOWN).number; // todo test
 
         if (this.restore_type == RestoreType.leech) {

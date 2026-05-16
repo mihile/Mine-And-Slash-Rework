@@ -9,10 +9,10 @@ import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.network.chat.Component;
-
-import static net.minecraft.client.gui.components.AbstractWidget.WIDGETS_LOCATION;
+import net.minecraft.resources.ResourceLocation;
 
 public class ToonEntry extends ObjectSelectionList.Entry<ToonEntry> {
+    private static final ResourceLocation WIDGETS_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/widgets.png");
 
     ToonData entry;
     ToonList list;
@@ -56,7 +56,6 @@ public class ToonEntry extends ObjectSelectionList.Entry<ToonEntry> {
 
         // taken from abstractbutton
         if (this.list.screen.selectedEntry == this.entry || this.isMouseOver(pMouseX, pMouseY)) {
-            gui.blitNineSliced(WIDGETS_LOCATION, pLeft - 1, pTop - 1, pWidth + 20, 20, 20, 4, pWidth, 20, 0, this.getTextureY(pMouseX, pMouseY));
         }
 
         if (this.isMouseOver(pMouseX, pMouseY)) {

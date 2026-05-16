@@ -23,7 +23,7 @@ public class AddToNumberEffect extends StatEffect {
 
     @Override
     public void activate(EffectEvent event, EffectSides statSource, StatData data, Stat stat) {
-        event.data.getNumber(number_id).number += num_provider.getValue(event, event.getSide(statSource), data);
+        event.data.getNumber(number_id).number += num_provider.get(event, event.getSide(statSource), data);
     }
 
     @Override

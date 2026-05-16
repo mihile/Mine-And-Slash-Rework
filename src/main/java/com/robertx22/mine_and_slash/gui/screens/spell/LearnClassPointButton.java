@@ -13,7 +13,7 @@ import com.robertx22.mine_and_slash.vanilla_mc.packets.AllocateClassPointPacket;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class LearnClassPointButton extends ImageButton {
+public class LearnClassPointButton extends OldImageButton {
 
     static ResourceLocation SPELL_SLOT = SlashRef.guiId("spells/slots/spell");
     static ResourceLocation PASSIVE = SlashRef.guiId("spells/slots/passive");
@@ -73,7 +73,7 @@ public class LearnClassPointButton extends ImageButton {
     }
 
     @Override
-    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
+    public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
         if (this.isHovered()) {
             setModTooltip();
         }
@@ -87,7 +87,7 @@ public class LearnClassPointButton extends ImageButton {
         }
 
         gui.setColor(1.0F, 1.0F, 1.0F, 1.0F);
-        gui.blit(perk.getIcon(), getX() + 1, getY() + 1, 16, 16, 16, 16, 16, 16);
+        gui.blit(perk.getIcon(), getX() + 1, getY() + 1, 0, 0, 16, 16, 16, 16);
         gui.blit(OVERLAY, getX(), getY(), BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X, BUTTON_SIZE_X);
 
 
@@ -125,13 +125,6 @@ public class LearnClassPointButton extends ImageButton {
         String lvltext = currentlvl + "/" + maxlvl;
         TextUtils.renderText(gui, 0.8F, lvltext, getX() + BUTTON_SIZE_X / 2, (int) (getY() + BUTTON_SIZE_Y * 0.85F), color);
 
-        super.render(gui, mouseX, mouseY, delta);
-
-    }
-
-    @Override
-    public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        // this.renderTexture(pGuiGraphics, this.resourceLocation, this.getX(), this.getY(), this.xTexStart, this.yTexStart, this.yDiffTex, this.width, this.height, this.textureWidth, this.textureHeight);
     }
 
     public void setModTooltip() {
@@ -151,11 +144,11 @@ public class LearnClassPointButton extends ImageButton {
 
 
     }
-
-    @Override
     protected ClientTooltipPositioner createTooltipPositioner() {
         return DefaultTooltipPositioner.INSTANCE;
     }
 
 
 }
+
+

@@ -6,8 +6,6 @@ import net.minecraft.resources.ResourceLocation;
 
 public class AnimationHolder {
 
-    // public static HashMap<String, AnimationHolder> MAP = new HashMap<>();
-
     public String id;
 
     public boolean hideOffhand = false;
@@ -37,7 +35,7 @@ public class AnimationHolder {
 
     public ResourceLocation getLocation() {
         if (id == null || id.isEmpty()) {
-            return new ResourceLocation("");
+            return ResourceLocation.parse("");
         }
 
         return SlashRef.id(id);

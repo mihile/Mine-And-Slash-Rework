@@ -24,7 +24,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,22 +70,22 @@ public class ExpSources {
 
             if (type == Type.BLOCK_TAG) {
                 if (obj instanceof TagKey<?> in) {
-                    return in.location().equals(new ResourceLocation(id));
+                    return in.location().equals(ResourceLocation.parse(id));
                 }
             }
             if (type == Type.BLOCK) {
                 if (obj instanceof Block in) {
-                    return VanillaUTIL.REGISTRY.blocks().getKey(in).equals(new ResourceLocation(id));
+                    return VanillaUTIL.REGISTRY.blocks().getKey(in).equals(ResourceLocation.parse(id));
                 }
             }
             if (type == Type.FARM_ITEM) {
                 if (obj instanceof Item in) {
-                    return VanillaUTIL.REGISTRY.items().getKey(in).equals(new ResourceLocation(id));
+                    return VanillaUTIL.REGISTRY.items().getKey(in).equals(ResourceLocation.parse(id));
                 }
             }
             if (type == Type.ENTITY) {
                 if (obj instanceof EntityType in) {
-                    return ForgeRegistries.ENTITY_TYPES.getKey(in).equals(new ResourceLocation(id));
+                    return BuiltInRegistries.ENTITY_TYPE.getKey(in).equals(ResourceLocation.parse(id));
                 }
             }
 
@@ -152,7 +152,6 @@ public class ExpSources {
             var lootMods = new LootModifiersList();
 
             int proflvl = Load.player(p).professions.getLevel(pro.GUID());
-            //float lvlmulti = MathHelper.clamp((float) proflvl / (float) getLevelOfMastery(), 0.5F, 1F);
 
             var fx = LevelUtils.scaleExpReward(exp, Load.player(p).professions.getLevel(pro.id));
 
@@ -175,7 +174,6 @@ public class ExpSources {
 
 
             lootMods.add(new LootModifier(LootModifierEnum.PROFESSION_BONUS_STAT, Load.Unit(p).getUnit().getCalculatedStat(new ProfExp(pro.id)).getMultiplier()));
-            //lootMods.add(new LootModifier(LootModifierEnum.LEVEL_DISTANCE_PENALTY, lvlmulti));
             lootMods.add(new LootModifier(LootModifierEnum.LOW_LEVEL_RECIPE_PENALTY, lowRecipeLvlPenalty));
 
 

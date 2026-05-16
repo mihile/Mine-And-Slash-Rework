@@ -32,12 +32,7 @@ public class OverlayAnchor {
 
             var offset = getSizeOffset(type);
 
-            //  var config = ClientConfigs.getConfig().getOverlayConfig(type);
-
-            //   var pos = config.getPos();
-
             return offset;
-            //  return new PointData(pos.x + offset.x, pos.y + offset.y);
         }
 
     }

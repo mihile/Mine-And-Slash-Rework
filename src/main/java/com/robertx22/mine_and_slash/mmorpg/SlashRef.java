@@ -6,11 +6,11 @@ import net.minecraft.resources.ResourceLocation;
 public class SlashRef {
 
     public static ResourceLocation id(String id) {
-        return new ResourceLocation(MODID, id);
+        return ResourceLocation.fromNamespaceAndPath(MODID, id);
     }
 
     public static ResourceLocation guiId(String id) {
-        return new ResourceLocation(SlashRef.MODID, "textures/gui/" + id + ".png");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/" + id + ".png");
     }
 
     public static final String MODID = "mmorpg";

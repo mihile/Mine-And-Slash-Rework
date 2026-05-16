@@ -43,7 +43,7 @@ public class SlashEntities {
     private static <T extends Entity> RegObj<EntityType<T>> mob(EntityType.EntityFactory<T> factory, EntityType like, String id) {
 
         RegObj<EntityType<T>> def = Def.entity(id, () -> EntityType.Builder.of(factory, MobCategory.MISC)
-                .sized(like.getDimensions().width, like.getDimensions().height)
+                .sized(like.getDimensions().width(), like.getDimensions().height())
                 .setTrackingRange(10)
                 .build(id));
 

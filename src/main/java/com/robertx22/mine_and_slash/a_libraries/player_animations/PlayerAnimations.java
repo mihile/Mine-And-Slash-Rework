@@ -11,6 +11,7 @@ import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
 import dev.kosmx.playerAnim.api.layered.modifier.AdjustmentModifier;
 import dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier;
+import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.core.util.Vec3f;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
@@ -93,7 +94,7 @@ public class PlayerAnimations {
 
 
         var keyframeAnimation = PlayerAnimationRegistry.getAnimation(resourceLocation);
-        if (keyframeAnimation != null) {
+        if (keyframeAnimation instanceof KeyframeAnimation animationData) {
 
             AnimationHolder config = SpellAnimations.MAP.getOrDefault(resourceLocation.getPath(), AnimationHolder.none());
 
@@ -101,7 +102,7 @@ public class PlayerAnimations {
             var animation = (ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData((AbstractClientPlayer) player).get(SpellAnimations.ANIMATION_RESOURCE);
             if (animation != null) {
 
-                var castingAnimationPlayer = new KeyframeAnimationPlayer(keyframeAnimation);
+                var castingAnimationPlayer = new KeyframeAnimationPlayer(animationData);
 
                 castingAnimationPlayerLookup.put(player.getUUID(), castingAnimationPlayer);
                 var armsFlag = true; //SHOW_FIRST_PERSON_ARMS.get();
@@ -110,8 +111,6 @@ public class PlayerAnimations {
                 if (armsFlag || itemsFlag) {
                     castingAnimationPlayer.setFirstPersonMode(FirstPersonMode.THIRD_PERSON_MODEL);
                     castingAnimationPlayer.setFirstPersonConfiguration(new FirstPersonConfiguration(armsFlag, armsFlag, true, !config.hideOffhand));
-                } else {
-                    //castingAnimationPlayer.setFirstPersonMode(FirstPersonMode.DISABLED);
                 }
                 animation.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(2, Ease.INOUTSINE), castingAnimationPlayer, true);
             }
@@ -122,13 +121,5 @@ public class PlayerAnimations {
         if (finishAnimation != null && !cancelled) {
             animatePlayerStart(player, finishAnimation);
         }
-        /*else if (finishAnimation != AnimationHolder.pass() || cancelled) {
-            var animationPlayer = castingAnimationPlayerLookup.getOrDefault(player.getUUID(), null);
-            if (animationPlayer != null) {
-                animationPlayer.stop();
-            }
-        }
-
-         */
     }
 }

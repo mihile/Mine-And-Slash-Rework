@@ -12,6 +12,7 @@ public class DamageSourceMixin implements DamageSourceDuck {
     private float originalHP = 1;
 
     private boolean mnsOverride = false;
+    private boolean messageSent = false;
 
     @Override
     public void setMnsDamage(float dmg) {
@@ -49,5 +50,15 @@ public class DamageSourceMixin implements DamageSourceDuck {
     @Override
     public float getOriginalDamage() {
         return originalDamage;
+    }
+
+    @Override
+    public boolean isMessageSent() {
+        return messageSent;
+    }
+
+    @Override
+    public void setMessageSent(boolean sent) {
+        this.messageSent = sent;
     }
 }

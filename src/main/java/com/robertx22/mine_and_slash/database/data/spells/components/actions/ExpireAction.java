@@ -20,7 +20,7 @@ public class ExpireAction extends SpellAction {
             if (!ctx.getPositionEntity().isRemoved()) {
 
                 // todo this is confusing
-                if (ctx.getPositionEntity() instanceof Player == false) {
+                if (!(ctx.getPositionEntity() instanceof Player)) {
                     ctx.getPositionEntity().discard(); // this can cause infi loops and even calling expire spell multiple times
                 }
             }

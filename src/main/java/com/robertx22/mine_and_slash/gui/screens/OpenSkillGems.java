@@ -20,7 +20,7 @@ public class OpenSkillGems implements IContainerNamedScreen, IAlertScreen {
 
     @Override
     public ResourceLocation iconLocation() {
-        return new ResourceLocation(SlashRef.MODID, "textures/gui/main_hub/icons/skill_gems.png");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/main_hub/icons/skill_gems.png");
     }
 
     @Override

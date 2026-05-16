@@ -47,9 +47,7 @@ public class CooldownsData {
             return;
         }
         new HashMap<>(map).entrySet()
-                .forEach(x -> {
-                    tickDownCooldown(x.getKey(), ticks);
-                });
+                .forEach(x -> tickDownCooldown(x.getKey(), ticks));
     }
 
     public List<String> getAllSpellsOnCooldown() {
@@ -77,12 +75,12 @@ public class CooldownsData {
     }
 
     public boolean runIfNoCooldownAndSet(String id, int cdticks, Runnable run) {
-        if (!isOnCooldown(id)) {
-            run.run();
-            setOnCooldown(id, cdticks);
-            return true;
+        if (isOnCooldown(id)) {
+            return false;
         }
-        return false;
+        run.run();
+        setOnCooldown(id, cdticks);
+        return true;
     }
 
 }

@@ -2,10 +2,10 @@ package com.robertx22.mine_and_slash.gui.screens.spell;
 
 import com.robertx22.mine_and_slash.gui.screens.ILeftRight;
 import com.robertx22.mine_and_slash.mmorpg.SlashRef;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.resources.ResourceLocation;
 
-public class LeftRightButton extends ImageButton {
+public class LeftRightButton extends OldImageButton {
 
     public static ResourceLocation TEX = SlashRef.guiId("leftright/leftright");
 
@@ -26,12 +26,5 @@ public class LeftRightButton extends ImageButton {
         });
     }
 
-    /*
-    @Override
-    public void renderButton(PoseStack matrix, int x, int y, float ticks) {
-        super.renderButton(matrix, x, y, ticks);
-    }
-
-     */
 
 }

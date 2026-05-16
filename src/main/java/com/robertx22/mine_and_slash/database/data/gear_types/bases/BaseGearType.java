@@ -67,7 +67,6 @@ public final class BaseGearType implements IAutoLocName, JsonExileRegistry<BaseG
         public int weight = 1000;
         public String item_id = "";
         public String min_rar = IRarity.COMMON_ID;
-        //  public String force_rar = "";
 
         public ItemChance(int weight, String item_id, String min_rar) {
             this.weight = weight;
@@ -76,7 +75,7 @@ public final class BaseGearType implements IAutoLocName, JsonExileRegistry<BaseG
         }
 
         public Item getItem() {
-            return VanillaUTIL.REGISTRY.items().get(new ResourceLocation(item_id));
+            return VanillaUTIL.REGISTRY.items().get(ResourceLocation.parse(item_id));
         }
 
         @Override

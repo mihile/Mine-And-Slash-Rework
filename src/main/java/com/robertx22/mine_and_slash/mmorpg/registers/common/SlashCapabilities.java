@@ -5,55 +5,55 @@ import com.robertx22.mine_and_slash.capability.chunk.ChunkCap;
 import com.robertx22.mine_and_slash.capability.entity.EntityData;
 import com.robertx22.mine_and_slash.capability.player.PlayerBackpackData;
 import com.robertx22.mine_and_slash.capability.player.PlayerData;
-import com.robertx22.mine_and_slash.capability.world.WorldData;
 import com.robertx22.mine_and_slash.mmorpg.ForgeEvents;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
-import java.util.function.Consumer;
-
+/**
+ * SlashCapabilities - NeoForge 1.21.1 Data Attachment 등록 및 이벤트 처리
+ *
+ * PlayerData, PlayerBackpackData, EntityData, ChunkCap 모두 INBTSerializable을 구현하고
+ * AttachmentType.serializable()로 등록되어 있으므로, NeoForge가 자동으로 NBT 저장/로드를 처리합니다.
+ *
+ * 여기서는 추가로 필요한 런타임 초기화(entity 레퍼런스 주입)만 처리합니다.
+ */
 public class SlashCapabilities {
-
 
     public static void register() {
 
-        ForgeEvents.registerForgeEvent(RegisterCapabilitiesEvent.class, x -> {
-            x.register(EntityData.class);
-            x.register(WorldData.class);
-            x.register(PlayerData.class);
-            x.register(PlayerBackpackData.class);
-            x.register(ChunkCap.class);
-        });
-
-        MinecraftForge.EVENT_BUS.addGenericListener(Level.class, (Consumer<AttachCapabilitiesEvent<Level>>) x -> {
-            x.addCapability(WorldData.RESOURCE, new WorldData(x.getObject()));
-        });
-
-
-        MinecraftForge.EVENT_BUS.addGenericListener(LevelChunk.class, (Consumer<AttachCapabilitiesEvent<LevelChunk>>) x -> {
-            x.addCapability(ChunkCap.RESOURCE, new ChunkCap(x.getObject()));
-        });
-
-        MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, (Consumer<AttachCapabilitiesEvent<Entity>>) x -> {
-
-            if (x.getObject() instanceof LivingEntity en) {
-                x.addCapability(EntityData.RESOURCE, new EntityData(en));
-            }
-            if (x.getObject() instanceof Player p) {
-                x.addCapability(PlayerData.RESOURCE, new PlayerData(p));
-                x.addCapability(PlayerBackpackData.RESOURCE, new PlayerBackpackData(p));
+        /**
+         * 플레이어 로그인 시 Attachment에 entity 레퍼런스 주입.
+         * Attachment는 NBT에서 자동으로 로드되지만, transient 필드인 player/entity 참조는
+         * 별도로 주입해야 합니다.
+         */
+        ForgeEvents.registerForgeEvent(PlayerEvent.PlayerLoggedInEvent.class, event -> {
+            try {
+                if (event.getEntity() instanceof ServerPlayer sp) {
+                    sp.getData(SlashAttachments.ENTITY_DATA.get()).init(sp);
+                    sp.getData(SlashAttachments.PLAYER_DATA.get()).init(sp);
+                    sp.getData(SlashAttachments.PLAYER_BACKPACK_DATA.get()).init(sp);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
 
-        PlayerCapabilities.register(EntityData.INSTANCE, new EntityData(null)); // todo will forge's async screw with this?
-        PlayerCapabilities.register(PlayerData.INSTANCE, new PlayerData(null)); // todo will forge's async screw with this?
-        PlayerCapabilities.register(PlayerBackpackData.INSTANCE, new PlayerBackpackData(null)); // todo will forge's async screw with this?
+        /**
+         * 플레이어 사망/차원이동 후 Clone 이벤트 시 entity 레퍼런스 주입.
+         * copyOnDeath()로 PlayerData/PlayerBackpackData의 NBT는 자동 복사되지만,
+         * transient player 참조는 새 플레이어 인스턴스로 다시 주입해야 합니다.
+         */
+        ForgeEvents.registerForgeEvent(PlayerEvent.Clone.class, event -> {
+            try {
+                if (event.getEntity() instanceof ServerPlayer sp) {
+                    sp.getData(SlashAttachments.ENTITY_DATA.get()).init(sp);
+                    sp.getData(SlashAttachments.PLAYER_DATA.get()).init(sp);
+                    sp.getData(SlashAttachments.PLAYER_BACKPACK_DATA.get()).init(sp);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 
     }
 }

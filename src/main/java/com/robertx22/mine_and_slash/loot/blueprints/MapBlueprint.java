@@ -28,27 +28,13 @@ public class MapBlueprint extends RarityItemBlueprint {
     @Override
     public ItemStack generate() {
 
-        return DungeonMapItem.newRandomMapItemStack(new DungeonMapGenSettings());
+        ItemStack stack = DungeonMapItem.newRandomMapItemStack(new DungeonMapGenSettings());
 
-        // todo need to fix this
-
-        /*
         MapItemData data = createData();
+        data.lvl = this.level.get();
+        data.saveToStack(stack);
 
-        ItemStack stack = new ItemStack(DungeonEntries.DUNGEON_MAP_ITEM.get());
-
-        var vanillaData = DungeonMapItem.randomNewMapData();
-
-        if (uberMap) {
-            vanillaData.uber = true;
-        }
-
-        StackSaving.MAP.saveTo(stack, data);
-        DungeonItemNbt.DUNGEON_MAP.saveTo(stack, vanillaData);
         return stack;
-
-         */
-
     }
 
     public MapItemData createData() {

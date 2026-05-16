@@ -23,11 +23,7 @@ public class WorldUtils {
 
     // todo rework this to point to dungeon mod instead
     public static boolean isMapWorldClass(Level world, BlockPos pos) {
-        if (world == null) {
-            return false;
-        }
-
-        return ifMapData(world, pos).isPresent();
+        return world != null && ifMapData(world, pos).isPresent();
 
     }
 

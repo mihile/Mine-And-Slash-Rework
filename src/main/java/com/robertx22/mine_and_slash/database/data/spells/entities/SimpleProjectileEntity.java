@@ -40,7 +40,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.network.NetworkHooks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,8 +75,12 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
     boolean collidedAlready = false;
 
 
-    @Override
     protected ItemStack getPickupItem() {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    protected ItemStack getDefaultPickupItem() {
         return ItemStack.EMPTY;
     }
 
@@ -84,17 +88,14 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
         return true;
     }
 
-    @Override
     public Iterable<ItemStack> getArmorSlots() {
         return new ArrayList<>();
     }
 
-    @Override
     public void setItemSlot(EquipmentSlot slotIn, ItemStack stack) {
 
     }
 
-    @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
@@ -167,7 +168,7 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
                     .radius(radius)
                     .build();
 
-            if (entities.size() > 0) {
+            if (!entities.isEmpty()) {
 
                 LivingEntity closest = entities.get(0);
 
@@ -276,33 +277,48 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
     Entity target = null;
 
     public void tryMoveTowardsTargets() {
-        if (moveTowardsEnemies) {
-
-            if (target == null || !target.isAlive() || this.tickCount % 20 == 0) {
-
-                int radius = getSpellData().getSpell().config.tracking_radius;
-
-                var b = EntityFinder.start(getCaster(), LivingEntity.class, position())
-                        .finder(EntityFinder.SelectionType.RADIUS)
-                        .searchFor(getSpellData().getSpell().config.tracks)
-                        .predicate(x -> AoeSelector.canHit(this.position(), x))
-                        .radius(radius);
-
-                target = b.getClosest();
-            }
-
-            if (target != null) {
-                var vel = ProjectileCastHelper.positionToVelocity(new MyPosition(position()), new MyPosition(target.getEyePosition()));
-                vel = vel.normalize().multiply(speed, speed, speed); // todo this doesnt fix the speed problem
-                setDeltaMovement(vel);
-
-
-                PlayerUtils.getNearbyPlayers(level(), blockPosition(), 40)
-                        .forEach(p -> {
-                            ((ServerPlayer) p).connection.send(new ClientboundSetEntityMotionPacket(this));
-                        });
-            }
+        if (!moveTowardsEnemies) {
+            return;
         }
+
+        if (shouldRefreshTrackingTarget()) {
+            refreshTrackingTarget();
+        }
+
+        if (target != null) {
+            moveTowardsTrackingTarget();
+        }
+    }
+
+    private boolean shouldRefreshTrackingTarget() {
+        return target == null || !target.isAlive() || this.tickCount % 20 == 0;
+    }
+
+    private void refreshTrackingTarget() {
+        int radius = getSpellData().getSpell().config.tracking_radius;
+
+        var b = EntityFinder.start(getCaster(), LivingEntity.class, position())
+                .finder(EntityFinder.SelectionType.RADIUS)
+                .searchFor(getSpellData().getSpell().config.tracks)
+                .predicate(x -> AoeSelector.canHit(this.position(), x))
+                .radius(radius);
+
+        target = b.getClosest();
+    }
+
+    private void moveTowardsTrackingTarget() {
+        var vel = ProjectileCastHelper.positionToVelocity(new MyPosition(position()), new MyPosition(target.getEyePosition()));
+        vel = vel.normalize().multiply(speed, speed, speed); // todo this doesnt fix the speed problem
+        setDeltaMovement(vel);
+
+        syncMotionToNearbyPlayers();
+    }
+
+    private void syncMotionToNearbyPlayers() {
+        PlayerUtils.getNearbyPlayers(level(), blockPosition(), 40)
+                .forEach(p -> {
+                    ((ServerPlayer) p).connection.send(new ClientboundSetEntityMotionPacket(this));
+                });
     }
 
     @Override
@@ -315,20 +331,25 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
                     return !e.isSpectator() && e.isPickable() && e instanceof Entity && e != this.getCaster() && e != this.ignoreEntity;
                 });
 
-        if (!this.entityData.get(HIT_ALLIES)) {
-            if (res != null && getCaster() != null && res.getEntity() instanceof LivingEntity) {
-                if (AllyOrEnemy.allies.is(getCaster(), (LivingEntity) res.getEntity())) {
-                    return null; // don't hit allies with spells, let them pass
-                }
-            }
+        if (shouldIgnoreAllyHit(res)) {
+            return null;
         }
         return res;
     }
 
+    private boolean shouldIgnoreAllyHit(EntityHitResult res) {
+        if (!this.entityData.get(HIT_ALLIES)) {
+            if (res != null && getCaster() != null && res.getEntity() instanceof LivingEntity) {
+                if (AllyOrEnemy.allies.is(getCaster(), (LivingEntity) res.getEntity())) {
+                    return true; // don't hit allies with spells, let them pass
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     protected void onHit(HitResult raytraceResultIn) {
-
-        // super.onHit(raytraceResultIn); // adding this back seemed to fix proj a bit
 
         HitResult.Type raytraceresult$type = raytraceResultIn.getType();
         if (raytraceresult$type == HitResult.Type.ENTITY) {
@@ -336,18 +357,20 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
             this.onImpact(raytraceResultIn);
 
         } else if (raytraceresult$type == HitResult.Type.BLOCK) {
-
-            if (collidedAlready) {
-                return;
-            }
-            this.onImpact(raytraceResultIn);
-
-            collidedAlready = true;
-
-            this.inGround = true;
-
+            handleBlockHit(raytraceResultIn);
         }
 
+    }
+
+    private void handleBlockHit(HitResult raytraceResultIn) {
+        if (collidedAlready) {
+            return;
+        }
+        this.onImpact(raytraceResultIn);
+
+        collidedAlready = true;
+
+        this.inGround = true;
     }
 
     protected void onImpact(HitResult result) {
@@ -357,110 +380,141 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
         Entity entityHit = getEntityHit(result, 0.3D);
 
         if (entityHit != null) {
-            if (level().isClientSide) {
-                SoundUtils.playSound(this, SoundEvents.GENERIC_HURT, 1F, 0.9F);
-            }
+            playEntityImpactSound();
 
             LivingEntity caster = getCaster();
 
-            LivingEntity en = null;
-
-            if (entityHit instanceof LivingEntity == false) {
-                // HARDCODED support for dumb ender dragon non living entity dragon parts
-                if (entityHit instanceof EnderDragonPart) {
-                    EnderDragonPart part = (EnderDragonPart) entityHit;
-                    if (!part.isInvulnerableTo(this.damageSources().mobAttack(caster))) {
-                        en = part.parentMob;
-                    }
-                }
-            } else if (entityHit instanceof LivingEntity) {
-                en = (LivingEntity) entityHit;
-            }
+            LivingEntity en = getLivingEntityHit(entityHit, caster);
 
             if (en == null) {
                 return;
             }
 
             if (caster != null) {
-                if (!Load.Unit(caster)
-                        .alreadyHit(this, en)) {
-                    if (!level().isClientSide) {
-                        var ctx = SpellCtx.onHit(caster, this, en, getSpellData());
-
-                        this.getSpellData()
-                                .getSpell()
-                                .getAttached()
-                                .tryActivate(getScoreboardName(), ctx);
-                    }
-                }
+                activateHitSpell(caster, en);
             }
 
         } else {
 
-            if (level().isClientSide) {
-                SoundUtils.playSound(this, SoundEvents.STONE_HIT, 0.7F, 0.9F);
-            }
+            playBlockImpactSound();
 
         }
 
+        if (shouldStopImpactAfterEntityHit(entityHit)) {
+            return;
+        }
+
+        removeOnBlockImpactIfNeeded(result);
+
+
+        if (!level().isClientSide) {
+            spawnChainedProjectile(entityHit);
+        }
+
+    }
+
+    private void playEntityImpactSound() {
+        if (level().isClientSide) {
+            SoundUtils.playSound(this, SoundEvents.GENERIC_HURT, 1F, 0.9F);
+        }
+    }
+
+    private void playBlockImpactSound() {
+        if (level().isClientSide) {
+            SoundUtils.playSound(this, SoundEvents.STONE_HIT, 0.7F, 0.9F);
+        }
+    }
+
+    private boolean shouldStopImpactAfterEntityHit(Entity entityHit) {
         if (entityHit != null) {
             if (!entityData.get(EXPIRE_ON_ENTITY_HIT)) {
-                return;
+                return true;
             } else {
                 scheduleRemoval();
             }
         }
+        return false;
+    }
 
+    private void removeOnBlockImpactIfNeeded(HitResult result) {
         if (result instanceof BlockHitResult && entityData.get(EXPIRE_ON_BLOCK_HIT)) {
             scheduleRemoval();
         }
+    }
+
+    private void activateHitSpell(LivingEntity caster, LivingEntity en) {
+        if (!Load.Unit(caster)
+                .alreadyHit(this, en)) {
+            if (!level().isClientSide) {
+                var ctx = SpellCtx.onHit(caster, this, en, getSpellData());
+
+                this.getSpellData()
+                        .getSpell()
+                        .getAttached()
+                        .tryActivate(getScoreboardName(), ctx);
+            }
+        }
+    }
+
+    private LivingEntity getLivingEntityHit(Entity entityHit, LivingEntity caster) {
+        LivingEntity en = null;
+
+        if (!(entityHit instanceof LivingEntity)) {
+            // HARDCODED support for dumb ender dragon non living entity dragon parts
+            if (entityHit instanceof EnderDragonPart) {
+                EnderDragonPart part = (EnderDragonPart) entityHit;
+                if (!part.isInvulnerableTo(this.damageSources().mobAttack(caster))) {
+                    en = part.parentMob;
+                }
+            }
+        } else if (entityHit instanceof LivingEntity) {
+            en = (LivingEntity) entityHit;
+        }
+
+        return en;
+    }
+
+    private void spawnChainedProjectile(Entity entityHit) {
+        if (getCaster() != null) {
 
 
-        if (!level().isClientSide) {
+            int chains = this.entityData.get(CHAINS).intValue();
+
+            if (chains > 0) {
+                chains--;
+
+                if (entityHit == null) {
+                    chains = 0;
+                }
 
 
-            if (getCaster() != null) {
+                var radius = getSpellData().data.getNumber(EventData.AREA_MULTI, 1F).number;
 
+                var b = EntityFinder.start(getCaster(), LivingEntity.class, position())
+                        .finder(EntityFinder.SelectionType.RADIUS)
+                        .searchFor(AllyOrEnemy.enemies)
+                        .radius(5 * radius);
 
-                int chains = this.entityData.get(CHAINS).intValue();
+                if (entityHit instanceof LivingEntity hit) {
+                    b.excludeEntity(hit);
+                }
+                var target = b.getClosest();
 
-                if (chains > 0) {
-                    chains--;
+                if (target != null) {
 
-                    if (entityHit == null) {
-                        chains = 0;
-                    }
+                    SimpleProjectileEntity en = (SimpleProjectileEntity) getType().create(level());
+                    en.setPos(position());
+                    var sd = this.getSpellDataCopy(); // important so it doesnt affect old ones
+                    sd.chains_did++; // when upping chain count
+                    en.init(caster, sd, holder);
+                    en.entityData.set(CHAINS, chains);
+                    var vel = ProjectileCastHelper.positionToVelocity(new MyPosition(position()), new MyPosition(target.getEyePosition()));
+                    en.setDeltaMovement(vel.normalize().multiply(speed, speed, speed));
+                    level().addFreshEntity(en);
 
-
-                    var radius = getSpellData().data.getNumber(EventData.AREA_MULTI, 1F).number;
-
-                    var b = EntityFinder.start(getCaster(), LivingEntity.class, position())
-                            .finder(EntityFinder.SelectionType.RADIUS)
-                            .searchFor(AllyOrEnemy.enemies)
-                            .radius(5 * radius);
-
-                    if (entityHit instanceof LivingEntity hit) {
-                        b.excludeEntity(hit);
-                    }
-                    var target = b.getClosest();
-
-                    if (target != null) {
-
-                        SimpleProjectileEntity en = (SimpleProjectileEntity) getType().create(level());
-                        en.setPos(position());
-                        var sd = this.getSpellDataCopy(); // important so it doesnt affect old ones
-                        sd.chains_did++; // when upping chain count
-                        en.init(caster, sd, holder);
-                        en.entityData.set(CHAINS, chains);
-                        var vel = ProjectileCastHelper.positionToVelocity(new MyPosition(position()), new MyPosition(target.getEyePosition()));
-                        en.setDeltaMovement(vel.normalize().multiply(speed, speed, speed));
-                        level().addFreshEntity(en);
-
-                    }
                 }
             }
         }
-
     }
 
     boolean removeNextTick = false;
@@ -478,8 +532,6 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
     public void addAdditionalSaveData(CompoundTag nbt) {
 
         try {
-
-            // super.writeCustomDataToTag(nbt);
 
             nbt.putInt("xTile", this.xTile);
             nbt.putInt("yTile", this.yTile);
@@ -500,8 +552,6 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
     public void readAdditionalSaveData(CompoundTag nbt) {
 
         try {
-
-//            super.readCustomDataFromTag(nbt);
 
             this.xTile = nbt.getInt("xTile");
             this.yTile = nbt.getInt("yTile");
@@ -524,7 +574,6 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
             try {
                 this.caster = Utilities.getLivingEntityByUUID(level(), UUID.fromString(getSpellData().caster_uuid));
             } catch (Exception e) {
-                // e.printStackTrace();
             }
         }
 
@@ -532,16 +581,16 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(SPELL_DATA, new CompoundTag());
-        this.entityData.define(ENTITY_NAME, "");
-        this.entityData.define(EXPIRE_ON_ENTITY_HIT, true);
-        this.entityData.define(EXPIRE_ON_BLOCK_HIT, true);
-        this.entityData.define(HIT_ALLIES, false);
-        this.entityData.define(PIERCE, false);
-        this.entityData.define(DEATH_TIME, 100);
-        this.entityData.define(CHAINS, 0);
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(SPELL_DATA, new CompoundTag());
+        builder.define(ENTITY_NAME, "");
+        builder.define(EXPIRE_ON_ENTITY_HIT, true);
+        builder.define(EXPIRE_ON_BLOCK_HIT, true);
+        builder.define(HIT_ALLIES, false);
+        builder.define(PIERCE, false);
+        builder.define(DEATH_TIME, 100);
+        builder.define(CHAINS, 0);
+        super.defineSynchedData(builder);
     }
 
     @Override
@@ -577,12 +626,11 @@ public class SimpleProjectileEntity extends AbstractArrow implements IMyRenderAs
     @Override
     public ItemStack getItem() {
         try {
-            Item item = VanillaUTIL.REGISTRY.items().get(new ResourceLocation(getSpellData().data.getString(EventData.ITEM_ID)));
+            Item item = VanillaUTIL.REGISTRY.items().get(ResourceLocation.parse(getSpellData().data.getString(EventData.ITEM_ID)));
             if (item != null) {
                 return new ItemStack(item);
             }
         } catch (Exception e) {
-            // e.printStackTrace();
         }
 
         return new ItemStack(Items.AIR);

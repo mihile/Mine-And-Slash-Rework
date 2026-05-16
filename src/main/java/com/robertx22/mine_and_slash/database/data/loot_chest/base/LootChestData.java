@@ -57,7 +57,7 @@ public class LootChestData implements ICommonDataItem<GearRarity> {
         if (key.isEmpty()) {
             return null;
         }
-        return VanillaUTIL.REGISTRY.items().get(new ResourceLocation(key));
+        return VanillaUTIL.REGISTRY.items().get(ResourceLocation.parse(key));
     }
 
     public boolean isLocked() {
@@ -116,7 +116,6 @@ public class LootChestData implements ICommonDataItem<GearRarity> {
                 .release());
 
 
-        //tip.add(TooltipUtils.level(lvl));
     }
 
     @Override

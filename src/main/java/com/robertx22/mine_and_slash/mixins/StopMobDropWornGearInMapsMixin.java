@@ -1,6 +1,7 @@
 package com.robertx22.mine_and_slash.mixins;
 
 import com.robertx22.mine_and_slash.uncommon.utilityclasses.WorldUtils;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LivingEntity.class)
 public class StopMobDropWornGearInMapsMixin {
     @Inject(method = "dropAllDeathLoot", at = @At(value = "HEAD"), cancellable = true)
-    public void hookLoot(DamageSource pDamageSource, CallbackInfo ci) {
+    public void hookLoot(ServerLevel level, DamageSource pDamageSource, CallbackInfo ci) {
 
         try {
             LivingEntity en = (LivingEntity) (Object) this;

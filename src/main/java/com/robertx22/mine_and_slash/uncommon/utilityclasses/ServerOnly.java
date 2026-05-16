@@ -10,8 +10,8 @@ public class ServerOnly {
 
     public static Entity getEntityByUUID(Level world, UUID id) {
 
-        if (world instanceof ServerLevel) {
-            return ((ServerLevel) world).getEntity(id);
+        if (world instanceof ServerLevel serverLevel) {
+            return serverLevel.getEntity(id);
         }
 
         return null;

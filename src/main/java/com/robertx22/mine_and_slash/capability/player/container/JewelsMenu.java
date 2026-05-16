@@ -3,7 +3,7 @@ package com.robertx22.mine_and_slash.capability.player.container;
 import com.robertx22.mine_and_slash.capability.player.helper.JewelInvHelper;
 import com.robertx22.mine_and_slash.uncommon.localization.Words;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -25,11 +25,11 @@ public class JewelsMenu extends ChestMenu {
         this.maxJewels = maxJewels;
         this.firstPlayerInventoryIndex = pRows * 9;
         ItemStack itemStack = new ItemStack(JewelInvHelper.GetPlaceholder());
-        itemStack.setHoverName(Component.literal(Words.JEWEL_SOCKET_NOT_AVAILABLE.translate()).withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD));
+        itemStack.set(DataComponents.CUSTOM_NAME, Words.JEWEL_SOCKET_NOT_AVAILABLE.locName().withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD));
         for (int i = 0; i < container.getContainerSize(); i++) {
             if (i >= maxJewels) {
-                container.setItem(i, itemStack);
-            } else if (JewelInvHelper.IsPlaceholder(itemStack)) {
+                container.setItem(i, itemStack.copy());
+            } else if (JewelInvHelper.IsPlaceholder(container.getItem(i))) {
                 container.setItem(i, new ItemStack(Items.AIR));
             }
         }

@@ -56,9 +56,9 @@ public class MoreXPerYOf extends BaseDatapackStat implements AddToAfterCalcEnd {
         StatData add_to = stats.getOrCreateCalculatedStat(stat_to_add_to);
         StatData adder = copy.getOrCreateCalculatedStat(adder_stat);
 
-        float val = (int) (adder.getValue() / perEach) * statData.getValue();
+        float val = (int) (adder.get() / perEach) * statData.get();
 
-        add_to.setValue(add_to.getValue() + val);
+        add_to.setValue(add_to.get() + val);
 
     }
 

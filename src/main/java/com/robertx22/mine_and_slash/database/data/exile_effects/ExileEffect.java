@@ -30,7 +30,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,7 +83,7 @@ public class ExileEffect implements JsonExileRegistry<ExileEffect>, IAutoGson<Ex
 
     public Item getEffectDisplayItem() {
         var id = SlashRef.id("mob_effects/" + GUID());
-        return ForgeRegistries.ITEMS.getValue(id);
+        return BuiltInRegistries.ITEM.get(id);
     }
 
     @Override
@@ -149,7 +149,7 @@ public class ExileEffect implements JsonExileRegistry<ExileEffect>, IAutoGson<Ex
         return this.stats.stream()
                 .map(x -> {
                     LeveledValue lvlval = new LeveledValue(0, 100);
-                    int perc = (int) lvlval.getValue(caster, spell);
+                    int perc = (int) lvlval.get(caster, spell);
 
                     var result = x.ToExactStat((int) (perc), Load.Unit(caster).getLevel());
 
@@ -196,9 +196,6 @@ public class ExileEffect implements JsonExileRegistry<ExileEffect>, IAutoGson<Ex
 
         var tagtext = Words.TAGS.locName().append(ExileTooltipUtils.joinMutableComps(tags.stream().map(IAutoLocName::locName).iterator(), Gui.COMMA_SEPARATOR.locName()));
 
-
-        //   SpellDesc.getTooltip(info.player, this.spell)
-        //         .forEach(x -> list.add(Component.literal(x)));
 
         list.add(tagtext.withStyle(ChatFormatting.YELLOW));
 

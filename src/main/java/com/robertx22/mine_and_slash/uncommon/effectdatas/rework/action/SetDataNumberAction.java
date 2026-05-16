@@ -20,7 +20,7 @@ public class SetDataNumberAction extends StatEffect {
 
     @Override
     public void activate(EffectEvent event, EffectSides statSource, StatData data, Stat stat) {
-        event.data.getNumber(num_id).number = data.getValue();
+        event.data.getNumber(num_id).number = data.get();
     }
 
     @Override

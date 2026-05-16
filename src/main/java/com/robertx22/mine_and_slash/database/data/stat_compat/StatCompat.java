@@ -14,13 +14,14 @@ import com.robertx22.mine_and_slash.saveclasses.ExactStatData;
 import com.robertx22.mine_and_slash.uncommon.MathHelper;
 import com.robertx22.mine_and_slash.uncommon.datasaving.Load;
 import com.robertx22.mine_and_slash.uncommon.enumclasses.ModType;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -57,8 +58,8 @@ public class StatCompat implements JsonExileRegistry<StatCompat>, IAutoGson<Stat
         addToSerializables(MMORPG.SERIAZABLE_REGISTRATION_INFO);
     }
 
-    private Attribute getAttribute() {
-        return ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(attribute_id));
+    private Holder<Attribute> getAttribute() {
+        return BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse(attribute_id)).orElse(null);
     }
 
     public boolean isAttributeCompat() {
@@ -71,31 +72,7 @@ public class StatCompat implements JsonExileRegistry<StatCompat>, IAutoGson<Stat
 
 
     public ExactStatData getEnchantCompatResult(List<ItemStack> stacks, int lvl) {
-        if (ExileDB.Stats().get(mns_stat_id) instanceof AttributeStat) {
-            return null;
-        }
-        Enchantment ench = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchant_id));
-
-        float value = 0;
-
-        for (ItemStack stack : stacks) {
-            int enchlvl = stack.getEnchantmentLevel(ench);
-
-            if (enchlvl < 1) {
-                continue;
-            }
-            int val = (int) (enchlvl * conversion);
-            value += MathHelper.clamp(val, per_item_min, per_item_max);
-        }
-
-        if (value != 0) {
-            value = MathHelper.clamp(value, minimum_cap, maximum_cap);
-            value = (int) scaling.scale(value, lvl);
-            var data = ExactStatData.noScaling(value, mod_type, mns_stat_id);
-            return data;
-        } else {
-            return null;
-        }
+        return null;
     }
 
     public ExactStatData getResult(LivingEntity en, int lvl) {

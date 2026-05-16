@@ -27,6 +27,7 @@ import com.robertx22.mine_and_slash.uncommon.interfaces.data_items.IRarity;
 import com.robertx22.mine_and_slash.uncommon.localization.Gui;
 import com.robertx22.mine_and_slash.uncommon.localization.Itemtips;
 import com.robertx22.mine_and_slash.uncommon.localization.Words;
+import com.robertx22.mine_and_slash.uncommon.utilityclasses.ClientOnly;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -43,7 +44,12 @@ public class SkillGemData implements ICommonDataItem<GearRarity> {
 
     @Override
     public void BuildTooltip(TooltipContext ctx) {
-
+        Player player = ClientOnly.getPlayer();
+        if (player == null) {
+            return;
+        }
+        ctx.tooltip.clear();
+        ctx.tooltip.addAll(getTooltip(player));
     }
 
 

@@ -23,7 +23,7 @@ public class EffectCtx extends AutoHashClass implements IGUID {
     public String locname;
 
     public ResourceLocation getEffectLocation() {
-        return new ResourceLocation(SlashRef.MODID, resourcePath);
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, resourcePath);
     }
 
     @Override

@@ -69,7 +69,6 @@ public class EntityAilmentData {
             });
             var ev = b.build();
             ev.Activate();
-            //  ev.sendDamageMessage(ev.calculateAllBonusElementalDamage());
         }
     }
 
@@ -123,7 +122,7 @@ public class EntityAilmentData {
 
             float strength = 0;
 
-            float max = Load.Unit(target).getUnit().healthData().getValue() + Load.Unit(target).getUnit().magicShieldData().getValue();
+            float max = Load.Unit(target).getUnit().healthData().get() + Load.Unit(target).getUnit().magicShieldData().get();
 
             float forFull = max * ailment.percentHealthRequiredForFullStrength;
 
@@ -238,7 +237,7 @@ public class EntityAilmentData {
                     return true;
                 }
                 Entity entity = s.getEntity(x.getKey());
-                return entity instanceof LivingEntity == false;
+                return !(entity instanceof LivingEntity);
             });
         }
 

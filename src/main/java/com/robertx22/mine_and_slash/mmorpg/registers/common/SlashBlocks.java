@@ -23,7 +23,6 @@ public class SlashBlocks {
     public static RegObj<TotemBlock> FROST_FLOWER = Def.block("frost_flower", () -> new TotemBlock());
     public static RegObj<TotemBlock> TRAP = Def.block("trap", () -> new TotemBlock());
     public static RegObj<TotemBlock> GLYPH = Def.block("glyph", () -> new TotemBlock());
-    //    public static RegObj<LeagueTeleportBlock> HARVEST_TELEPORT = Def.block("harvest_teleport", () -> new LeagueTeleportBlock(LeagueMechanics.HARVEST_ID));
     public static RegObj<ProphecyAltarBlock> PROPHECY_ALTAR = Def.block("prophecy_altar", () -> new ProphecyAltarBlock());
 
 

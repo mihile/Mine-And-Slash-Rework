@@ -12,12 +12,15 @@ import com.robertx22.mine_and_slash.uncommon.effectdatas.rework.EventData;
 import com.robertx22.mine_and_slash.uncommon.interfaces.data_items.IRarity;
 import com.robertx22.mine_and_slash.uncommon.utilityclasses.AllyOrEnemy;
 import com.robertx22.mine_and_slash.uncommon.utilityclasses.EntityFinder;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 
@@ -43,13 +46,13 @@ public class SummonPetAction extends SpellAction {
 
             TamableAnimal en = (TamableAnimal) type.get().create(ctx.world);
 
-            en.finalizeSpawn((ServerLevel) ctx.world, ctx.world.getCurrentDifficultyAt(ctx.getBlockPos()), MobSpawnType.MOB_SUMMONED, null, null);
+            en.finalizeSpawn((ServerLevel) ctx.world, ctx.world.getCurrentDifficultyAt(ctx.getBlockPos()), MobSpawnType.MOB_SUMMONED, null);
 
             en.tame((Player) ctx.caster);
 
-            var pos = ctx.caster.blockPosition(); // todo
+            Vec3 pos = getSafeSummonPosition(en, ctx.caster.blockPosition());
 
-            en.setPos(pos.getX(), pos.getY(), pos.getZ());
+            en.setPos(pos.x, pos.y, pos.z);
 
             int duration = data.get(MapField.LIFESPAN_TICKS).intValue();
             duration *= ctx.calculatedSpellData.data.getNumber(EventData.DURATION_MULTI, 1).number;
@@ -113,6 +116,31 @@ public class SummonPetAction extends SpellAction {
         }
 
         Load.player(player).setSummonedData(summonedTypes);
+    }
+
+    private Vec3 getSafeSummonPosition(TamableAnimal entity, BlockPos origin) {
+        for (int radius = 0; radius <= 3; radius++) {
+            for (int y = -1; y <= 1; y++) {
+                for (int x = -radius; x <= radius; x++) {
+                    for (int z = -radius; z <= radius; z++) {
+                        BlockPos pos = origin.offset(x, y, z);
+                        Vec3 center = Vec3.atBottomCenterOf(pos);
+                        if (canSummonFit(entity, pos, center)) {
+                            return center;
+                        }
+                    }
+                }
+            }
+        }
+        return Vec3.atBottomCenterOf(origin);
+    }
+
+    private boolean canSummonFit(TamableAnimal entity, BlockPos pos, Vec3 center) {
+        if (entity.level().getBlockState(pos.below()).getCollisionShape(entity.level(), pos.below()).isEmpty()) {
+            return false;
+        }
+        AABB box = AABB.ofSize(center.add(0, entity.getBbHeight() / 2F, 0), entity.getBbWidth(), entity.getBbHeight(), entity.getBbWidth());
+        return entity.level().noBlockCollision(entity, box);
     }
 
     public MapHolder create(EntityType type, int lifespan, int amount, SummonType st, boolean counts) {

@@ -11,7 +11,7 @@ import com.robertx22.library_of_exile.utils.TextUTIL;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -19,7 +19,7 @@ import net.minecraft.network.chat.MutableComponent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatPanelButton extends ImageButton {
+public class StatPanelButton extends OldImageButton {
 
     public static int xSize = 163;
     public static int ySize = 20;
@@ -52,8 +52,8 @@ public class StatPanelButton extends ImageButton {
     }
 
     @Override
-    public void render(GuiGraphics gui, int x, int y, float ticks) {
-        super.render(gui, x, y, ticks);
+    public void renderWidget(GuiGraphics gui, int x, int y, float ticks) {
+        super.renderWidget(gui, x, y, ticks);
 
         if (this.isHoveredOrFocused()) {
             List<MutableComponent> tooltip = new ArrayList<>();
@@ -90,3 +90,4 @@ public class StatPanelButton extends ImageButton {
     }
 
 }
+

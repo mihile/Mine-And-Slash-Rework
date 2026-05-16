@@ -2,22 +2,22 @@ package com.robertx22.mine_and_slash.config.forge.overlay;
 
 import com.robertx22.mine_and_slash.config.forge.ClientConfigs;
 import com.robertx22.mine_and_slash.saveclasses.PointData;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.Locale;
 
 public class OverlayConfig {
 
-    public ForgeConfigSpec.EnumValue<OverlayAnchor.AttachmentPosition> ANCHOR_X;
-    public ForgeConfigSpec.EnumValue<OverlayAnchor.AttachmentPosition> ANCHOR_Y;
+    public ModConfigSpec.EnumValue<OverlayAnchor.AttachmentPosition> ANCHOR_X;
+    public ModConfigSpec.EnumValue<OverlayAnchor.AttachmentPosition> ANCHOR_Y;
 
-    public ForgeConfigSpec.EnumValue<OverlayType> ANCHOR_TARGET;
+    public ModConfigSpec.EnumValue<OverlayType> ANCHOR_TARGET;
 
-    public ForgeConfigSpec.IntValue X_OFFSET;
-    public ForgeConfigSpec.IntValue Y_OFFSET;
+    public ModConfigSpec.IntValue X_OFFSET;
+    public ModConfigSpec.IntValue Y_OFFSET;
 
 
-    public OverlayConfig(ForgeConfigSpec.Builder b, OverlayConfigBuilder data) {
+    public OverlayConfig(ModConfigSpec.Builder b, OverlayConfigBuilder data) {
         b.comment(data.presetName + " Overlay Preset").push(data.presetName.toLowerCase(Locale.ROOT).replace(" ", "_"));
 
         ANCHOR_TARGET = b.defineEnum("ANCHOR_TO", data.anchor);

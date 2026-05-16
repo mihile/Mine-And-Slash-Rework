@@ -26,4 +26,8 @@ public class LeveledValue {
         return min + (perlevel * level);
     }
 
+    public float get(LivingEntity en, MaxLevelProvider provider) {
+        return getValue(en, provider);
+    }
+
 }

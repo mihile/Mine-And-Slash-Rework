@@ -24,7 +24,7 @@ public class CasterHasStatCondition extends EffectCondition {
 
         return Load.Unit(ctx.caster)
                 .getUnit()
-                .getCalculatedStat(mod).getValue() > 0;
+                .getCalculatedStat(mod).get() > 0;
 
     }
 

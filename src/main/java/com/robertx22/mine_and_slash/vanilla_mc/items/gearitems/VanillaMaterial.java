@@ -1,7 +1,9 @@
 package com.robertx22.mine_and_slash.vanilla_mc.items.gearitems;
 
+import net.minecraft.core.Holder;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -16,10 +18,10 @@ public enum VanillaMaterial {
 
     public String id;
     public ItemOrTag mat;
-    public ArmorMaterials armormat;
+    public Holder<ArmorMaterial> armormat;
     public Tiers toolmat;
 
-    VanillaMaterial(String id, ItemOrTag mat, ArmorMaterials armormat, Tiers toolmat) {
+    VanillaMaterial(String id, ItemOrTag mat, Holder<ArmorMaterial> armormat, Tiers toolmat) {
         this.id = id;
         this.mat = mat;
         this.armormat = armormat;

@@ -7,8 +7,9 @@ import com.robertx22.mine_and_slash.database.data.profession.ProfessionRecipe;
 import com.robertx22.mine_and_slash.mmorpg.SlashRef;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.TooltipFlag;
@@ -16,10 +17,11 @@ import net.minecraft.world.item.TooltipFlag;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeButton extends ImageButton {
+public class RecipeButton extends OldImageButton {
 
     public static int XS = 18;
     public static int YS = 19;
+    private static final WidgetSprites SPRITES = new WidgetSprites(SlashRef.guiId("empty"), SlashRef.guiId("empty"));
 
     Minecraft mc = Minecraft.getInstance();
 
@@ -27,33 +29,25 @@ public class RecipeButton extends ImageButton {
     ProfessionRecipe recipe;
 
     public RecipeButton(CraftingStationScreen screen, ProfessionRecipe recipe, int xPos, int yPos) {
-        super(xPos, yPos, XS, YS, 0, 0, YS, SlashRef.guiId(""), (button) -> {
+        super(xPos, yPos, XS, YS, SPRITES, (button) -> {
             Packets.sendToServer(new LockRecipePacket(recipe.GUID()));
             screen.refreshRequiredMats(recipe);
-        });
+        }, Component.empty());
         this.recipe = recipe;
     }
 
     @Override
-    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
-        setModTooltip();
-        super.render(gui, mouseX, mouseY, delta);
-    }
-
-    @Override
     public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
+        setModTooltip();
 
         gui.renderFakeItem(recipe.toResultStackForJei(), getX(), getY());
 
-        //   ResourceLocation tex = SlashRef.guiId("craftbutton");
-        // gui.setColor(1.0F, 1.0F, 1.0F, 1.0F);
-        //gui.blit(tex, getX(), getY(), 0, (pbe.getSyncedData().craftingState == Crafting_State.ACTIVE || pbe.getSyncedData().craftingState == Crafting_State.IDLE) ? 0 : 19, 18, 19);
     }
 
     public void setModTooltip() {
 
         List<MutableComponent> list = new ArrayList<>();
-        for (Component l : recipe.toResultStackForJei().getTooltipLines(mc.player, TooltipFlag.NORMAL)) {
+        for (Component l : recipe.toResultStackForJei().getTooltipLines(net.minecraft.world.item.Item.TooltipContext.EMPTY, mc.player, TooltipFlag.NORMAL)) {
             list.add((MutableComponent) l);
         }
 
@@ -61,3 +55,4 @@ public class RecipeButton extends ImageButton {
     }
 
 }
+

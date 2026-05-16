@@ -61,8 +61,8 @@ public class DamageShield extends Stat {
 
         @Override
         public DamageEvent activate(DamageEvent effect, StatData data, Stat stat) {
-            effect.getLayer(StatLayers.Defensive.FLAT_DAMAGE_REDUCTION, EventData.NUMBER, Side()).reduce(data.getValue());
-            //      effect.data.getNumber(EventData.NUMBER).number -= data.getValue();
+            effect.getLayer(StatLayers.Defensive.FLAT_DAMAGE_REDUCTION, EventData.NUMBER, Side()).reduce(data.get());
+            //      effect.data.getNumber(EventData.NUMBER).number -= data.get();
             return effect;
         }
 

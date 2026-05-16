@@ -11,7 +11,7 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
-import mezz.jei.api.recipe.category.extensions.IExtendableRecipeCategory;
+import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategoryExtension;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class CraftingCategory implements IExtendableRecipeCategory<ProfessionRecipe, ICraftingCategoryExtension> {
+public class CraftingCategory implements IRecipeCategory<ProfessionRecipe> {
     public static final int width = 116;
     public static final int height = 54;
 
@@ -34,7 +34,7 @@ public class CraftingCategory implements IExtendableRecipeCategory<ProfessionRec
     public static final String TEXTURE_GUI_PATH = "textures/jei/gui/";
     public static final String TEXTURE_GUI_VANILLA = TEXTURE_GUI_PATH + "gui_vanilla.png";
 
-    public static final ResourceLocation RECIPE_GUI_VANILLA = new ResourceLocation(ModIds.JEI_ID, TEXTURE_GUI_VANILLA);
+    public static final ResourceLocation RECIPE_GUI_VANILLA = ResourceLocation.fromNamespaceAndPath(ModIds.JEI_ID, TEXTURE_GUI_VANILLA);
 
     ICraftingCategoryExtension recipeExtension;
 
@@ -116,21 +116,15 @@ public class CraftingCategory implements IExtendableRecipeCategory<ProfessionRec
         return true;
     }
 
-    @Override
     public <R extends ProfessionRecipe> void addCategoryExtension(Class<? extends R> recipeClass, Function<R, ? extends ICraftingCategoryExtension> extensionFactory) {
 
         // todo wtf is this
-
-        //     recipeExtension.addRecipeExtensionFactory(recipeClass, null, extensionFactory);
     }
 
-    @Override
     public <R extends ProfessionRecipe> void addCategoryExtension(Class<? extends R> recipeClass, Predicate<R> extensionFilter, Function<R, ? extends ICraftingCategoryExtension> extensionFactory) {
-        //  recipeExtension.addRecipeExtensionFactory(recipeClass, extensionFilter, extensionFactory);
     }
 
-    @Override
     public ResourceLocation getRegistryName(ProfessionRecipe recipe) {
-        return new ResourceLocation(recipe.result);
+        return ResourceLocation.parse(recipe.result);
     }
 }

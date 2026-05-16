@@ -23,7 +23,7 @@ public class TellClientEntityIsCastingSpellPacket extends MyPacket<TellClientEnt
 
     @Override
     public ResourceLocation getIdentifier() {
-        return new ResourceLocation(SlashRef.MODID, "tell_client_entity_is_casting_spell");
+        return ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "tell_client_entity_is_casting_spell");
     }
 
     @Override
@@ -40,22 +40,6 @@ public class TellClientEntityIsCastingSpellPacket extends MyPacket<TellClientEnt
 
     @Override
     public void onReceived(ExilePacketContext ctx) {
-
-        // todo delete this eventually
-
-        /*
-        LivingEntity en = (LivingEntity) ctx.getPlayer().level().getEntity(enid);
-
-        Spell spell = ExileDB.Spells()
-                .get(spellid);
-        SpellCastContext c = new SpellCastContext(en, 0, spell);
-
-        spell.getAttached()
-                .tryActivate(Spell.CASTER_NAME, SpellCtx.onTick(en, en, CalculatedSpellData.create(Load.Unit(en)
-                        .getLevel(), en, spell)));
-
-         */
-
     }
 
     @Override

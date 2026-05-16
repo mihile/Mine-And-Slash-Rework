@@ -89,20 +89,20 @@ public class ResourcesData {
         if (type == ResourceType.mana) {
             return data.getUnit()
                     .manaData()
-                    .getValue();
+                    .get();
 
         } else if (type == ResourceType.blood) {
             return data.getUnit()
                     .bloodData()
-                    .getValue();
+                    .get();
         } else if (type == ResourceType.energy) {
             return data.getUnit()
                     .energyData()
-                    .getValue();
+                    .get();
         } else if (type == ResourceType.magic_shield) {
             return data.getUnit()
                     .magicShieldData()
-                    .getValue();
+                    .get();
         } else if (type == ResourceType.health) {
             return HealthUtils.getMaxHealth(en);
         }

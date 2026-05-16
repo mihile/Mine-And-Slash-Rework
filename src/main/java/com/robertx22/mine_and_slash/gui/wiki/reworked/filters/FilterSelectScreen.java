@@ -25,6 +25,10 @@ public class FilterSelectScreen extends Screen {
     public void tick() {
     }
 
+    @Override
+    public void renderBackground(GuiGraphics pGuiGraphics, int mouseX, int mouseY, float partialTick) {
+    }
+
     public GroupFilterType type;
 
     protected void init() {

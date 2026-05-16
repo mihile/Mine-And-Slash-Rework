@@ -11,7 +11,7 @@ import com.robertx22.mine_and_slash.uncommon.utilityclasses.ClientOnly;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import com.robertx22.mine_and_slash.compat.OldImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
@@ -22,7 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfessionLevelsButton extends ImageButton {
+public class ProfessionLevelsButton extends OldImageButton {
 
     public static int SX = 16;
     public static int SY = 16;
@@ -30,15 +30,9 @@ public class ProfessionLevelsButton extends ImageButton {
     Minecraft mc = Minecraft.getInstance();
 
     public ProfessionLevelsButton(int xPos, int yPos) {
-        super(xPos, yPos, SX, SY, 0, 0, SY, new ResourceLocation("empty"), (button) -> {
+        super(xPos, yPos, SX, SY, 0, 0, SY, ResourceLocation.parse("empty"), (button) -> {
         });
 
-    }
-
-    @Override
-    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
-        setModTooltip();
-        super.render(gui, mouseX, mouseY, delta);
     }
 
     @Override
@@ -46,9 +40,12 @@ public class ProfessionLevelsButton extends ImageButton {
         gui.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         gui.blit(SlashRef.guiId("profession/button"), getX(), getY(), SX, SX, SX, SX, SX, SX);
 
+        if (this.isHovered()) {
+            setModTooltip();
+        } else {
+            this.setTooltip(null);
+        }
     }
-
-    @Override
     protected ClientTooltipPositioner createTooltipPositioner() {
         return DefaultTooltipPositioner.INSTANCE;
     }
@@ -64,16 +61,10 @@ public class ProfessionLevelsButton extends ImageButton {
             int exp = Load.player(ClientOnly.getPlayer()).professions.getExp(prof.GUID());
             int maxexp = Load.player(ClientOnly.getPlayer()).professions.getMaxExp(prof.GUID());
 
-            class cappedChecker {
-                private MutableComponent check() {
-                    if (Load.player(ClientOnly.getPlayer()).professions.getLevel(prof.GUID()) >= Load.Unit(ClientOnly.getPlayer()).getLevel()) {
-                        return Words.CAPPED_TO_LVL.locName();
-                    } else {
-                        return Component.literal("");
-                    }
-                }
-            }
-            var name = Gui.PROF_NAME.locName(prof.locName(), new cappedChecker().check()).withStyle(ChatFormatting.YELLOW);
+            MutableComponent cappedText = Load.player(ClientOnly.getPlayer()).professions.getLevel(prof.GUID()) >= Load.Unit(ClientOnly.getPlayer()).getLevel()
+                    ? Words.CAPPED_TO_LVL.locName()
+                    : Component.literal("");
+            var name = Gui.PROF_NAME.locName(prof.locName(), cappedText).withStyle(ChatFormatting.YELLOW);
 
             list.add(name);
 //the rest of text needed for there is written in lang, just don't want to use the TooltipUtils cuz THIS TEXT IS NOT RELATED TO TOOLTIPS.
@@ -91,3 +82,5 @@ public class ProfessionLevelsButton extends ImageButton {
 
 
 }
+
+

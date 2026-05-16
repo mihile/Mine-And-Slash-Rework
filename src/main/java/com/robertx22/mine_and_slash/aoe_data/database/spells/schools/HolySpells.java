@@ -57,32 +57,6 @@ public class HolySpells implements ExileRegistryInit {
     @Override
     public void registerAll() {
 
-/*
-        SpellBuilder.of(HOLY_MISSILES, PlayStyle.INT, SpellConfiguration.Builder.multiCast(30, 10, 25, 8)
-                                .setChargesAndRegen(HOLY_MISSILES, 3, 20 * 10)
-                                .setSwingArm().setTrackingRadius(4), "Holy Missiles",
-                        Arrays.asList(SpellTags.damage, SpellTags.LIGHTNING, SpellTags.MISSILE))
-                .animations(SpellAnimations.STAFF_CAST_WAVE_LOOP, SpellAnimations.STAFF_CAST_FINISH)
-                .manualDesc(
-                        "Fire off Missiles that slowly move towards enemies and deal " + SpellCalcs.HOLY_MISSILES.getLocDmgTooltip()
-                                + " " + Elements.Nature.getIconNameDmg() + ".")
-
-                .weaponReq(CastingWeapon.MAGE_WEAPON)
-                .onCast(PartBuilder.playSound(SoundEvents.WITCH_THROW, 1D, 2D))
-                .onCast(PartBuilder.justAction(SpellAction.SUMMON_PROJECTILE.create(Items.AIR, 1D, 0.3D, SlashEntities.SIMPLE_PROJECTILE.get(), 20 * 8D, false)
-                        .put(MapField.TRACKS_ENEMIES, true)
-                        .put(MapField.EXPIRE_ON_ENTITY_HIT, true)
-                ))
-                .onTick(ParticleBuilder.of(ParticleTypes.END_ROD, 0.03F).amount(3).build())
-                .onTick(ParticleBuilder.of(ParticleTypes.ENCHANT, 0.03F).amount(3).build())
-
-                .onHit(DamageBuilder.target(Elements.Nature, SpellCalcs.HOLY_MISSILES).build())
-
-                .build();
-
- */
-
-
         song(HYMN_OF_VALOR, "Hymn of Valor", ModEffects.VALOR);
         song(HYMN_OF_PERSERVANCE, "Hymn of Perseverance", ModEffects.PERSEVERANCE);
         song(HYMN_OF_VIGOR, "Hymn of Vigor", ModEffects.VIGOR);

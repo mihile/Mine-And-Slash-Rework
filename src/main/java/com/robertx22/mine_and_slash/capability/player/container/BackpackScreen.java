@@ -10,12 +10,12 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraftforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
 
 public class BackpackScreen extends AbstractContainerScreen<BackpackMenu> {
 
 
-    public static final ResourceLocation BACKGROUND_LOCATION = new ResourceLocation(SlashRef.MODID, "textures/gui/master_bag.png");
+    public static final ResourceLocation BACKGROUND_LOCATION = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/master_bag.png");
 
     public static double iMouseX = (double)(Minecraft.getInstance().getWindow().getScreenWidth() / 2);
     public static double iMouseY = (double)(Minecraft.getInstance().getWindow().getHeight() / 2);
@@ -49,7 +49,7 @@ public class BackpackScreen extends AbstractContainerScreen<BackpackMenu> {
     }
 
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(pGuiGraphics);
+        this.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
 
@@ -67,8 +67,6 @@ public class BackpackScreen extends AbstractContainerScreen<BackpackMenu> {
 
     @Override
     protected void renderLabels(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
-        //  pGuiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
-        // pGuiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
     }
 
     @Override
