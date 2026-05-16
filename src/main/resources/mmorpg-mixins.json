@@ -3,7 +3,7 @@
   "required": true,
   "refmap": "mmorpg.refmap.json",
   "package": "com.robertx22.mine_and_slash.mixins",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
     "TestMixin",
     "PlayerAnimMixin",
@@ -16,18 +16,22 @@
     "DamageSourceMixin",
     "DamageConflictCheckMixin",
     "AttributeMixin",
+    "StopVanillaDamageIndicatorMixin",
     "RecipeTest"
   ],
   "client": [
     "TooltipMixin",
     "StopOffhandRenderMixin",
     "MixinServerWorldInfo",
-    "NeatRenderMixin",
+    "AccessorCompositeRenderType",
+    "AccessorCompositeState",
     "AccessorRenderType",
+    "AccessorTextureStateShard",
     "ItemGlintMixin",
     "ItemStackMixin",
     "WorldRendererMixin",
-    "MouseHandlerMixin"
+    "MouseHandlerMixin",
+    "NeatRenderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

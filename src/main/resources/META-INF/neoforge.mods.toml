@@ -1,0 +1,71 @@
+modLoader = "javafml"
+loaderVersion = "${loader_version_range}"
+license = "All rights reserved"
+issueTrackerURL = "${mod_issues_link}"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_display_name}"
+displayURL = "${mod_website_link}"
+logoFile = "icon.png"
+credits = ""
+authors = "mcrobertx22"
+description = '''
+Turns Minecraft into a hack and slash RPG!
+'''
+
+[[mixins]]
+config = "mmorpg-mixins.json"
+
+[[accessTransformers]]
+file = "META-INF/accesstransformer.cfg"
+
+[[dependencies.mmorpg]]
+modId = "neoforge"
+type = "required"
+versionRange = "[${neoforge_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.mmorpg]]
+modId = "minecraft"
+type = "required"
+versionRange = "[${minecraft_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.mmorpg]]
+modId = "library_of_exile"
+type = "required"
+versionRange = "[${exile_library_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.mmorpg]]
+modId = "dungeon_realm"
+type = "required"
+versionRange = "[${dungeon_realm_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.mmorpg]]
+modId = "the_harvest"
+type = "required"
+versionRange = "[${the_harvest_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.mmorpg]]
+modId = "curios"
+type = "required"
+versionRange = "[0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.mmorpg]]
+modId = "playeranimator"
+type = "required"
+versionRange = "[0,)"
+ordering = "NONE"
+side = "BOTH"

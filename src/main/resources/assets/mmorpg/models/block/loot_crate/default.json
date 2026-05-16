@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "mmorpg:block/loot_crate/default"
+    "all": "mmorpg:block/loot_crate/currency"
 	},
 	"overrides": [
 		{ "predicate": {  "custom_model_data": 1 }, "model": "mmorpg:block/loot_crate/gem"},
