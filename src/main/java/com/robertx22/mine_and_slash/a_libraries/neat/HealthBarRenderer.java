@@ -1,6 +1,5 @@
 package com.robertx22.mine_and_slash.a_libraries.neat;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -16,7 +15,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.registries.Registries;
@@ -40,7 +38,6 @@ import net.minecraft.world.scores.Team;
 import net.minecraft.core.registries.BuiltInRegistries;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
-import org.lwjgl.opengl.GL11;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -223,7 +220,7 @@ public class HealthBarRenderer {
         }
 
         if (!clientHasLineOfSight(cameraEntity, living)) {
-            // Temporarily ignoring LoS to see if HUD appears when close.
+            return false;
         }
 
         if (!NeatConfig.instance.showOnBosses() && isBoss(living)) {
@@ -468,52 +465,44 @@ public class HealthBarRenderer {
         {
             final int white = 0xFFFFFFFF;
             final int black = 0;
-            MultiBufferSource textBuffers = new HudTextBufferSource(buffers);
-            RenderSystem.enableDepthTest();
-            RenderSystem.depthFunc(GL11.GL_ALWAYS);
+            // Name
+            {
+                poseStack.pushPose();
+                poseStack.translate(halfSize, -4.5F, 0F);
+                poseStack.scale(-textScale, textScale, textScale);
+                mc.font.drawInBatch(name, 0, 0, white, false, poseStack.last().pose(), buffers, Font.DisplayMode.NORMAL, black, light);
+                poseStack.popPose();
+            }
 
-            try {
-                // Name
-                {
-                    poseStack.pushPose();
-                    poseStack.translate(halfSize, -4.5F, 0F);
-                    poseStack.scale(-textScale, textScale, textScale);
-                    mc.font.drawInBatch(name, 0, 0, white, false, poseStack.last().pose(), textBuffers, Font.DisplayMode.SEE_THROUGH, black, light);
-                    poseStack.popPose();
+            // Health values (and debug ID)
+            {
+                final float healthValueTextScale = 0.75F * textScale;
+                poseStack.pushPose();
+                poseStack.translate(halfSize, -4.5F, 0F);
+                poseStack.scale(-healthValueTextScale, healthValueTextScale, healthValueTextScale);
+
+                int h = NeatConfig.instance.hpTextHeight();
+
+                if (NeatConfig.instance.showCurrentHP()) {
+                    String hpStr = MMORPG.formatBigNumber(HealthUtils.getCurrentHealthPlusMagicShield(living));
+                    mc.font.drawInBatch(hpStr, 2, h, white, false, poseStack.last().pose(), buffers, Font.DisplayMode.NORMAL, black, light);
                 }
-
-                // Health values (and debug ID)
-                {
-                    final float healthValueTextScale = 0.75F * textScale;
-                    poseStack.pushPose();
-                    poseStack.translate(halfSize, -4.5F, 0F);
-                    poseStack.scale(-healthValueTextScale, healthValueTextScale, healthValueTextScale);
-
-                    int h = NeatConfig.instance.hpTextHeight();
-
-                    if (NeatConfig.instance.showCurrentHP()) {
-                        String hpStr = MMORPG.formatBigNumber(HealthUtils.getCurrentHealthPlusMagicShield(living));
-                        mc.font.drawInBatch(hpStr, 2, h, white, false, poseStack.last().pose(), textBuffers, Font.DisplayMode.SEE_THROUGH, black, light);
-                    }
-                    if (NeatConfig.instance.showMaxHP()) {
-                        String maxHpStr = ChatFormatting.BOLD + MMORPG.formatBigNumber(HealthUtils.getMaxHealthPlusMagicShield(living));
-                        mc.font.drawInBatch(maxHpStr, (int) (halfSize / healthValueTextScale * 2) - mc.font.width(maxHpStr) - 2, h, white, false, poseStack.last().pose(), textBuffers, Font.DisplayMode.SEE_THROUGH, black, light);
-                    }
-                    if (NeatConfig.instance.showPercentage()) {
-                        String percStr = (int) (100 * HealthUtils.getCurrentHealthPlusMagicShield(living) / HealthUtils.getMaxHealthPlusMagicShield(living)) + "%";
-                        mc.font.drawInBatch(percStr, (int) (halfSize / healthValueTextScale) - mc.font.width(percStr) / 2.0F, h, white, false, poseStack.last().pose(), textBuffers, Font.DisplayMode.SEE_THROUGH, black, light);
-                    }
-                    if (NeatConfig.instance.enableDebugInfo() && mc.getDebugOverlay().showDebugScreen()) {
-                        var id = BuiltInRegistries.ENTITY_TYPE.getKey(living.getType());
-                        mc.font.drawInBatch("ID: \"" + id + "\"", 0, h + 16, white, false, poseStack.last().pose(), textBuffers, Font.DisplayMode.SEE_THROUGH, black, light);
-                    }
-                    poseStack.popPose();
+                if (NeatConfig.instance.showMaxHP()) {
+                    String maxHpStr = ChatFormatting.BOLD + MMORPG.formatBigNumber(HealthUtils.getMaxHealthPlusMagicShield(living));
+                    mc.font.drawInBatch(maxHpStr, (int) (halfSize / healthValueTextScale * 2) - mc.font.width(maxHpStr) - 2, h, white, false, poseStack.last().pose(), buffers, Font.DisplayMode.NORMAL, black, light);
                 }
-                if (buffers instanceof net.minecraft.client.renderer.MultiBufferSource.BufferSource source) {
-                    source.endBatch();
+                if (NeatConfig.instance.showPercentage()) {
+                    String percStr = (int) (100 * HealthUtils.getCurrentHealthPlusMagicShield(living) / HealthUtils.getMaxHealthPlusMagicShield(living)) + "%";
+                    mc.font.drawInBatch(percStr, (int) (halfSize / healthValueTextScale) - mc.font.width(percStr) / 2.0F, h, white, false, poseStack.last().pose(), buffers, Font.DisplayMode.NORMAL, black, light);
                 }
-            } finally {
-                RenderSystem.depthFunc(GL11.GL_LEQUAL);
+                if (NeatConfig.instance.enableDebugInfo() && mc.getDebugOverlay().showDebugScreen()) {
+                    var id = BuiltInRegistries.ENTITY_TYPE.getKey(living.getType());
+                    mc.font.drawInBatch("ID: \"" + id + "\"", 0, h + 16, white, false, poseStack.last().pose(), buffers, Font.DisplayMode.NORMAL, black, light);
+                }
+                poseStack.popPose();
+            }
+            if (buffers instanceof net.minecraft.client.renderer.MultiBufferSource.BufferSource source) {
+                source.endBatch();
             }
         }
 
@@ -541,13 +530,6 @@ public class HealthBarRenderer {
         
         if (buffers instanceof net.minecraft.client.renderer.MultiBufferSource.BufferSource source) {
             source.endBatch();
-        }
-    }
-
-    private record HudTextBufferSource(MultiBufferSource delegate) implements MultiBufferSource {
-        @Override
-        public VertexConsumer getBuffer(RenderType renderType) {
-            return delegate.getBuffer(NeatRenderType.getHudTextType(renderType));
         }
     }
 

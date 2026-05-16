@@ -91,13 +91,15 @@
 - 싱글플레이 재접속 후 같은 던전으로 재입장해도 던전 진행 상태와 제단이 유지되도록 수정 완료. `PRIMARY_CONTENT` map dimension을 서버 시작 시 folder wipe 대상에서 제외함 (인게임 검증됨).
 - code-generated recipe 생성 경로 비활성화로 누락되어 있던 `ResetPotion` 10종, soul extractor/key, `master_bag`, `soul_cleaner`, `destroy_output_exp`, 장신구/지팡이, profession downgrade, currency/harvest currency recipe 70개를 static JSON으로 복구함 (인게임 검증됨).
 - `Jewel`/`Jewelry` 한국어 번역 혼동 수정 완료. `is_jewel`, `jewel_corrupt`, `not_jewel` 문구를 `주얼`로 보정하고 `jewelry_family`를 `장신구 계열`로 수정함 (인게임 검증됨).
+- The Harvest 및 Dungeon Realm 애드온 `ko_kr.json` 번역 추가 완료 (인게임 검증됨).
+- M&S station 장치 제작법 누락 보정 및 일부 1.21.1 recipe `result.id` 형식 수정 완료 (인게임 검증됨).
+- `ko_kr.json` placeholder 조사 문구 추가 보정 완료 (인게임 검증됨).
+- 일반 socket gem 9종의 등급 업그레이드 recipe 54개 추가 완료 (인게임 검증됨).
+- gem rank 번역을 등급 흐름에 맞게 보정 완료: `Cracked` 깨진, `Chipped` 흠집 난, `Regular` 보통, `Grand` 상급, `Glorious` 찬란한 (인게임 검증됨).
+- Mob overhead HUD가 블록/엔티티 뒤에서도 보이던 문제와 HUD 뒤 상자/몹/물/용암이 alpha 뒤로 보이지 않던 depth 처리 문제 수정 완료 (인게임 검증됨).
 
 ## 수정 중
-- The Harvest 및 Dungeon Realm 애드온 `ko_kr.json` 번역 추가. 인게임 확인 필요.
-- M&S station 장치 제작법 누락 보정 및 일부 1.21.1 recipe `result.id` 형식 수정. JEI/제작대 인게임 확인 필요.
-- `ko_kr.json` placeholder 조사 문구 추가 보정. 인게임 툴팁 확인 필요.
-- 일반 socket gem 9종의 등급 업그레이드 recipe 54개 추가. JEI/제작대 인게임 확인 필요.
-- gem rank 번역을 등급 흐름에 맞게 보정: `Cracked` 깨진, `Chipped` 흠집 난, `Regular` 보통, `Grand` 상급, `Glorious` 찬란한. 인게임 확인 필요.
+- 던전 맵 차원에서는 장식된 도자기(`DecoratedPotBlock`)에 어떤 아이템도 들어가지 않도록 `RightClickBlock` 상호작용 차단 패치 적용. 인게임 확인 필요.
 
 ## 남은 문제
 - 추가 버그 제보 확인 및 안정화 작업.
@@ -142,6 +144,9 @@
 - src/main/resources/assets/mmorpg/lang/ko_kr.json
 - scripts/copy-playable-jar.ps1
 - porting-notes.md
+- src/main/java/com/robertx22/mine_and_slash/a_libraries/neat/HealthBarRenderer.java
+- src/main/java/com/robertx22/mine_and_slash/a_libraries/neat/NeatRenderType.java
+- src/main/java/com/robertx22/mine_and_slash/mmorpg/event_registers/CommonEvents.java
 
 ## 다음 작업
-- 추가 버그 제보 확인 및 안정화 작업.
+- 던전 내 장식된 도자기 아이템 삽입 차단 동작 인게임 확인.

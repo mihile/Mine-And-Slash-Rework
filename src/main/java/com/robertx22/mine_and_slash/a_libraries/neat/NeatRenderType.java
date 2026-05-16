@@ -1,6 +1,5 @@
 package com.robertx22.mine_and_slash.a_libraries.neat;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.robertx22.mine_and_slash.mixins.AccessorCompositeRenderType;
 import com.robertx22.mine_and_slash.mixins.AccessorCompositeState;
@@ -10,7 +9,6 @@ import com.robertx22.mine_and_slash.mmorpg.SlashRef;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 import java.util.Map;
 import java.util.Optional;
@@ -22,23 +20,6 @@ public class NeatRenderType extends RenderStateShard {
 
     //https://github.com/UpcraftLP/Orderly/blob/master/src/main/resources/assets/orderly/textures/ui/default_health_bar.png
     public static final ResourceLocation HEALTH_BAR_TEXTURE = ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "textures/gui/health_bar_texture.png");
-
-    // Custom depth state: depth TEST is enabled with GL_ALWAYS so the immediate
-    // entity-render HUD is not clipped by world geometry. The HUD quads are
-    // rendered opaque and write depth so later clouds/water cannot overdraw them.
-    public static final DepthTestStateShard ALWAYS_PASS_WRITE_DEPTH = new DepthTestStateShard("neat_always_pass_write_depth", GL11.GL_ALWAYS) {
-        @Override
-        public void setupRenderState() {
-            RenderSystem.enableDepthTest();
-            RenderSystem.depthFunc(GL11.GL_ALWAYS);
-        }
-
-        @Override
-        public void clearRenderState() {
-            RenderSystem.depthFunc(GL11.GL_LEQUAL);
-            // Leave depth test enabled — that matches the prevailing world-render state.
-        }
-    };
 
     public static final RenderType BAR_TEXTURE_TYPE = getHealthBarType();
     private static final Map<ResourceLocation, RenderType> HUD_TEXT_TYPES = new ConcurrentHashMap<>();
@@ -54,8 +35,8 @@ public class NeatRenderType extends RenderStateShard {
                 .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                 .setLightmapState(LIGHTMAP)
                 .setCullState(NO_CULL)
-                .setDepthTestState(ALWAYS_PASS_WRITE_DEPTH)
-                .setWriteMaskState(COLOR_DEPTH_WRITE)
+                .setDepthTestState(LEQUAL_DEPTH_TEST)
+                .setWriteMaskState(COLOR_WRITE)
                 .createCompositeState(false);
         return AccessorRenderType.neat_create("neat_health_bar", POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS, 256, true, true, renderTypeState);
     }
@@ -85,8 +66,8 @@ public class NeatRenderType extends RenderStateShard {
                     .setTextureState(new TextureStateShard(key, false, false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                     .setLightmapState(LIGHTMAP)
-                    .setDepthTestState(ALWAYS_PASS_WRITE_DEPTH)
-                    .setWriteMaskState(COLOR_DEPTH_WRITE)
+                    .setDepthTestState(NO_DEPTH_TEST)
+                    .setWriteMaskState(COLOR_WRITE)
                     .createCompositeState(false);
             return AccessorRenderType.neat_create("neat_hud_text", POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS, 1536, false, true, state);
         });

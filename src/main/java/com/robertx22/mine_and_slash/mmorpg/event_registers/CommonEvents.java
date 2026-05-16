@@ -2,6 +2,7 @@ package com.robertx22.mine_and_slash.mmorpg.event_registers;
 
 import com.robertx22.library_of_exile.events.base.EventConsumer;
 import com.robertx22.library_of_exile.events.base.ExileEvents;
+import com.robertx22.library_of_exile.dimension.MapDimensions;
 import com.robertx22.mine_and_slash.database.DatabaseCaches;
 import com.robertx22.mine_and_slash.database.data.spells.summons.entity.SummonEntity;
 import com.robertx22.mine_and_slash.event_hooks.damage_hooks.LivingHurtUtils;
@@ -39,6 +40,7 @@ import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
@@ -77,6 +79,14 @@ public class CommonEvents {
 
 
         OnItemInteract.register();
+
+        ForgeEvents.registerForgeEvent(PlayerInteractEvent.RightClickBlock.class, event -> {
+            if (event.getEntity().level().getBlockState(event.getPos()).is(Blocks.DECORATED_POT)
+                    && MapDimensions.isMap(event.getEntity().level())
+                    && !event.getItemStack().isEmpty()) {
+                event.setCanceled(true);
+            }
+        }, EventPriority.HIGHEST);
 
 
         // instant bows
