@@ -1,0 +1,147 @@
+# 포팅 노트
+
+## 수정됨
+- Startup crash 수정 완료.
+- Player HUD 정상 표시 (stamina/energy, health, mana, skill HUD).
+- 스킬 Cooldown logic 정상 작동.
+- 원샷 스킬 데미지 버그 수정 완료.
+- Mob overhead HUD 렌더링 훅 연결 (NeatRenderMixin 사용).
+- Mob overhead HUD 배경(검은색 레터박스) 출력 성공.
+- HUD 시야 판정(Line of Sight) 오작동으로 인한 숨김 문제 우회 패치.
+- HUD 렌더링 파이프라인 버퍼 Flush 및 Culling 비활성화 적용.
+- Mob overhead HUD 텍스트 표시 정상.
+- normal weapon attack이 Mine and Slash combat logic으로 진입하도록 수정됨.
+- Area/Region level이 플레이어 레벨을 그대로 따라가던 문제 해결됨.
+- Mob overhead HUD가 인게임에서 정상 표시되고 HP 감소가 연동됨.
+- 몹 드랍 gem/aura 전리품 tooltip/effect 표시 정상.
+- 주얼 장착 UI 잠긴 슬롯 tooltip raw key 표시 해결됨.
+- reworked currency item tooltip/effect 정상.
+- ko_kr.json의 orb/currency 및 library_of_exile tooltip 효과/조건/공통 문구 번역 키 보강.
+- ko_kr.json이 en_us.json의 전체 key를 포함하도록 보강됨. Affix/Corrupted/currency tooltip 계열 용어 정리 패치됨. 인게임 확인 필요.
+- 기존 ko_kr.json 백업 후 en_us.json 기준으로 ko_kr.json 전체 재생성. POE식 용어(속성/타락/오브/지도/희귀도) 정리됨. 인게임 확인 필요.
+- Library of Exile requirement tooltip key 보강: `Must be a Single Item` 등 누락 번역 추가. 인게임 확인 필요.
+- Curios `ring`/`necklace`/`omen` 슬롯을 플레이어 엔티티에 연결하고 `ring` 슬롯을 2칸으로 보정함. 인게임 확인 필요.
+- ko_kr.json에서 placeholder 뒤 고정 조사로 인해 `신화 속성로`처럼 표시되던 문구를 `(으)로`/`(을)를`/`(이)가` 형태로 보정함. 인게임 확인 필요.
+- Curios 장신구 item tag를 1.21.1용 `tags/item` 경로에도 추가하고 기존 `tags/items` JSON의 `replace` 값을 boolean으로 수정함. 빌드/인게임 확인 필요.
+- Mob overhead HUD deferred render queue를 `RenderLevelStageEvent.Stage.AFTER_LEVEL`에서 소비하도록 연결함. 구름/물/용암/엔티티와 겹칠 때 색이 섞이는 문제 인게임 확인 필요.
+- Mob overhead HUD를 deferred render가 아닌 `EntityRenderDispatcher` 내부 즉시 렌더링으로 되돌림. 시점에 따라 HUD 위치가 화면 밖으로 튀는 문제 인게임 확인 필요.
+- HUD 디버그 메시지 스팸 문제: HealthBarRenderer.shouldShowPlate의 debugFail 호출 제거 패치됨.
+- 주얼 장착 UI 잠긴 슬롯 placeholder/model 표시가 깨져 보이는 문제 수정됨.
+- en_us.json 기준 ko_kr.json 전체 재번역 및 Library of Exile requirement tooltip 번역 수정됨.
+- Curios 장신구 슬롯 UI 및 ring/necklace/omen 장착 동작 수정됨.
+- Mob overhead HUD의 `Background Alpha`/`Bar Alpha` config를 다시 존중하고, alpha 0인 quad는 그리지 않도록 조정함. 텍스트 outline은 제거하고 font `DisplayMode.SEE_THROUGH` 경로를 유지해 엔티티 모델 뒤로 가려지지 않게 조정함.
+- Mob overhead HUD 글자가 물/풀/구름/엔티티와 섞여 보이는 문제를 해결함. font glyph도 HUD 전용 depth-write `RenderType`으로 라우팅되어 체력바처럼 앞에 정상 표시됨.
+- FavorButton(평판)/ProfessionLevelsButton(전문기술) 마우스 오버레이 tooltip 표시 정상화.
+- 전문기술 채광/농업 EXP 부여 경로를 mixin 의존(ChestLootGenMixin) 방식에서 `BlockDropsEvent`로 교체. 인게임 확인됨.
+- Right Click Harvest 등 우클릭 수확 모드 사용 시 농업 EXP 부여 수정됨. FARMING 직업이 드롭 아이템으로 등록되어 있어 `Block.getDrops()`로 드롭을 미리 계산 후 전달하는 방식으로 해결.
+- 전문기술 재료 아이템(영적인 수확물 등 16종) 및 영혼 추출기 등 5종의 `appendHoverText` 시그처가 1.21.1 기준(`Item.TooltipContext`)으로 수정됨. 기존 `Level world` / `@Nullable Level` 파라미터가 override 되지 않아 툴팁이 보이지 않던 문제 해결.
+- 전설 도구 마법부여 오브(`library_of_exile:legendary_enchant_tool`) 관련 버그 최종 수정 완료 (인게임 검증됨).
+- 자동 분해(Auto-salvage) 기능 버그 최종 수정 완료 (인게임 검증됨).
+- 위키(Library) UI 레이아웃 및 상호작용 버그 최종 수정 완료 (인게임 검증됨).
+- 몹 overhead HUD 디버프 아이콘 설정 고도화 완료 (인게임 검증됨).
+- 위키(Library) UI 리스트 위치 및 크기 설정 파일(config) 연동 완료 (인게임 검증됨).
+- 핫바 및 HUD 아이템 희귀도 배경색 표시 버그 수정 완료 (인게임 검증됨).
+- 아이템 선택 시 표시되는 토스트 메시지(Action Bar) 커스텀 이름 연동 완료 (인게임 검증됨).
+- 데미지 로그 및 보석 장착 중복 메시지 출력 버그 수정 완료 (인게임 검증됨).
+- 인벤토리 정렬 모드와의 충돌 방지 로직 적용 완료 (인게임 검증됨).
+- 강화 재화(오브, 암석, 룬 등) 사용법 안내 툴팁 개선 및 일괄 적용 완료 (인게임 검증됨).
+- 타락 관련 요구사항 번역 문구 개선 완료 (인게임 검증됨).
+- 수리석 및 각종 강화 재화 사용 기능 복구 완료 (인게임 검증됨).
+- 커스텀 요구사항 시리얼라이저 ID 매핑 교정 완료 (인게임 검증됨).
+- `ko_kr.json` 한국어 번역 전체 복구 완료 (인게임 검증됨).
+- 스킬 이펙트(Particle) 표시 버그 수정 완료 (인게임 검증됨).
+- Dungeon Realm 및 메인 모드 제작법/데이터팩 누락 문제 최종 수정 및 최적화 완료 (인게임 검증됨).
+- 플레이어 사망 후 리스폰 시 레벨이 1로 초기화되는 버그 수정 (EntityData Attachment에 copyOnDeath 추가).
+- 던전 내 몹 스폰 안 되는 버그 수정 (청크 데이터 보존 시스템 복구).
+- 던전 몹 검증 오류 ("Killed Mob wasn't properly spawned") 및 전리품 미드랍 버그 수정.
+- 하베스트 던전 전리품 드랍 버그 수정 (The Harvest 모드 내 dropFromLootTable 로직 구현 완료).
+- 하베스트 던전 지형 생성 시 "Far Chunk" 에러 및 상호작용 불가 버그 수정.
+- 하베스트 제단 우클릭 시 즉시 퇴장되는 기능 삭제 및 원래 기믹 로직 복구 완료.
+- 리스폰 후 오라, 주얼, 보조 보석, 백팩 아이템 소실 버그 완전 수정 (1.21.1 ItemStack.saveOptional() 반환 NBT 누락 및 Player 참조 갱신 버그 해결).
+- 예언 제단 및 기타 제단 스폰 조건 교정 완료 (인게임 검증됨).
+- 던전 내 상자 전리품 미드랍 버그 수정 (1.21.1 LootTable.fill 대신 `RandomizableContainerBlockEntity.unpackLootTable`에 직접 Mixin을 연결하여 전리품 생성을 강제함. 인게임 확인됨).
+- library_of_exile 모드의 PlayerManagerMixin 및 ItemStackMixin 1.21.1 대응 패치 완료 (인게임 검증됨).
+- 던전 내 몹 처치 및 상자 루팅 시 전리품 등급(Rarity) 상승 시스템 복구 완료 (인게임 검증됨).
+- 예언 제단 및 각종 제단 스폰 및 기능 정상 작동 확인 완료 (인게임 검증됨).
+- 던전 완료 시 보상 방의 상자 개수가 전리품 등급에 비례하여 증가하도록 수정 완료 (인게임 검증됨).
+- '서사' 등급 번역을 메인 모드 컨벤션에 맞춰 '영웅'으로 변경 완료.
+- 오브류 아이템의 이름 및 툴팁이 중복되어 표시되는 버그 수정 완료 (ExileCurrency 레지스트리 체크 후 tooltip.clear() 추가).
+- 지도 지급 명령어(/mine_and_slash give map) 사용 시 지정한 레벨과 등급이 무시되는 버그 수정 완료.
+- 지도가 시작될 때 이미 레벨이 지정된 지도는 플레이어 레벨로 강제 스케일링되지 않도록 수정 완료 (레벨 1 지도는 여전히 스케일링됨).
+- 지도 아이템 툴팁의 요구 레벨이 지도의 실제 레벨로 표시되도록 수정 완료.
+- 던전 생성 시 무조건 지옥(Nether) 구조물만 생성되던 버그 수정 완료.
+- 모드 로딩 중 `ConcurrentModificationException` 발생 크래시 수정 완료.
+- 던전 상자 루팅 시 탐험 등급(Favor)이 비정상적으로 급상승하던 버그 수정 완료 (중복 Mixin 제거).
+- 소환수(서리 골렘 등)의 공격 AI 및 사거리 개선 완료.
+- 소환수(SummonEntity) AI 및 순간이동 로직 개선:
+    - 도달 불가능한 지형의 몹을 계속 타겟팅하는 문제 수정 (isTargetReachable 체크를 AI Goal에 반영).
+    - 주인과 너무 멀어지면(32블록 이상) 타겟팅을 해제하고 주인에게 즉시 순간이동하도록 수정.
+    - 주인 주변의 적을 우선적으로 타겟팅하도록 타겟 선택 로직(OwnerTargetedByTargetGoal) 개선.
+    - 타겟팅 중이라도 도달 불가능해지면 타겟을 해제하고 다른 유효한 타겟을 찾거나 주인에게 복귀하도록 수정.
+- 곡괭이 등 전문 기술 도구(Profession Tool)가 수리석으로 수리되지 않던 버그 수정 완료 (인게임 검증됨).
+- 데미지 숫자(Floating Damage Numbers) 표시 정상화 완료. `DamageEvent.sendDamageParticle()`가 짧은 수명의 invisible `ItemEntity` custom name을 서버에서 직접 스폰하는 방식으로 복구됨 (인게임 확인됨).
+- 바닐라 `ParticleTypes.DAMAGE_INDICATOR`가 Mine and Slash 데미지 숫자와 겹쳐 보이던 문제 수정 완료 (인게임 검증됨).
+- 근접 소환수 공격 사거리가 길게 느껴지는 문제 수정 완료. `SummonEntity.tick()`의 3.5블록 직접 `doHurtTarget` 호출을 제거하고, 실제 근접 공격은 바닐라 `MeleeAttackGoal` 판정에 맡기도록 되돌림 (인게임 검증됨).
+- 소환수 소환 또는 던전 내 몹 소환 시 벽에 끼어서 데미지를 입는 문제 개선 완료. `SummonPetAction`은 플레이어 주변 충돌 없는 블록 중심 좌표를 사용하고, `MobBuilder`는 `SpawnPointHelper`와 bounding box 충돌 검사를 사용함 (인게임 검증됨).
+- 감시자의 눈 주얼 용어 정리 및 Support Gem 표시명을 스킬 보석으로 통일 완료.
+- mythic 몹 전리품 메시지 누락 수정 완료. 소환수/펫 처치 owner 귀속, `mythic` rarity `setElite()`, 던전 elite/mini boss/final boss/uber boss `DungeonMobValidator` 검증, `set_health_damage_override` 사망 경로의 `ExileEvents.MOB_DEATH` 호출 보정까지 인게임 검증됨.
+- 싱글플레이 재접속 후 `MapDeviceBE`의 활성 던전 연결이 사라지던 문제 수정 완료. dungeon dimension wipe 시 active dungeon metadata를 유지하고 M&S `WorldData` map 저장 후 `setDirty()`를 호출하도록 보정함 (인게임 검증됨).
+- 같은 룬이 이미 장착된 장비에 동일 룬을 다시 적용하면 중복 장착은 되지 않지만 룬 아이템만 소비되던 문제 수정 완료. `RuneCurrency.canBeModified()`에서 동일 rune GUID를 실패 처리하고, 관련 툴팁/메시지 문구를 보정함 (인게임 검증됨).
+- 포팅 PR 분리를 위해 요구 조건 미충족 장비 시각 경고/장비 상태 HUD 관련 추가 기능을 제외함 (인게임 검증됨).
+- 싱글플레이 재접속 후 같은 던전으로 재입장해도 던전 진행 상태와 제단이 유지되도록 수정 완료. `PRIMARY_CONTENT` map dimension을 서버 시작 시 folder wipe 대상에서 제외함 (인게임 검증됨).
+- code-generated recipe 생성 경로 비활성화로 누락되어 있던 `ResetPotion` 10종, soul extractor/key, `master_bag`, `soul_cleaner`, `destroy_output_exp`, 장신구/지팡이, profession downgrade, currency/harvest currency recipe 70개를 static JSON으로 복구함 (인게임 검증됨).
+- `Jewel`/`Jewelry` 한국어 번역 혼동 수정 완료. `is_jewel`, `jewel_corrupt`, `not_jewel` 문구를 `주얼`로 보정하고 `jewelry_family`를 `장신구 계열`로 수정함 (인게임 검증됨).
+
+## 수정 중
+- The Harvest 및 Dungeon Realm 애드온 `ko_kr.json` 번역 추가. 인게임 확인 필요.
+- M&S station 장치 제작법 누락 보정 및 일부 1.21.1 recipe `result.id` 형식 수정. JEI/제작대 인게임 확인 필요.
+- `ko_kr.json` placeholder 조사 문구 추가 보정. 인게임 툴팁 확인 필요.
+- 일반 socket gem 9종의 등급 업그레이드 recipe 54개 추가. JEI/제작대 인게임 확인 필요.
+- gem rank 번역을 등급 흐름에 맞게 보정: `Cracked` 깨진, `Chipped` 흠집 난, `Regular` 보통, `Grand` 상급, `Glorious` 찬란한. 인게임 확인 필요.
+
+## 남은 문제
+- 추가 버그 제보 확인 및 안정화 작업.
+
+## 빌드
+- 빌드 성공; playable jar를 output 폴더에 복사함.
+
+## 최근 파일
+- deps/Library-of-Exile-Rework/src/main/java/com/robertx22/library_of_exile/config/map_dimension/MapDimensionConfig.java
+- src/main/java/com/robertx22/mine_and_slash/event_hooks/ontick/UnequipGear.java
+- src/main/java/com/robertx22/mine_and_slash/mixin_methods/RenderItemGlints.java
+- src/main/java/com/robertx22/mine_and_slash/config/forge/ClientConfigs.java
+- src/main/java/com/robertx22/mine_and_slash/mmorpg/event_registers/GuiOverlays.java
+- src/main/java/com/robertx22/mine_and_slash/vanilla_mc/items/gemrunes/RuneItem.java
+- src/main/java/com/robertx22/mine_and_slash/config/forge/ServerContainer.java
+- src/main/java/com/robertx22/mine_and_slash/uncommon/localization/Chats.java
+- src/main/java/com/robertx22/mine_and_slash/uncommon/localization/Itemtips.java
+- src/main/resources/assets/mmorpg/lang/en_us.json
+- src/main/java/com/robertx22/mine_and_slash/uncommon/effectdatas/DamageEvent.java
+- src/main/java/com/robertx22/addons/dungeon_realm/DungeonAddonEvents.java
+- deps/dungeon_realm/src/main/java/com/robertx22/dungeon_realm/main/DungeonMain.java
+- src/main/java/com/robertx22/mine_and_slash/event_hooks/my_events/OnMobDeathDrops.java
+- src/main/java/com/robertx22/mine_and_slash/aoe_data/database/mob_rarities/MobRarities.java
+- deps/dungeon_realm/src/main/java/com/robertx22/dungeon_realm/main/DungeonMobValidator.java
+- src/main/resources/assets/mmorpg/lang/ko_kr.json
+- deps/Library-of-Exile-Rework/src/main/resources/assets/library_of_exile/lang/ko_kr.json
+- deps/the_harvest/src/main/resources/assets/the_harvest/lang/ko_kr.json
+- deps/dungeon_realm/src/main/resources/assets/dungeon_realm/lang/ko_kr.json
+- deps/the_harvest/src/main/resources/data/the_harvest/recipe/harvest.json
+- deps/dungeon_realm/src/main/resources/data/dungeon_realm/recipe/test_dirt_to_diamond.json
+- src/main/resources/data/mmorpg/recipe/alchemy_station.json
+- src/main/resources/data/mmorpg/recipe/cooking_station.json
+- src/main/resources/data/mmorpg/recipe/enchanting_station.json
+- src/main/resources/data/mmorpg/recipe/gear_crafting_station.json
+- src/main/resources/data/mmorpg/recipe/salvaging_station.json
+- src/main/resources/data/mmorpg/recipe/newbie_gear_bag.json
+- src/main/resources/data/mmorpg/recipe/gems/
+- src/main/resources/data/mmorpg/recipe/potions/
+- src/main/resources/data/mmorpg/recipe/currency/
+- src/main/resources/data/mmorpg/recipe/soul_extractor/
+- src/main/resources/data/mmorpg/recipe/keys/
+- src/main/resources/assets/mmorpg/lang/ko_kr.json
+- scripts/copy-playable-jar.ps1
+- porting-notes.md
+
+## 다음 작업
+- 추가 버그 제보 확인 및 안정화 작업.

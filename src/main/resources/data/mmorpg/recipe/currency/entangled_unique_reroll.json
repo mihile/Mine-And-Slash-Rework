@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","category":"misc","pattern":["YYY","YXY","YYY"],"key":{"X":{"item":"minecraft:diamond_block"},"Y":{"item":"the_harvest:primal"}},"result":{"id":"mmorpg:currency/entangled_unique_reroll","count":1},"show_notification":true}

@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","category":"misc","pattern":["vvv","vtv","vbv"],"key":{"v":{"item":"mmorpg:stone/5"},"t":{"item":"minecraft:golden_apple"},"b":{"item":"minecraft:glass_bottle"}},"result":{"id":"mmorpg:potions/full_reset_ascendancy","count":1},"show_notification":true}

@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","category":"misc","pattern":["YYY","YXY","YYY"],"key":{"X":{"item":"minecraft:gold_ingot"},"Y":{"item":"the_harvest:primal"}},"result":{"id":"mmorpg:currency/entangled_potential","count":1},"show_notification":true}

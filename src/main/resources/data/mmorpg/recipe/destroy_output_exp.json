@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","category":"misc","pattern":["XXX","XCX","XXX"],"key":{"X":{"item":"minecraft:iron_nugget"},"C":{"item":"minecraft:anvil"}},"result":{"id":"mmorpg:destroy_output_exp","count":1},"show_notification":true}

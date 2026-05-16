@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","category":"misc","pattern":["YYY","YXY","YYY"],"key":{"X":{"item":"minecraft:iron_ingot"},"Y":{"item":"the_harvest:lucid"}},"result":{"id":"mmorpg:currency/entangled_affix_upgrade","count":1},"show_notification":true}

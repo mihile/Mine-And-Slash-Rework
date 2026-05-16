@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","category":"misc","pattern":["XXX","XCX","XXX"],"key":{"X":{"item":"mmorpg:stone/1"},"C":{"item":"minecraft:stick"}},"result":{"id":"mmorpg:keys/1","count":1},"show_notification":true}

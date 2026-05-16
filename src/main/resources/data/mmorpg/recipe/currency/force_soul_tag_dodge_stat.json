@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","category":"misc","pattern":["X","Y"],"key":{"X":{"item":"minecraft:leather"},"Y":{"item":"minecraft:iron_ingot"}},"result":{"id":"mmorpg:currency/force_soul_tag_dodge_stat","count":1},"show_notification":true}

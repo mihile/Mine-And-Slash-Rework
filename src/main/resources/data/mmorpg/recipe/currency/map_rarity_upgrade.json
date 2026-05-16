@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","category":"misc","pattern":["XXX","XYX","XXX"],"key":{"X":{"item":"mmorpg:stone/3"},"Y":{"item":"minecraft:diamond"}},"result":{"id":"mmorpg:currency/map_rarity_upgrade","count":5},"show_notification":true}
