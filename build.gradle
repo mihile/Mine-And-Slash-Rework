@@ -1,100 +1,121 @@
-// --- COMMON BUILD SCRIPT START ---
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://maven.sinytra.org/' } // Wiki
-        maven { url = 'https://maven.parchmentmc.org' } // Mappings
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '6+', changing: true
-        classpath 'org.parchmentmc:librarian:1.+'
-        classpath group: 'org.spongepowered', name: 'mixingradle', version: '+'
-    }
-}
-
 plugins {
-    id 'java'
-    id 'idea'
+    id 'java-library'
     id 'maven-publish'
-    id "me.modmuss50.mod-publish-plugin" version "${publish_plugin_version}"
-    id "org.moddedmc.wiki.toolkit" version "${wiki_toolkit_version}"
+    id 'net.neoforged.moddev' version '2.0.141'
+    id 'idea'
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: 'org.spongepowered.mixin'
+version = mod_version
+group = maven_group
 
-apply from: 'https://raw.githubusercontent.com/RobertSkalko/ModResources/refs/heads/main/1.20.1/common.gradle'
-apply from: 'https://raw.githubusercontent.com/RobertSkalko/ModResources/refs/heads/main/1.20.1/exile_lib_dep.gradle'
-apply from: 'https://raw.githubusercontent.com/RobertSkalko/ModResources/refs/heads/main/1.20.1/ide_runs.gradle'
-apply from: 'https://raw.githubusercontent.com/RobertSkalko/ModResources/refs/heads/main/1.20.1/meta.gradle'
-apply from: 'https://raw.githubusercontent.com/RobertSkalko/ModResources/refs/heads/main/1.20.1/publishing.gradle'
-apply from: 'https://raw.githubusercontent.com/RobertSkalko/ModResources/refs/heads/main/1.20.1/mixin.gradle'
-apply from: 'https://raw.githubusercontent.com/RobertSkalko/ModResources/refs/heads/main/1.20.1/dungeon_dep.gradle'
-apply from: 'https://raw.githubusercontent.com/RobertSkalko/ModResources/refs/heads/main/1.20.1/mns_other_deps.gradle'
+base {
+    archivesName = "${mod_archive_name}-${minecraft_version}"
+}
 
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-// --- COMMON BUILD SCRIPT END ---
-
-
-// --- MOD SPECIFIC ---
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+}
 
 repositories {
+    mavenCentral()
+    maven { url = 'https://maven.neoforged.net/releases' }
+    maven { url = 'https://maven.parchmentmc.org' }
+    maven { url = 'https://maven.theillusivec4.top/' }
+    maven { url = 'https://maven.kosmx.dev/' }
+    maven { url = 'https://maven.blamejared.com/' }
+}
 
-    maven { url = "https://maven.theillusivec4.top/" } // curios
-    maven { url = "https://maven.kosmx.dev/" } // player animations
-    maven {
-        // location of a maven mirror for JEI files, as a fallback
-        name = "ModMaven"
-        url = "https://modmaven.dev/"
-        content {
-            includeGroup "mezz.jei"
+neoForge {
+    version = project.neoforge_version
+
+    parchment {
+        minecraftVersion = project.parchment_minecraft_version
+        mappingsVersion = project.parchment_mappings_version
+    }
+
+    accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
+
+    runs {
+        client {
+            client()
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        server {
+            server()
+            programArgument '--nogui'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        data {
+            data()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').absolutePath, '--existing', file('src/main/resources/').absolutePath
+        }
+
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            logLevel = org.slf4j.event.Level.DEBUG
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
         }
     }
 }
 
-minecraft {
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
 }
 
 dependencies {
+    implementation project(':library_of_exile')
+    implementation project(':dungeon_realm')
+    implementation project(':the_harvest')
 
-    implementation fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
+    implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
 
-    compileOnly fg.deobf("mezz.jei:jei-1.20.1-common-api:${project.jei_version}") //API for compile
-    compileOnly fg.deobf("mezz.jei:jei-1.20.1-forge-api:${project.jei_version}") //API for compile
-    runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:${project.jei_version}") //Full for runtime
+    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+    localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 
-    implementation fg.deobf("dev.kosmx.player-anim:player-animation-lib-forge:${player_animator_version}")
-
+    implementation "dev.kosmx.player-anim:player-animation-lib-forge:${player_animator_version}"
 }
 
-publishMods {
-
-    curseforge {
-        requires { slug = "library-of-exile" }
-        requires { slug = "curios" }
-        requires { slug = "playeranimator" }
-        requires { slug = "dungeon-realm" }
-        requires { slug = "the-harvest" }
-    }
-    modrinth {
-        requires { slug = "library-of-exile" }
-        requires { slug = "curios" }
-        requires { slug = "playeranimator" }
-        requires { slug = "dungeon-realm" }
-        requires { slug = "the-harvest" }
-    }
-}
-
-wiki {
-    docs {
-        mutils {
-            root = file("docs")
-        }
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            mod_id                : mod_id,
+            mod_version           : mod_version,
+            mod_display_name      : mod_display_name,
+            mod_website_link      : mod_website_link,
+            mod_issues_link       : mod_issues_link,
+            minecraft_version     : minecraft_version,
+            neoforge_version      : neoforge_version,
+            loader_version_range  : loader_version_range,
+            exile_library_version : exile_library_version,
+            dungeon_realm_version : dungeon_realm_version,
+            the_harvest_version   : the_harvest_version
+    ]
+    inputs.properties replaceProperties
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand replaceProperties
     }
 }
 
-// --- MOD SPECIFIC ---
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Jar).configureEach {
+    exclude 'net/neoforged/neoforge/**'
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}

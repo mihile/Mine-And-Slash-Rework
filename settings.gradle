@@ -1,12 +1,22 @@
 pluginManagement {
     repositories {
-        mavenCentral()
-        maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
-        }
         gradlePluginPortal()
-
-
+        maven { url = 'https://maven.neoforged.net/releases' }
     }
 }
+
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
+rootProject.name = 'Mine-And-Slash-Rework'
+
+include 'library_of_exile'
+include 'dungeon_realm'
+include 'the_harvest'
+include 'mine_and_fx'
+
+project(':library_of_exile').projectDir = file('deps/Library-of-Exile-Rework')
+project(':dungeon_realm').projectDir = file('deps/dungeon_realm')
+project(':the_harvest').projectDir = file('deps/the_harvest')
+project(':mine_and_fx').projectDir = file('deps/mine_and_fx')
