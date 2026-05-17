@@ -31,7 +31,8 @@
     "ItemStackMixin",
     "WorldRendererMixin",
     "MouseHandlerMixin",
-    "NeatRenderMixin"
+    "NeatRenderMixin",
+    "CuriosScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

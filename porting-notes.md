@@ -98,6 +98,7 @@
 - gem rank 번역을 등급 흐름에 맞게 보정 완료: `Cracked` 깨진, `Chipped` 흠집 난, `Regular` 보통, `Grand` 상급, `Glorious` 찬란한 (인게임 검증됨).
 - Mob overhead HUD가 블록/엔티티 뒤에서도 보이던 문제와 HUD 뒤 상자/몹/물/용암이 alpha 뒤로 보이지 않던 depth 처리 문제 수정 완료 (인게임 검증됨).
 - `Loot Beams Refork` 병용 시 데미지 숫자용 invisible `ItemEntity`가 `invisible_item` 이름표로 노출되던 문제 수정 완료 (인게임 검증됨).
+- Curios 슬롯을 연 상태에서 socket gem/rune tooltip이 `[SOCKET_PLACEHOLDER]`로 노출되던 문제 수정 완료. `CuriosScreen` tooltip 렌더 경로가 실제 `ItemStack`을 넘기도록 보정해 일반 인벤토리와 동일한 socket icon tooltip이 표시됨 (인게임 검증됨).
 
 ## 수정 중
 - 던전 맵 차원에서는 장식된 도자기(`DecoratedPotBlock`)에 어떤 아이템도 들어가지 않도록 `RightClickBlock` 상호작용 차단 패치 적용. 인게임 확인 필요.
@@ -150,6 +151,9 @@
 - src/main/java/com/robertx22/mine_and_slash/mmorpg/event_registers/CommonEvents.java
 - src/main/java/com/robertx22/mine_and_slash/uncommon/effectdatas/DamageEvent.java
 - src/main/java/com/robertx22/mine_and_slash/mmorpg/registers/common/items/SlashItems.java
+- src/main/java/com/robertx22/mine_and_slash/mmorpg/init/ClientInit.java
+- src/main/java/com/robertx22/mine_and_slash/mixins/CuriosScreenMixin.java
+- src/main/resources/mmorpg-mixins.json
 
 ## 다음 작업
 - 던전 내 장식된 도자기 아이템 삽입 차단 동작 인게임 확인.
