@@ -79,7 +79,7 @@
     - 주인 주변의 적을 우선적으로 타겟팅하도록 타겟 선택 로직(OwnerTargetedByTargetGoal) 개선.
     - 타겟팅 중이라도 도달 불가능해지면 타겟을 해제하고 다른 유효한 타겟을 찾거나 주인에게 복귀하도록 수정.
 - 곡괭이 등 전문 기술 도구(Profession Tool)가 수리석으로 수리되지 않던 버그 수정 완료 (인게임 검증됨).
-- 데미지 숫자(Floating Damage Numbers) 표시 정상화 완료. `DamageEvent.sendDamageParticle()`가 짧은 수명의 invisible `ItemEntity` custom name을 서버에서 직접 스폰하는 방식으로 복구됨 (인게임 확인됨).
+- 데미지 숫자(Floating Damage Numbers) 표시 정상화 완료 (인게임 검증됨).
 - 바닐라 `ParticleTypes.DAMAGE_INDICATOR`가 Mine and Slash 데미지 숫자와 겹쳐 보이던 문제 수정 완료 (인게임 검증됨).
 - 근접 소환수 공격 사거리가 길게 느껴지는 문제 수정 완료. `SummonEntity.tick()`의 3.5블록 직접 `doHurtTarget` 호출을 제거하고, 실제 근접 공격은 바닐라 `MeleeAttackGoal` 판정에 맡기도록 되돌림 (인게임 검증됨).
 - 소환수 소환 또는 던전 내 몹 소환 시 벽에 끼어서 데미지를 입는 문제 개선 완료. `SummonPetAction`은 플레이어 주변 충돌 없는 블록 중심 좌표를 사용하고, `MobBuilder`는 `SpawnPointHelper`와 bounding box 충돌 검사를 사용함 (인게임 검증됨).
@@ -97,6 +97,7 @@
 - 일반 socket gem 9종의 등급 업그레이드 recipe 54개 추가 완료 (인게임 검증됨).
 - gem rank 번역을 등급 흐름에 맞게 보정 완료: `Cracked` 깨진, `Chipped` 흠집 난, `Regular` 보통, `Grand` 상급, `Glorious` 찬란한 (인게임 검증됨).
 - Mob overhead HUD가 블록/엔티티 뒤에서도 보이던 문제와 HUD 뒤 상자/몹/물/용암이 alpha 뒤로 보이지 않던 depth 처리 문제 수정 완료 (인게임 검증됨).
+- `Loot Beams Refork` 병용 시 데미지 숫자용 invisible `ItemEntity`가 `invisible_item` 이름표로 노출되던 문제 수정 완료 (인게임 검증됨).
 
 ## 수정 중
 - 던전 맵 차원에서는 장식된 도자기(`DecoratedPotBlock`)에 어떤 아이템도 들어가지 않도록 `RightClickBlock` 상호작용 차단 패치 적용. 인게임 확인 필요.
@@ -147,6 +148,8 @@
 - src/main/java/com/robertx22/mine_and_slash/a_libraries/neat/HealthBarRenderer.java
 - src/main/java/com/robertx22/mine_and_slash/a_libraries/neat/NeatRenderType.java
 - src/main/java/com/robertx22/mine_and_slash/mmorpg/event_registers/CommonEvents.java
+- src/main/java/com/robertx22/mine_and_slash/uncommon/effectdatas/DamageEvent.java
+- src/main/java/com/robertx22/mine_and_slash/mmorpg/registers/common/items/SlashItems.java
 
 ## 다음 작업
 - 던전 내 장식된 도자기 아이템 삽입 차단 동작 인게임 확인.

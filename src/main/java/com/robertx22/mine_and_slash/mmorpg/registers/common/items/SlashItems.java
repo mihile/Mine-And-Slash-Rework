@@ -25,7 +25,9 @@ import com.robertx22.mine_and_slash.vanilla_mc.items.gearitems.baubles.ItemNeckl
 import com.robertx22.mine_and_slash.vanilla_mc.items.gearitems.baubles.ItemRing;
 import com.robertx22.mine_and_slash.vanilla_mc.items.gearitems.weapons.StaffWeapon;
 import com.robertx22.mine_and_slash.vanilla_mc.items.misc.*;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 import java.util.Arrays;
@@ -79,7 +81,12 @@ public class SlashItems {
     public static RegObj<CommonGearProducerItem> COMMON_SOUL_PRODUCE = Def.item(() -> new CommonGearProducerItem(), "common_soul_produce");
 
     public static RegObj<StatSoulItem> STAT_SOUL = Def.item(() -> new StatSoulItem(), "stat_soul");
-    public static RegObj<Item> INVISIBLE_ICON = Def.item(() -> new Item(new Item.Properties()), "invisible_item");
+    public static RegObj<Item> INVISIBLE_ICON = Def.item(() -> new Item(new Item.Properties()) {
+        @Override
+        public Component getName(ItemStack stack) {
+            return Component.empty();
+        }
+    }, "invisible_item");
     public static RegObj<Item> TEST_GEN = Def.item(() -> new Item(new Item.Properties()), "test_gen");
     public static RegObj<Item> MASTER_BAG = Def.item(() -> new BackpackItem(), "master_bag");
     public static RegObj<Item> OMEN = Def.item(() -> new OmenItem(VanillaMaterial.DIAMOND), "omen");
