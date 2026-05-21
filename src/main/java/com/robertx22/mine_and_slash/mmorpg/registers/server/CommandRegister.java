@@ -68,6 +68,7 @@ public class CommandRegister {
         GivePerLvlExp.register(dispatcher);
         GiveProfessionExp.register(dispatcher);
         GivePerLvlProfessionExp.register(dispatcher);
+        GiveLoot.register(dispatcher);
 
         GiveStat.register(dispatcher);
         RemoveStat.register(dispatcher);
