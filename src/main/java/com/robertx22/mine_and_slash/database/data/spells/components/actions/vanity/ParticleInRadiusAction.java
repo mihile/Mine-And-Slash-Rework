@@ -6,6 +6,7 @@ import com.robertx22.mine_and_slash.database.data.spells.components.packets.Part
 import com.robertx22.mine_and_slash.database.data.spells.spell_classes.SpellCtx;
 import com.robertx22.mine_and_slash.uncommon.effectdatas.rework.EventData;
 import com.robertx22.library_of_exile.main.Packets;
+import com.robertx22.mine_and_slash.uncommon.utilityclasses.ExileEffectUtils;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.LivingEntity;
@@ -55,7 +56,7 @@ public class ParticleInRadiusAction extends SpellAction {
             float motionMulti = data.getOrDefault(MOTION_MULTI, 1D).floatValue();
 
             Vec3 pos = ctx.getPos();
-            Vec3 vel = ctx.getPositionEntity().getDeltaMovement();
+            Vec3 vel = ExileEffectUtils.EnsureNotNaN(ctx.getPositionEntity().getDeltaMovement());
 
 
             ParticlesPacket.Data saved = new ParticlesPacket.Data();
