@@ -19,18 +19,22 @@ public class ExpireAction extends SpellAction {
 
     @Override
     public void tryActivate(Collection<LivingEntity> targets, SpellCtx ctx, MapHolder data) {
-        Entity entityToDiscard = ctx.getPositionEntity();
-        if (entityToDiscard != null) {
-            if (!entityToDiscard.isRemoved()) {
-                if (!(entityToDiscard instanceof Player)) {
-                    if (entityToDiscard instanceof SummonEntity summonEntity) {
-                        Load.Unit(summonEntity).summonedPetData.discard((LivingEntity) entityToDiscard);
-                    } else {
-                        entityToDiscard.discard(); // this can cause infi loops and even calling expire spell multiple times
-                    }
-                }
-            }
+        Entity entity = ctx.getPositionEntity();
+        if (entity == null || entity.isRemoved() || entity instanceof Player) {
+            return;
         }
+
+        if (ctx.activation == com.robertx22.mine_and_slash.database.data.spells.components.EntityActivation.ON_EXPIRE) {
+            return;
+        }
+
+        if (entity instanceof SummonEntity summon) {
+            var entityUnit = Load.Unit(entity);
+            entityUnit.summonedPetData.discard(summon);
+            return;
+        }
+
+        entity.discard();
     }
 
     public MapHolder create() {

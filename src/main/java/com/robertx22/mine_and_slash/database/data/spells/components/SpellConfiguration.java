@@ -111,6 +111,11 @@ public class SpellConfiguration {
         return this;
     }
 
+    public SpellConfiguration setSummonAggroRadius(int radius) {
+        this.aggro_radius = radius;
+        return this;
+    }
+
     public SpellConfiguration setSummonBasicAttack(String s) {
         this.summon_basic_atk = s;
         return this;
