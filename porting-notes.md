@@ -106,7 +106,7 @@
 - 던전 전리품 완료도 분모가 상자 생성/발견 시점에 뒤늦게 증가해 첫 상자 1개로 100% 및 신화 등급까지 승격되던 문제 수정 완료. 던전 layout build 시 전체 room template의 일반 map chest data block 수를 미리 계산하도록 변경 (인게임 검증됨).
 
 ## 수정 중
-- Ancient Obelisks addon을 mahjerion fork 기준으로 `port-1.21.1-neoforge` 브랜치에 포팅 시도. NeoForge build metadata, attachment capability, registry, block entity save/load, loot table, mob spawn, attribute modifier, chest loot table API를 1.21.1에 맞춰 수정. 빌드 성공; 인게임 확인 필요.
+- Ancient Obelisks addon을 mahjerion fork 기준으로 `port-1.21.1-neoforge` 브랜치에 포팅 시도. NeoForge build metadata, attachment capability, registry, block entity save/load, loot table, mob spawn, attribute modifier, chest loot table API를 1.21.1에 맞춰 수정. abstract `MobSpawnEvent` listener 로딩 크래시는 `EntityJoinLevelEvent`로 교체하여 패치. 빌드 성공; 인게임 확인 필요.
 - 던전 맵 차원에서는 장식된 도자기(`DecoratedPotBlock`)에 어떤 아이템도 들어가지 않도록 `RightClickBlock` 상호작용 차단 패치 적용. 인게임 확인 필요.
 - 독, 낙하 등 환경 데미지가 마법 보호막(Magic Shield)을 무시하고 바닐라 체력에 직격하는 문제 수정 완료 (`LivingEntity.hurt` 메서드에 `@ModifyVariable` 믹싱을 적용하여 데미지 인자를 가로채고 보호막을 우선 차감하도록 변경). 인게임 확인 필요.
 - 마녀 회복 포션 과다 치유 수정 패치 적용. 인게임 확인 필요.
