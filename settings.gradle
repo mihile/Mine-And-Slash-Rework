@@ -14,9 +14,11 @@ rootProject.name = 'Mine-And-Slash-Rework'
 include 'library_of_exile'
 include 'dungeon_realm'
 include 'the_harvest'
+include 'ancient_obelisks'
 include 'mine_and_fx'
 
 project(':library_of_exile').projectDir = file('deps/Library-of-Exile-Rework')
 project(':dungeon_realm').projectDir = file('deps/dungeon_realm')
 project(':the_harvest').projectDir = file('deps/the_harvest')
+project(':ancient_obelisks').projectDir = file('deps/ancient_obelisks')
 project(':mine_and_fx').projectDir = file('deps/mine_and_fx')

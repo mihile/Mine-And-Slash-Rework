@@ -106,6 +106,7 @@
 - 던전 전리품 완료도 분모가 상자 생성/발견 시점에 뒤늦게 증가해 첫 상자 1개로 100% 및 신화 등급까지 승격되던 문제 수정 완료. 던전 layout build 시 전체 room template의 일반 map chest data block 수를 미리 계산하도록 변경 (인게임 검증됨).
 
 ## 수정 중
+- Ancient Obelisks addon을 mahjerion fork 기준으로 `port-1.21.1-neoforge` 브랜치에 포팅 시도. NeoForge build metadata, attachment capability, registry, block entity save/load, loot table, mob spawn, attribute modifier, chest loot table API를 1.21.1에 맞춰 수정. 빌드 성공; 인게임 확인 필요.
 - 던전 맵 차원에서는 장식된 도자기(`DecoratedPotBlock`)에 어떤 아이템도 들어가지 않도록 `RightClickBlock` 상호작용 차단 패치 적용. 인게임 확인 필요.
 - 독, 낙하 등 환경 데미지가 마법 보호막(Magic Shield)을 무시하고 바닐라 체력에 직격하는 문제 수정 완료 (`LivingEntity.hurt` 메서드에 `@ModifyVariable` 믹싱을 적용하여 데미지 인자를 가로채고 보호막을 우선 차감하도록 변경). 인게임 확인 필요.
 - 마녀 회복 포션 과다 치유 수정 패치 적용. 인게임 확인 필요.
@@ -124,73 +125,18 @@
 - 빌드 성공; playable jar를 output 폴더에 복사함.
 
 ## 최근 파일
-- deps/dungeon_realm/src/main/java/com/robertx22/dungeon_realm/main/DungeonEvents.java
-- deps/dungeon_realm/src/main/java/com/robertx22/dungeon_realm/database/data_blocks/chests/MapChestMB.java
-- src/main/java/com/robertx22/addons/dungeon_realm/DungeonStatsOverlay.java
-- src/main/java/com/robertx22/addons/dungeon_realm/DungeonStatsPacket.java
-- src/main/java/com/robertx22/addons/dungeon_realm/DungeonStatsSyncData.java
-- src/main/java/com/robertx22/mine_and_slash/event_hooks/ontick/OnServerTick.java
-- src/main/java/com/robertx22/mine_and_slash/mmorpg/event_registers/GuiOverlays.java
-- src/main/java/com/robertx22/mine_and_slash/mmorpg/registers/client/S2CPacketRegister.java
-- deps/dungeon_realm/src/main/java/com/robertx22/dungeon_realm/structure/DungeonMapData.java
-- deps/dungeon_realm/src/main/java/com/robertx22/dungeon_realm/main/DungeonWords.java
-- deps/dungeon_realm/src/main/resources/assets/dungeon_realm/lang/en_us.json
-- deps/dungeon_realm/src/main/resources/assets/dungeon_realm/lang/ko_kr.json
-- deps/Library-of-Exile-Rework/src/main/java/com/robertx22/library_of_exile/config/map_dimension/MapDimensionConfig.java
-- src/main/java/com/robertx22/mine_and_slash/event_hooks/ontick/UnequipGear.java
-- src/main/java/com/robertx22/mine_and_slash/mixin_methods/RenderItemGlints.java
-- src/main/java/com/robertx22/mine_and_slash/config/forge/ClientConfigs.java
-- src/main/java/com/robertx22/mine_and_slash/mmorpg/event_registers/GuiOverlays.java
-- src/main/java/com/robertx22/mine_and_slash/vanilla_mc/items/gemrunes/RuneItem.java
-- src/main/java/com/robertx22/mine_and_slash/config/forge/ServerContainer.java
-- src/main/java/com/robertx22/mine_and_slash/uncommon/localization/Chats.java
-- src/main/java/com/robertx22/mine_and_slash/uncommon/localization/Itemtips.java
-- src/main/resources/assets/mmorpg/lang/en_us.json
-- src/main/java/com/robertx22/mine_and_slash/uncommon/effectdatas/DamageEvent.java
-- src/main/java/com/robertx22/addons/dungeon_realm/DungeonAddonEvents.java
-- deps/dungeon_realm/src/main/java/com/robertx22/dungeon_realm/main/DungeonMain.java
-- src/main/java/com/robertx22/mine_and_slash/event_hooks/my_events/OnMobDeathDrops.java
-- src/main/java/com/robertx22/mine_and_slash/aoe_data/database/mob_rarities/MobRarities.java
-- deps/dungeon_realm/src/main/java/com/robertx22/dungeon_realm/main/DungeonMobValidator.java
-- src/main/resources/assets/mmorpg/lang/ko_kr.json
-- deps/Library-of-Exile-Rework/src/main/resources/assets/library_of_exile/lang/ko_kr.json
-- deps/the_harvest/src/main/resources/assets/the_harvest/lang/ko_kr.json
-- deps/dungeon_realm/src/main/resources/assets/dungeon_realm/lang/ko_kr.json
-- deps/the_harvest/src/main/resources/data/the_harvest/recipe/harvest.json
-- deps/dungeon_realm/src/main/resources/data/dungeon_realm/recipe/test_dirt_to_diamond.json
-- src/main/resources/data/mmorpg/recipe/alchemy_station.json
-- src/main/resources/data/mmorpg/recipe/cooking_station.json
-- src/main/resources/data/mmorpg/recipe/enchanting_station.json
-- src/main/resources/data/mmorpg/recipe/gear_crafting_station.json
-- src/main/resources/data/mmorpg/recipe/salvaging_station.json
-- src/main/resources/data/mmorpg/recipe/newbie_gear_bag.json
-- src/main/resources/data/mmorpg/recipe/gems/
-- src/main/resources/data/mmorpg/recipe/potions/
-- src/main/resources/data/mmorpg/recipe/currency/
-- src/main/resources/data/mmorpg/recipe/soul_extractor/
-- src/main/resources/data/mmorpg/recipe/keys/
-- src/main/resources/assets/mmorpg/lang/ko_kr.json
+- deps/ancient_obelisks/build.gradle
+- deps/ancient_obelisks/gradle.properties
+- deps/ancient_obelisks/src/main/resources/META-INF/neoforge.mods.toml
+- deps/ancient_obelisks/src/main/java/com/robertx22/ancient_obelisks/main/ObeliskEntries.java
+- deps/ancient_obelisks/src/main/java/com/robertx22/ancient_obelisks/capability/ObeliskEntityCapability.java
+- deps/ancient_obelisks/src/main/java/com/robertx22/ancient_obelisks/structure/ObeliskMapCapability.java
+- deps/ancient_obelisks/src/main/java/com/robertx22/ancient_obelisks/main/ObeliskLootTables.java
+- deps/ancient_obelisks/src/main/java/com/robertx22/ancient_obelisks/main/ObeliskMobTierStats.java
+- deps/ancient_obelisks/src/main/java/com/robertx22/ancient_obelisks/main/ObeliskRewardLogic.java
+- settings.gradle
 - scripts/copy-playable-jar.ps1
 - porting-notes.md
-- src/main/java/com/robertx22/mine_and_slash/a_libraries/neat/HealthBarRenderer.java
-- src/main/java/com/robertx22/mine_and_slash/a_libraries/neat/NeatRenderType.java
-- src/main/java/com/robertx22/mine_and_slash/mmorpg/event_registers/CommonEvents.java
-- src/main/java/com/robertx22/mine_and_slash/uncommon/effectdatas/DamageEvent.java
-- src/main/java/com/robertx22/mine_and_slash/mmorpg/registers/common/items/SlashItems.java
-- src/main/java/com/robertx22/mine_and_slash/mmorpg/init/ClientInit.java
-- src/main/java/com/robertx22/mine_and_slash/mixins/CuriosScreenMixin.java
-- src/main/resources/mmorpg-mixins.json
-- src/main/java/com/robertx22/mine_and_slash/database/data/spells/components/actions/SummonPetAction.java
-- src/main/java/com/robertx22/mine_and_slash/database/data/spells/components/actions/ExpireAction.java
-- src/main/java/com/robertx22/mine_and_slash/database/data/spells/components/SpellConfiguration.java
-- src/main/java/com/robertx22/mine_and_slash/aoe_data/database/spells/schools/SummonSpells.java
-- src/main/java/com/robertx22/mine_and_slash/vanilla_mc/commands/entity/GiveLoot.java
-- src/main/java/com/robertx22/mine_and_slash/uncommon/utilityclasses/ExileEffectUtils.java
-- src/main/java/com/robertx22/mine_and_slash/database/data/spells/components/Spell.java
-- src/main/java/com/robertx22/mine_and_slash/database/data/stats/tooltips/SummonTooltip.java
-- src/main/java/com/robertx22/mine_and_slash/uncommon/localization/Words.java
-- src/main/resources/assets/mmorpg/lang/en_us.json
-- src/main/java/com/robertx22/mine_and_slash/database/data/game_balance_config/PlayerPointsType.java
 
 ## 다음 작업
-- 추가 버그 제보 확인 및 안정화 작업.
+- Ancient Obelisks 인게임 로딩 및 obelisk 생성/보상/몹 tier 적용 확인.
