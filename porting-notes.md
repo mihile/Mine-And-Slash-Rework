@@ -99,9 +99,23 @@
 - Mob overhead HUD가 블록/엔티티 뒤에서도 보이던 문제와 HUD 뒤 상자/몹/물/용암이 alpha 뒤로 보이지 않던 depth 처리 문제 수정 완료 (인게임 검증됨).
 - `Loot Beams Refork` 병용 시 데미지 숫자용 invisible `ItemEntity`가 `invisible_item` 이름표로 노출되던 문제 수정 완료 (인게임 검증됨).
 - Curios 슬롯을 연 상태에서 socket gem/rune tooltip이 `[SOCKET_PLACEHOLDER]`로 노출되던 문제 수정 완료. `CuriosScreen` tooltip 렌더 경로가 실제 `ItemStack`을 넘기도록 보정해 일반 인벤토리와 동일한 socket icon tooltip이 표시됨 (인게임 검증됨).
+- 상자 UI 등에서 마스터 배낭으로 아이템을 가져오는 'Backpack Quick Loot' 버튼의 모델(아이콘)이 깨져 보이던 문제 수정 완료 (OldImageButton 명시적 텍스처 생성자 적용). 인게임 검증됨.
+- 마녀(Witch) 등 바닐라 몹이 회복 포션을 마셨을 때 M&S 최대 체력에 비례하여 과도하게 치유되던 문제 수정 완료 (`LivingEntity.heal` 스케일링을 모든 엔티티로 확장). 인게임 확인 필요.
+- 특정 희귀도와 레벨을 가진 몹을 소환하는 명령어 추가 완료 (`/mine_and_slash spawn <entity> <rarity> <level>`). 테스트 용도.
+- 던전 맵 차원 우측 상단 dungeon stats overlay 복구 완료. 처치 완료도/전리품 완료도 서버 sync, overlay render, en_us/ko_kr lang key 표시 정상 (인게임 검증됨).
+- 던전 전리품 완료도 분모가 상자 생성/발견 시점에 뒤늦게 증가해 첫 상자 1개로 100% 및 신화 등급까지 승격되던 문제 수정 완료. 던전 layout build 시 전체 room template의 일반 map chest data block 수를 미리 계산하도록 변경 (인게임 검증됨).
 
 ## 수정 중
 - 던전 맵 차원에서는 장식된 도자기(`DecoratedPotBlock`)에 어떤 아이템도 들어가지 않도록 `RightClickBlock` 상호작용 차단 패치 적용. 인게임 확인 필요.
+- 독, 낙하 등 환경 데미지가 마법 보호막(Magic Shield)을 무시하고 바닐라 체력에 직격하는 문제 수정 완료 (`LivingEntity.hurt` 메서드에 `@ModifyVariable` 믹싱을 적용하여 데미지 인자를 가로채고 보호막을 우선 차감하도록 변경). 인게임 확인 필요.
+- 마녀 회복 포션 과다 치유 수정 패치 적용. 인게임 확인 필요.
+- mahjerion fork의 summon duration/expire 처리 일부 포팅: infinite duration 지원과 expire 시 summon counter 감소 경로를 1.21.1 코드에 맞춰 적용. 인게임 확인 필요.
+- mahjerion fork의 socket 장비 auto-salvage 보호 패치 포팅: gem/rune 장착 시 `SALVAGING_DISABLED`를 켜고, socket 추출 후 비었으면 다시 해제하도록 적용. 인게임 확인 필요.
+- mahjerion fork의 NaN delta movement 방어 패치 포팅: spell motion/particle/dash 경로에서 NaN motion 값을 0으로 보정. 인게임 확인 필요.
+- mahjerion fork의 `/mine_and_slash give loot` 디버그 명령 포팅. 인게임 확인 필요.
+- mahjerion fork의 summon aggro radius 기본값과 ExpireAction cleanup 포팅: summon spell aggro radius를 15로 지정하고 expire 시 summon tracking 정리 경로를 보정. 인게임 확인 필요.
+- mahjerion fork의 summon tooltip 포팅: summon spell tooltip에 소환 대상과 기본 지속시간/무한 지속 표시를 추가하고 중복 summon duration pair는 한 번만 표시. 인게임 확인 필요.
+- mahjerion fork의 `PlayerPointsType` `StringRepresentable` 포팅: config/직렬화에서 point type 이름이 `GUID()` 기준으로 안정적으로 저장되도록 적용. 인게임 확인 필요.
 
 ## 남은 문제
 - 추가 버그 제보 확인 및 안정화 작업.
@@ -110,6 +124,18 @@
 - 빌드 성공; playable jar를 output 폴더에 복사함.
 
 ## 최근 파일
+- deps/dungeon_realm/src/main/java/com/robertx22/dungeon_realm/main/DungeonEvents.java
+- deps/dungeon_realm/src/main/java/com/robertx22/dungeon_realm/database/data_blocks/chests/MapChestMB.java
+- src/main/java/com/robertx22/addons/dungeon_realm/DungeonStatsOverlay.java
+- src/main/java/com/robertx22/addons/dungeon_realm/DungeonStatsPacket.java
+- src/main/java/com/robertx22/addons/dungeon_realm/DungeonStatsSyncData.java
+- src/main/java/com/robertx22/mine_and_slash/event_hooks/ontick/OnServerTick.java
+- src/main/java/com/robertx22/mine_and_slash/mmorpg/event_registers/GuiOverlays.java
+- src/main/java/com/robertx22/mine_and_slash/mmorpg/registers/client/S2CPacketRegister.java
+- deps/dungeon_realm/src/main/java/com/robertx22/dungeon_realm/structure/DungeonMapData.java
+- deps/dungeon_realm/src/main/java/com/robertx22/dungeon_realm/main/DungeonWords.java
+- deps/dungeon_realm/src/main/resources/assets/dungeon_realm/lang/en_us.json
+- deps/dungeon_realm/src/main/resources/assets/dungeon_realm/lang/ko_kr.json
 - deps/Library-of-Exile-Rework/src/main/java/com/robertx22/library_of_exile/config/map_dimension/MapDimensionConfig.java
 - src/main/java/com/robertx22/mine_and_slash/event_hooks/ontick/UnequipGear.java
 - src/main/java/com/robertx22/mine_and_slash/mixin_methods/RenderItemGlints.java
@@ -154,6 +180,17 @@
 - src/main/java/com/robertx22/mine_and_slash/mmorpg/init/ClientInit.java
 - src/main/java/com/robertx22/mine_and_slash/mixins/CuriosScreenMixin.java
 - src/main/resources/mmorpg-mixins.json
+- src/main/java/com/robertx22/mine_and_slash/database/data/spells/components/actions/SummonPetAction.java
+- src/main/java/com/robertx22/mine_and_slash/database/data/spells/components/actions/ExpireAction.java
+- src/main/java/com/robertx22/mine_and_slash/database/data/spells/components/SpellConfiguration.java
+- src/main/java/com/robertx22/mine_and_slash/aoe_data/database/spells/schools/SummonSpells.java
+- src/main/java/com/robertx22/mine_and_slash/vanilla_mc/commands/entity/GiveLoot.java
+- src/main/java/com/robertx22/mine_and_slash/uncommon/utilityclasses/ExileEffectUtils.java
+- src/main/java/com/robertx22/mine_and_slash/database/data/spells/components/Spell.java
+- src/main/java/com/robertx22/mine_and_slash/database/data/stats/tooltips/SummonTooltip.java
+- src/main/java/com/robertx22/mine_and_slash/uncommon/localization/Words.java
+- src/main/resources/assets/mmorpg/lang/en_us.json
+- src/main/java/com/robertx22/mine_and_slash/database/data/game_balance_config/PlayerPointsType.java
 
 ## 다음 작업
-- 던전 내 장식된 도자기 아이템 삽입 차단 동작 인게임 확인.
+- 추가 버그 제보 확인 및 안정화 작업.
