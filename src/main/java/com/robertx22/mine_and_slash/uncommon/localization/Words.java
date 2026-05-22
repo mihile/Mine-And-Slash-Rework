@@ -365,7 +365,11 @@ public enum Words implements IAutoLocName {
     REDUCE_PERCENT_STAT("Lower "),
     EMPTY_BOX("Box"),
     LEVEL_UP_TYPE_PLAYER("Player"),
-    JEWEL_SOCKET_NOT_AVAILABLE("Unlock on talent tree");
+    JEWEL_SOCKET_NOT_AVAILABLE("Unlock on talent tree"),
+    SUMMON_IS_INFINITE("Is infinite"),
+    SUMMONS_LIST("Summons:"),
+    SUMMON_BASE_DURATION("Base Duration: %1$ss"),
+    SUMMON_UNKNOWN_ENTITY("Unknown");
 
 
     private String localization = "";

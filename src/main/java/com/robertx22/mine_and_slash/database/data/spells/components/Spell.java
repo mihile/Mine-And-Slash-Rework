@@ -17,9 +17,11 @@ import com.robertx22.mine_and_slash.database.data.StatMod;
 import com.robertx22.mine_and_slash.database.data.exile_effects.ExileEffect;
 import com.robertx22.mine_and_slash.database.data.game_balance_config.GameBalanceConfig;
 import com.robertx22.mine_and_slash.database.data.spells.components.actions.SpellAction;
+import com.robertx22.mine_and_slash.database.data.spells.components.actions.SummonPetAction;
 import com.robertx22.mine_and_slash.database.data.spells.map_fields.MapField;
 import com.robertx22.mine_and_slash.database.data.spells.spell_classes.SpellCtx;
 import com.robertx22.mine_and_slash.database.data.spells.spell_classes.bases.SpellCastContext;
+import com.robertx22.mine_and_slash.database.data.stats.tooltips.SummonTooltip;
 import com.robertx22.mine_and_slash.database.data.value_calc.MaxLevelProvider;
 import com.robertx22.mine_and_slash.database.registry.ExileDB;
 import com.robertx22.mine_and_slash.database.registry.ExileRegistryTypes;
@@ -51,6 +53,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -307,6 +310,7 @@ public final class Spell implements ISkillGem, IGUID, IAutoGson<Spell>, JsonExil
         // --- FIX: Use a map to keep only the effect with the greatest duration ---
         LinkedHashMap<ExileEffect, String> effectsWithDurations = new LinkedHashMap<>();
         DecimalFormat decimalFormat = new DecimalFormat("0.0");
+        List<SummonTooltip> summons = new ArrayList<>();
 
         if (ExileDB.ExileEffects().isRegistered(effect_tip)) {
             effectsWithDurations.put(
@@ -334,6 +338,19 @@ public final class Spell implements ISkillGem, IGUID, IAutoGson<Spell>, JsonExil
                                 } else {
                                     effectsWithDurations.put(eff, dur);
                                 }
+                            }
+                            if (a.has(MapField.SUMMONED_PET_ID)) {
+                                float duration = a.get(MapField.LIFESPAN_TICKS).intValue();
+                                Optional<EntityType<?>> type = EntityType.byString(a.get(MapField.SUMMONED_PET_ID));
+                                String name = Words.SUMMON_UNKNOWN_ENTITY.locNameLangFileGUID();
+                                if (type.isPresent()) {
+                                    name = type.get().getDescriptionId();
+                                }
+                                addSummonTooltipIfMissing(summons, name, duration);
+                            }
+                            if (a.has(MapField.BLOCK)) {
+                                float duration = a.get(MapField.LIFESPAN_TICKS).intValue();
+                                addSummonTooltipIfMissing(summons, this.loc_name, duration);
                             }
                         });
                     });
@@ -365,6 +382,19 @@ public final class Spell implements ISkillGem, IGUID, IAutoGson<Spell>, JsonExil
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        if (!summons.isEmpty()) {
+            list.add(Words.SUMMONS_LIST.locName());
+        }
+        for (SummonTooltip summon : summons) {
+            list.add(Component.translatable(summon.type()).withStyle(ChatFormatting.BLUE));
+            Component durationComponent = Words.SUMMON_BASE_DURATION.locName(summon.duration() / 20);
+            if (summon.duration() == SummonPetAction.INFINITE_DURATION) {
+                durationComponent = Words.SUMMON_IS_INFINITE.locName();
+            }
+            list.add(durationComponent);
+            list.add(ExileText.emptyLine().get());
         }
 
         if (!this.statsForSkillGem.isEmpty()) {
@@ -421,6 +451,12 @@ public final class Spell implements ISkillGem, IGUID, IAutoGson<Spell>, JsonExil
             return Float.parseFloat(dur);
         } catch (Exception e) {
             return 0f;
+        }
+    }
+
+    private static void addSummonTooltipIfMissing(List<SummonTooltip> summons, String type, float duration) {
+        if (summons.stream().noneMatch(x -> x.type().equals(type) && x.duration() == duration)) {
+            summons.add(new SummonTooltip(type, duration));
         }
     }
 
