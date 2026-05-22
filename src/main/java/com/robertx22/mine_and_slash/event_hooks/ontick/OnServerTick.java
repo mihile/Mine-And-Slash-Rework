@@ -1,5 +1,8 @@
 package com.robertx22.mine_and_slash.event_hooks.ontick;
 
+import com.robertx22.addons.dungeon_realm.DungeonStatsPacket;
+import com.robertx22.addons.dungeon_realm.DungeonStatsSyncData;
+import com.robertx22.dungeon_realm.main.DungeonMain;
 import com.robertx22.library_of_exile.main.Packets;
 import com.robertx22.mine_and_slash.capability.entity.EntityData;
 import com.robertx22.mine_and_slash.capability.player.PlayerData;
@@ -48,6 +51,7 @@ public class OnServerTick {
             }
 
             tickMapState(player, unitdata, sw);
+            syncDungeonStatsOverlay(player, sw);
 
             playerData.spellCastingData.onTimePass(player);
             unitdata.didStatCalcThisTickForPlayer = false;
@@ -98,6 +102,23 @@ public class OnServerTick {
             }
 
         });
+    }
+
+    private static void syncDungeonStatsOverlay(ServerPlayer player, ServerLevel sw) {
+        if (player.tickCount % 20 != 0) {
+            return;
+        }
+        if (!sw.dimension().location().equals(DungeonMain.DIMENSION_KEY)) {
+            return;
+        }
+        DungeonMain.ifMapData(sw, player.blockPosition()).ifPresentOrElse(map -> {
+            Packets.sendToClient(player, new DungeonStatsPacket(new DungeonStatsSyncData(
+                    true,
+                    map.current_mob_kill_rarity,
+                    map.getKillCompletionPercent(),
+                    map.getLootCompletionPercent()
+            )));
+        }, () -> Packets.sendToClient(player, new DungeonStatsPacket(new DungeonStatsSyncData())));
     }
 
     private static void tickRecurringPlayerEvents(ServerPlayer player, EntityData unitdata, PlayerData playerData, int age) {

@@ -1,5 +1,6 @@
 package com.robertx22.mine_and_slash.mmorpg.event_registers;
 
+import com.robertx22.addons.dungeon_realm.DungeonStatsOverlay;
 import com.robertx22.mine_and_slash.a_libraries.dmg_number_particle.DamageParticleRenderer;
 import com.robertx22.mine_and_slash.config.forge.ClientConfigs;
 import com.robertx22.mine_and_slash.config.forge.overlay.OverlayType;
@@ -40,6 +41,10 @@ public class GuiOverlays {
 
         event.registerAbove(VanillaGuiLayers.CHAT, ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "rpg_gui"), (guiGraphics, deltaTracker) -> {
             new RPGGuiOverlay().onHudRender(guiGraphics);
+        });
+
+        event.registerAbove(VanillaGuiLayers.CHAT, ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "dungeon_stats"), (guiGraphics, deltaTracker) -> {
+            DungeonStatsOverlay.render(guiGraphics);
         });
 
         event.registerAbove(VanillaGuiLayers.CHAT, ResourceLocation.fromNamespaceAndPath(SlashRef.MODID, "status_effects"), (guiGraphics, deltaTracker) -> {

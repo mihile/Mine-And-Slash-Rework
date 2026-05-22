@@ -1,6 +1,7 @@
 package com.robertx22.mine_and_slash.mmorpg.registers.client;
 
 import com.robertx22.library_of_exile.main.Packets;
+import com.robertx22.addons.dungeon_realm.DungeonStatsPacket;
 import com.robertx22.mine_and_slash.database.data.profession.StationPacket;
 import com.robertx22.mine_and_slash.database.data.profession.StationSyncData;
 import com.robertx22.mine_and_slash.database.data.spells.components.packets.ParticlesPacket;
@@ -31,6 +32,7 @@ public class S2CPacketRegister {
         Packets.registerServerToClient(MMORPG.NETWORK, new ExileInteractionResultPacket(), i++);
         Packets.registerServerToClient(MMORPG.NETWORK, new TellClientResetCaches(), i++);
         Packets.registerServerToClient(MMORPG.NETWORK, new MapCompletePacket(), i++);
+        Packets.registerServerToClient(MMORPG.NETWORK, new DungeonStatsPacket(), i++);
 
 
     }
