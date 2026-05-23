@@ -147,11 +147,11 @@ public class ServerContainer {
                 });
 
         ENTITY_SUMMON_BLACKLIST = b.comment("Entities that summons should not attack")
-                .define("ENTITY_SUMMON_BLACKLIST", Arrays.asList(
+                .defineList("ENTITY_SUMMON_BLACKLIST", Arrays.asList(
                         "minecraft:allay",
                         "minecraft:armor_stand"
                         // Add default blacklisted entities here
-                ));
+                ), x -> x instanceof String);
 
         b.comment("These are just default values for the Mine and slash Hub > features").push("Default Feature Configs");
 
