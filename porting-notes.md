@@ -109,6 +109,7 @@
 - 독, 낙하, 용암, 불 등 환경 데미지가 HP와 마법 보호막(Magic Shield)을 현재 HP+Magic Shield 비율에 따라 같이 차감되도록 수정 완료 (인게임 검증됨).
 
 ## 수정 중
+- release/playable jar에서 dev data generation이 로그인 시 실행되지 않도록 `MMORPG`, `the_harvest`, `dungeon_realm`의 `RUN_DEV_TOOLS`를 비활성화하고, Library of Exile chest loot debug print를 제거함. build 확인 완료, 인게임 확인 필요.
 - 다른 작업자도 같은 방식으로 전체 모드/addon jar를 빌드하고 `output` 폴더로 복사할 수 있도록 루트 `build-output.bat` 추가. clean worktree 검증 완료.
 - mahjerion `1.20-Forge`처럼 addon들을 루트 submodule로 노출하도록 구조 변경: `Library-of-Exile-Rework`, `the_harvest`, `dungeon_realm`, `ancient_obelisks`를 `mihile/*` fork의 `port-1.21.1-neoforge` 브렌치로 연결함. clean worktree build 확인 완료, GitHub clone/submodule workflow 확인 필요.
 - 마녀 회복 포션 과다 치유 수정 패치 적용. 인게임 확인 필요.
@@ -124,9 +125,14 @@
 - 추가 버그 제보 확인 및 안정화 작업.
 
 ## 빌드
-- 빌드 성공; 검증용 clean worktree에서 `build-output.bat`로 playable jar를 output 폴더에 복사함.
+- 빌드 성공; 검증용 clean worktree에서 `build-output.bat`로 playable jar를 output 폴더에 복사하고 실제 output 폴더에도 복사함.
 
 ## 최근 파일
+- src/main/java/com/robertx22/mine_and_slash/mmorpg/MMORPG.java
+- Library-of-Exile-Rework/src/main/java/com/robertx22/library_of_exile/mixins/RandomizableContainerMixin.java
+- Library-of-Exile-Rework/src/main/java/com/robertx22/library_of_exile/mixins/ChestLootGenMixin.java
+- the_harvest/src/main/java/com/robertx22/the_harvest/main/HarvestMain.java
+- dungeon_realm/src/main/java/com/robertx22/dungeon_realm/main/DungeonMain.java
 - build-output.bat
 - .gitmodules
 - Library-of-Exile-Rework
@@ -138,4 +144,4 @@
 - porting-notes.md
 
 ## 다음 작업
-- GitHub에서 `port-1.21.1-neoforge` 브렌치 clone/submodule 표시 확인.
+- release jar 로그인 로그에서 dev data generation 예외와 chest loot debug print가 사라졌는지 인게임 확인.
