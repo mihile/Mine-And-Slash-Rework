@@ -14,13 +14,34 @@ import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.gen.Invoker;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import com.robertx22.mine_and_slash.capability.entity.EntityData;
+import com.robertx22.mine_and_slash.saveclasses.unit.ResourceType;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin implements LivingEntityAccesor {
+
+    @ModifyVariable(method = "hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z", at = @At(value = "HEAD"), argsOnly = true, ordinal = 0)
+    private float absorbMagicShield(float amount, DamageSource source) {
+        LivingEntity en = (LivingEntity) (Object) this;
+        if (en.level().isClientSide || amount <= 0) return amount;
+        if (DmgSourceUtils.isMyDmgSource(source)) return amount;
+
+        EntityData data = EntityData.get(en);
+        float shield = data.getResources().getMagicShield();
+        float health = HealthUtils.getCurrentHealth(en);
+
+        if (shield > 0 && health > 0) {
+            float realDamage = amount * HealthUtils.getMaxHealth(en) / en.getMaxHealth();
+            float shieldDamage = Math.min(shield, realDamage * (shield / (health + shield)));
+            data.getResources().spend(en, ResourceType.magic_shield, shieldDamage);
+
+            return HealthUtils.realToVanilla(en, realDamage - shieldDamage);
+        }
+        
+        return amount;
+    }
 
     @Shadow
     protected abstract float getVoicePitch();
@@ -48,11 +69,7 @@ public abstract class LivingEntityMixin implements LivingEntityAccesor {
     public float reduceHealPerLevel(float amount, float arg) {
         LivingEntity en = (LivingEntity) (Object) this;
 
-        if (en instanceof Player) {
-            return HealthUtils.realToVanilla(en, amount);
-        }
-
-        return amount;
+        return HealthUtils.realToVanilla(en, amount);
     }
 
     // ENSURE MY SPECIAL DAMAGE ISNT LOWERED BY ARMOR, ENCHANTS ETC

@@ -104,11 +104,11 @@
 - 특정 희귀도와 레벨을 가진 몹을 소환하는 명령어 추가 완료 (`/mine_and_slash spawn <entity> <rarity> <level>`). 테스트 용도.
 - 던전 맵 차원 우측 상단 dungeon stats overlay 복구 완료. 처치 완료도/전리품 완료도 서버 sync, overlay render, en_us/ko_kr lang key 표시 정상 (인게임 검증됨).
 - 던전 전리품 완료도 분모가 상자 생성/발견 시점에 뒤늦게 증가해 첫 상자 1개로 100% 및 신화 등급까지 승격되던 문제 수정 완료. 던전 layout build 시 전체 room template의 일반 map chest data block 수를 미리 계산하도록 변경 (인게임 검증됨).
+- 던전 맵 차원에서는 장식된 도자기(`DecoratedPotBlock`)에 어떤 아이템도 들어가지 않도록 차단 완료 (인게임 검증됨).
+- Ancient Obelisks addon 1.21.1 NeoForge 포팅 완료. 로딩 크래시, dimension_type schema, recipe 경로/result schema, structure template 경로 보정 후 obelisk map 생성/입장 정상 작동 확인됨 (인게임 검증됨).
+- 독, 낙하, 용암, 불 등 환경 데미지가 HP와 마법 보호막(Magic Shield)을 현재 HP+Magic Shield 비율에 따라 같이 차감되도록 수정 완료 (인게임 검증됨).
 
 ## 수정 중
-- Ancient Obelisks addon을 mahjerion fork 기준으로 `port-1.21.1-neoforge` 브랜치에 포팅 시도. NeoForge build metadata, attachment capability, registry, block entity save/load, loot table, mob spawn, attribute modifier, chest loot table API를 1.21.1에 맞춰 수정. abstract `MobSpawnEvent` listener 로딩 크래시는 `EntityJoinLevelEvent`로 교체하여 패치. 빌드 성공; 인게임 확인 필요.
-- 던전 맵 차원에서는 장식된 도자기(`DecoratedPotBlock`)에 어떤 아이템도 들어가지 않도록 `RightClickBlock` 상호작용 차단 패치 적용. 인게임 확인 필요.
-- 독, 낙하 등 환경 데미지가 마법 보호막(Magic Shield)을 무시하고 바닐라 체력에 직격하는 문제 수정 완료 (`LivingEntity.hurt` 메서드에 `@ModifyVariable` 믹싱을 적용하여 데미지 인자를 가로채고 보호막을 우선 차감하도록 변경). 인게임 확인 필요.
 - 마녀 회복 포션 과다 치유 수정 패치 적용. 인게임 확인 필요.
 - mahjerion fork의 summon duration/expire 처리 일부 포팅: infinite duration 지원과 expire 시 summon counter 감소 경로를 1.21.1 코드에 맞춰 적용. 인게임 확인 필요.
 - mahjerion fork의 socket 장비 auto-salvage 보호 패치 포팅: gem/rune 장착 시 `SALVAGING_DISABLED`를 켜고, socket 추출 후 비었으면 다시 해제하도록 적용. 인게임 확인 필요.
@@ -134,6 +134,9 @@
 - deps/ancient_obelisks/src/main/java/com/robertx22/ancient_obelisks/main/ObeliskLootTables.java
 - deps/ancient_obelisks/src/main/java/com/robertx22/ancient_obelisks/main/ObeliskMobTierStats.java
 - deps/ancient_obelisks/src/main/java/com/robertx22/ancient_obelisks/main/ObeliskRewardLogic.java
+- deps/ancient_obelisks/src/main/resources/data/ancient_obelisks/dimension_type/obelisk.json
+- deps/ancient_obelisks/src/main/resources/data/ancient_obelisks/recipe/obelisk.json
+- deps/ancient_obelisks/src/main/resources/data/ancient_obelisks/structure/obelisk/stone/
 - settings.gradle
 - scripts/copy-playable-jar.ps1
 - porting-notes.md
