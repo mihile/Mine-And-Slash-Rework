@@ -109,6 +109,7 @@
 - 독, 낙하, 용암, 불 등 환경 데미지가 HP와 마법 보호막(Magic Shield)을 현재 HP+Magic Shield 비율에 따라 같이 차감되도록 수정 완료 (인게임 검증됨).
 
 ## 수정 중
+- 다른 작업자도 같은 방식으로 전체 모드/addon jar를 빌드하고 `output` 폴더로 복사할 수 있도록 루트 `build-output.bat` 추가. clean worktree 검증 완료.
 - mahjerion `1.20-Forge`처럼 addon들을 루트 submodule로 노출하도록 구조 변경: `Library-of-Exile-Rework`, `the_harvest`, `dungeon_realm`, `ancient_obelisks`를 `mihile/*` fork의 `port-1.21.1-neoforge` 브렌치로 연결함. clean worktree build 확인 완료, GitHub clone/submodule workflow 확인 필요.
 - 마녀 회복 포션 과다 치유 수정 패치 적용. 인게임 확인 필요.
 - mahjerion fork의 summon duration/expire 처리 일부 포팅: infinite duration 지원과 expire 시 summon counter 감소 경로를 1.21.1 코드에 맞춰 적용. 인게임 확인 필요.
@@ -123,9 +124,10 @@
 - 추가 버그 제보 확인 및 안정화 작업.
 
 ## 빌드
-- 빌드 성공; 검증용 clean worktree에서 playable jar를 output 폴더에 복사함.
+- 빌드 성공; 검증용 clean worktree에서 `build-output.bat`로 playable jar를 output 폴더에 복사함.
 
 ## 최근 파일
+- build-output.bat
 - .gitmodules
 - Library-of-Exile-Rework
 - the_harvest
