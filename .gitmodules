@@ -1,0 +1,16 @@
+[submodule "Library-of-Exile-Rework"]
+	path = Library-of-Exile-Rework
+	url = https://github.com/mihile/Library-of-Exile-Rework.git
+	branch = port-1.21.1-neoforge
+[submodule "the_harvest"]
+	path = the_harvest
+	url = https://github.com/mihile/the_harvest.git
+	branch = port-1.21.1-neoforge
+[submodule "dungeon_realm"]
+	path = dungeon_realm
+	url = https://github.com/mihile/dungeon_realm.git
+	branch = port-1.21.1-neoforge
+[submodule "ancient_obelisks"]
+	path = ancient_obelisks
+	url = https://github.com/mihile/ancient_obelisks.git
+	branch = port-1.21.1-neoforge

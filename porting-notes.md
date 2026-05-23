@@ -109,6 +109,7 @@
 - 독, 낙하, 용암, 불 등 환경 데미지가 HP와 마법 보호막(Magic Shield)을 현재 HP+Magic Shield 비율에 따라 같이 차감되도록 수정 완료 (인게임 검증됨).
 
 ## 수정 중
+- mahjerion `1.20-Forge`처럼 addon들을 루트 submodule로 노출하도록 구조 변경: `Library-of-Exile-Rework`, `the_harvest`, `dungeon_realm`, `ancient_obelisks`를 `mihile/*` fork의 `port-1.21.1-neoforge` 브렌치로 연결함. clean worktree build 확인 완료, GitHub clone/submodule workflow 확인 필요.
 - 마녀 회복 포션 과다 치유 수정 패치 적용. 인게임 확인 필요.
 - mahjerion fork의 summon duration/expire 처리 일부 포팅: infinite duration 지원과 expire 시 summon counter 감소 경로를 1.21.1 코드에 맞춰 적용. 인게임 확인 필요.
 - mahjerion fork의 socket 장비 auto-salvage 보호 패치 포팅: gem/rune 장착 시 `SALVAGING_DISABLED`를 켜고, socket 추출 후 비었으면 다시 해제하도록 적용. 인게임 확인 필요.
@@ -122,24 +123,17 @@
 - 추가 버그 제보 확인 및 안정화 작업.
 
 ## 빌드
-- 빌드 성공; playable jar를 output 폴더에 복사함.
+- 빌드 성공; 검증용 clean worktree에서 playable jar를 output 폴더에 복사함.
 
 ## 최근 파일
-- deps/ancient_obelisks/build.gradle
-- deps/ancient_obelisks/gradle.properties
-- deps/ancient_obelisks/src/main/resources/META-INF/neoforge.mods.toml
-- deps/ancient_obelisks/src/main/java/com/robertx22/ancient_obelisks/main/ObeliskEntries.java
-- deps/ancient_obelisks/src/main/java/com/robertx22/ancient_obelisks/capability/ObeliskEntityCapability.java
-- deps/ancient_obelisks/src/main/java/com/robertx22/ancient_obelisks/structure/ObeliskMapCapability.java
-- deps/ancient_obelisks/src/main/java/com/robertx22/ancient_obelisks/main/ObeliskLootTables.java
-- deps/ancient_obelisks/src/main/java/com/robertx22/ancient_obelisks/main/ObeliskMobTierStats.java
-- deps/ancient_obelisks/src/main/java/com/robertx22/ancient_obelisks/main/ObeliskRewardLogic.java
-- deps/ancient_obelisks/src/main/resources/data/ancient_obelisks/dimension_type/obelisk.json
-- deps/ancient_obelisks/src/main/resources/data/ancient_obelisks/recipe/obelisk.json
-- deps/ancient_obelisks/src/main/resources/data/ancient_obelisks/structure/obelisk/stone/
+- .gitmodules
+- Library-of-Exile-Rework
+- the_harvest
+- dungeon_realm
+- ancient_obelisks
 - settings.gradle
 - scripts/copy-playable-jar.ps1
 - porting-notes.md
 
 ## 다음 작업
-- Ancient Obelisks 인게임 로딩 및 obelisk 생성/보상/몹 tier 적용 확인.
+- GitHub에서 `port-1.21.1-neoforge` 브렌치 clone/submodule 표시 확인.

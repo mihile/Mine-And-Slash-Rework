@@ -4,10 +4,10 @@ $ProjectRoot = Split-Path -Parent $PSScriptRoot
 $OutputDir = Join-Path $ProjectRoot "output"
 $JarFolders = @(
     (Join-Path $ProjectRoot "build\libs"),
-    (Join-Path $ProjectRoot "deps\Library-of-Exile-Rework\build\libs"),
-    (Join-Path $ProjectRoot "deps\dungeon_realm\build\libs"),
-    (Join-Path $ProjectRoot "deps\the_harvest\build\libs"),
-    (Join-Path $ProjectRoot "deps\ancient_obelisks\build\libs")
+    (Join-Path $ProjectRoot "Library-of-Exile-Rework\build\libs"),
+    (Join-Path $ProjectRoot "dungeon_realm\build\libs"),
+    (Join-Path $ProjectRoot "the_harvest\build\libs"),
+    (Join-Path $ProjectRoot "ancient_obelisks\build\libs")
 )
 
 if (!(Test-Path $OutputDir)) {
