@@ -85,12 +85,14 @@ public class HealthUtils {
         EntityData data = Load.Unit(en);
 
         if (en.level().isClientSide) {
-            return data.getSyncedMaxHealth(); // for client, health needs to be synced
+            float synced = data.getSyncedMaxHealth();
+            return synced > 0 ? synced : en.getMaxHealth();
         }
         try {
-            return data.getUnit().healthData().get();
+            float mnsHp = data.getUnit().healthData().get();
+            return mnsHp > 0 ? mnsHp : en.getMaxHealth();
         } catch (Exception e) {
-            return 1;
+            return en.getMaxHealth();
         }
 
     }

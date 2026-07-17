@@ -18,9 +18,8 @@ public class InvGuiScreen extends BaseScreen {
 
 
     @Override
-    public void render(GuiGraphics gui, int x, int y, float ticks) {
-
-
+    public void renderBackground(GuiGraphics gui, int x, int y, float ticks) {
+        super.renderBackground(gui, x, y, ticks);
         gui.setColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         gui.blit(TEX, mc.getWindow()
@@ -28,10 +27,6 @@ public class InvGuiScreen extends BaseScreen {
                 mc.getWindow()
                         .getGuiScaledHeight() / 2 - sizeY / 2, 0, 0, sizeX, sizeY
         );
-
-        super.render(gui, x, y, ticks);
-
-
     }
 
     @Override

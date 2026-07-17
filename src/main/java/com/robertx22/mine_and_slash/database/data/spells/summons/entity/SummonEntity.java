@@ -71,6 +71,25 @@ public abstract class SummonEntity extends TamableAnimal implements RangedAttack
                     }
                 }
             }
+
+            if (this.tickCount % 10 == 0 && !(focusEntity instanceof LivingEntity focus && focus.isAlive() && isInAggroRadius(focus))) {
+                LivingEntity nearest = null;
+                double nearestDistance = Double.MAX_VALUE;
+                double aggroRadius = Load.Unit(this).summonedPetData.aggro_radius;
+
+                for (LivingEntity target : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(aggroRadius),
+                        target -> target != this && this.canAttack(target) && this.getSensing().hasLineOfSight(target))) {
+                    double distance = this.distanceToSqr(target);
+                    if (distance < nearestDistance) {
+                        nearest = target;
+                        nearestDistance = distance;
+                    }
+                }
+
+                if (nearest != null && nearest != this.getTarget()) {
+                    this.setTarget(nearest);
+                }
+            }
         }
     }
 
@@ -125,7 +144,7 @@ public abstract class SummonEntity extends TamableAnimal implements RangedAttack
             this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2D, true));
         }
         if (usesRanged()) {
-            this.goalSelector.addGoal(4, new RangedBowAttackGoal<>(this, 1.0D, 20, 15F));
+            this.goalSelector.addGoal(1, new RangedBowAttackGoal<>(this, 1.0D, 20, 15F));
         }
 
         this.goalSelector.addGoal(6, new RandomSwimmingGoal(this, 1, 1));

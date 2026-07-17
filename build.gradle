@@ -113,6 +113,17 @@ tasks.withType(Jar).configureEach {
     exclude 'net/neoforged/neoforge/**'
 }
 
+tasks.register('prepareRequiredRuntimeDependencies', Copy) {
+    from configurations.runtimeClasspath
+    include "curios-neoforge-${curios_version}.jar"
+    include "player-animation-lib-forge-${player_animator_version}.jar"
+    into layout.buildDirectory.dir('required-runtime-dependencies')
+}
+
+tasks.named('jar').configure {
+    finalizedBy tasks.named('prepareRequiredRuntimeDependencies')
+}
+
 idea {
     module {
         downloadSources = true

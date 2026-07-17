@@ -417,6 +417,10 @@ public abstract class SkillTreeScreen extends BaseScreen implements INamedScreen
 
 
     @Override
+    public void renderBackground(GuiGraphics gui, int x, int y, float ticks) {
+    }
+
+    @Override
     public void render(GuiGraphics gui, int x, int y, float ticks) {
 
         Watch watch = new Watch();

@@ -1,6 +1,5 @@
 package com.robertx22.mine_and_slash.database.data.spells.summons.entity;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
@@ -25,7 +24,8 @@ public class SkeletonSummon extends SummonEntity {
     }
 
 
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData) {
 
         var d = super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData);
 

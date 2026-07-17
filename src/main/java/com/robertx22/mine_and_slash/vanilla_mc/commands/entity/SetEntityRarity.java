@@ -3,8 +3,10 @@ package com.robertx22.mine_and_slash.vanilla_mc.commands.entity;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.robertx22.mine_and_slash.capability.entity.EntityData;
+import com.robertx22.mine_and_slash.database.registry.ExileRegistryTypes;
 import com.robertx22.mine_and_slash.uncommon.datasaving.Load;
 import com.robertx22.mine_and_slash.vanilla_mc.commands.CommandRefs;
+import com.robertx22.mine_and_slash.vanilla_mc.commands.suggestions.DatabaseSuggestions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.world.entity.Entity;
@@ -29,6 +31,7 @@ public class SetEntityRarity {
                                                 .requires(e -> e.hasPermission(2))
                                                 .then(argument("target", EntityArgument.entities())
                                                         .then(argument("rarity", StringArgumentType.string())
+                                                                .suggests(new DatabaseSuggestions(ExileRegistryTypes.MOB_RARITY, null))
                                                                 .executes(e -> execute(e.getSource(), EntityArgument.getEntities(e, "target"), StringArgumentType
                                                                         .getString(e, "rarity")))))))));
     }

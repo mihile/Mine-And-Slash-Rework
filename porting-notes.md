@@ -107,8 +107,19 @@
 - 던전 맵 차원에서는 장식된 도자기(`DecoratedPotBlock`)에 어떤 아이템도 들어가지 않도록 차단 완료 (인게임 검증됨).
 - Ancient Obelisks addon 1.21.1 NeoForge 포팅 완료. 로딩 크래시, dimension_type schema, recipe 경로/result schema, structure template 경로 보정 후 obelisk map 생성/입장 정상 작동 확인됨 (인게임 검증됨).
 - 독, 낙하, 용암, 불 등 환경 데미지가 HP와 마법 보호막(Magic Shield)을 현재 HP+Magic Shield 비율에 따라 같이 차감되도록 수정 완료 (인게임 검증됨).
+- C2ME 병렬 청크 생성 중 `DungeonData.rooms` 초기화 충돌로 입구 구조가 누락되어 플레이어가 bedrock 속에 스폰되던 문제 수정 완료 (인게임 검증됨).
+- `BaseScreen` 계열 GUI와 `InvGuiScreen`에서 접근성 menu background blur가 패널까지 흐리게 만들던 문제 수정 완료 (인게임 검증됨).
+- 스킬 트리 zoom 중 상속된 menu background가 왼쪽 위 사각형으로 표시되던 문제 수정 완료 (인게임 검증됨).
+- 스켈레톤 소환수의 활 장착 초기화와 원거리 공격 동작 복구 완료 (인게임 검증됨).
+- 모든 Mine and Slash 소환수가 명시적 공격 지시가 없을 때 자기 주변의 보이는 적 중 가장 가까운 대상을 우선하도록 수정 완료 (인게임 검증됨).
+- 슬라임 블록의 바운스와 수평 감속 때문에 근접 소환수의 `GroundPathNavigation` 경로 갱신이 막히던 문제 수정 완료. M&S `SummonEntity`만 일반 블록처럼 착지하고 정상적으로 적에게 접근함 (인게임 검증됨).
+- NeoForge 21.1.228 전용 서버에서 client 전용 클래스와 mixin을 불러와 서버가 열리지 않던 문제 수정 완료. client event 등록을 `ClientRegistration`으로 분리하고 `PlayerAnimMixin`을 client mixin 목록으로 이동했으며, 필수 runtime jar를 playable output에 포함함 (서버 기동 검증됨).
 
 ## 수정 중
+- 구버전 5개 인자 `GolemSummon.finalizeSpawn()` 때문에 실행되지 않던 골렘 고유 affix 초기화를 1.21.1의 4개 인자 override로 수정함. 인게임 확인 필요.
+- NeoForge 21.1.238 클라이언트에서 Dungeon Realm/The Harvest/Ancient Obelisks가 동일한 `MapChunkGenerator.CODEC` 객체를 중복 등록해 발생하던 로딩 크래시를 수정함. generator ID별 codec 인스턴스를 생성하고 각 `MapChunkGenerator`가 자신의 codec을 반환하도록 보정함. PrismLauncher `1.21.1MnS` 인스턴스에서 registry 초기화와 메인 메뉴 리소스 로딩 통과 확인, 월드/맵 차원 입장 확인 필요.
+- 미커밋 command 수정 통합: 활성 `Library-of-Exile-Rework`에 tooltip suggestion API와 `ResourceLocationWrapper`를 반영하고, command suggestion 순서/필터를 1.21.1 `SharedSuggestionProvider` 방식으로 보정함. `/mine_and_slash spawn`, profession/rarity/stat 자동완성을 포함한 현재 작업 폴더 전체 build 및 전용 서버 기동 확인 완료, 인게임 명령/tooltip 확인 필요.
+- `HealthUtils.getMaxHealth()`가 M&S HP sync/계산 전 0 또는 예외 상태일 때 vanilla max health로 fallback하도록 한 기존 미커밋 패치를 포함해 build함. 인게임 회복/데미지/HP 표시 확인 필요.
 - `ENTITY_SUMMON_BLACKLIST` server config가 list 값인데 `define`으로 등록되어 NeoForge가 매번 config correction 경고를 내던 문제를 `defineList`로 수정함. build 확인 완료, 인게임 확인 필요.
 - release/playable jar에서 dev data generation이 로그인 시 실행되지 않도록 `MMORPG`, `the_harvest`, `dungeon_realm`의 `RUN_DEV_TOOLS`를 비활성화하고, Library of Exile chest loot debug print를 제거함. build 확인 완료, 인게임 확인 필요.
 - 다른 작업자도 같은 방식으로 전체 모드/addon jar를 빌드하고 `output` 폴더로 복사할 수 있도록 루트 `build-output.bat` 추가. clean worktree 검증 완료.
@@ -126,24 +137,12 @@
 - 추가 버그 제보 확인 및 안정화 작업.
 
 ## 빌드
-- 빌드 성공; 검증용 clean worktree에서 `build-output.bat`로 playable jar를 output 폴더에 복사하고 실제 output 폴더에도 복사함.
+- 빌드 성공; `SlimeBlockMixin`의 M&S 소환수 바운스/수평 감속 제외 패치를 포함해 `build-output.bat`로 전체 clean build하고 7개 필수 jar를 `output`과 PrismLauncher `1.21.1MnS` 인스턴스에 복사함.
 
 ## 최근 파일
-- src/main/java/com/robertx22/mine_and_slash/config/forge/ServerContainer.java
-- src/main/java/com/robertx22/mine_and_slash/mmorpg/MMORPG.java
-- Library-of-Exile-Rework/src/main/java/com/robertx22/library_of_exile/mixins/RandomizableContainerMixin.java
-- Library-of-Exile-Rework/src/main/java/com/robertx22/library_of_exile/mixins/ChestLootGenMixin.java
-- the_harvest/src/main/java/com/robertx22/the_harvest/main/HarvestMain.java
-- dungeon_realm/src/main/java/com/robertx22/dungeon_realm/main/DungeonMain.java
-- build-output.bat
-- .gitmodules
-- Library-of-Exile-Rework
-- the_harvest
-- dungeon_realm
-- ancient_obelisks
-- settings.gradle
-- scripts/copy-playable-jar.ps1
-- porting-notes.md
+- src/main/java/com/robertx22/mine_and_slash/database/data/spells/summons/entity/SummonEntity.java
+- src/main/java/com/robertx22/mine_and_slash/mixins/SlimeBlockMixin.java
+- src/main/resources/mmorpg-mixins.json
 
 ## 다음 작업
-- release jar 로그인 로그에서 dev data generation 예외와 chest loot debug print가 사라졌는지 인게임 확인.
+- 추가 버그 제보 확인 및 안정화 작업.

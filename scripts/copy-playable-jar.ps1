@@ -2,6 +2,7 @@ $ErrorActionPreference = "Stop"
 
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
 $OutputDir = Join-Path $ProjectRoot "output"
+$DependencyDir = Join-Path $ProjectRoot "build\required-runtime-dependencies"
 $JarFolders = @(
     (Join-Path $ProjectRoot "build\libs"),
     (Join-Path $ProjectRoot "Library-of-Exile-Rework\build\libs"),
@@ -37,6 +38,22 @@ foreach ($folder in $JarFolders) {
 
     Write-Host "Copied playable jar:"
     Write-Host $jar.FullName
+}
+
+if (!(Test-Path $DependencyDir)) {
+    throw "required runtime dependency folder not found: $DependencyDir"
+}
+
+$dependencies = Get-ChildItem $DependencyDir -Filter "*.jar"
+if ($dependencies.Count -ne 2) {
+    throw "Expected 2 required runtime dependency jars in $DependencyDir, found $($dependencies.Count)"
+}
+
+foreach ($dependency in $dependencies) {
+    Copy-Item $dependency.FullName $OutputDir -Force
+
+    Write-Host "Copied required runtime dependency:"
+    Write-Host $dependency.FullName
 }
 
 Write-Host "To:"

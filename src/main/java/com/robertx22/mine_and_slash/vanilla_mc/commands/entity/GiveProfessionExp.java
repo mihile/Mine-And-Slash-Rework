@@ -4,9 +4,11 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType; // Added import for StringArgumentType
 import com.robertx22.mine_and_slash.capability.player.PlayerData;
+import com.robertx22.mine_and_slash.database.registry.ExileRegistryTypes;
 import com.robertx22.mine_and_slash.loot.LootModifiersList; // Kept import, though not used in the corrected run method
 import com.robertx22.mine_and_slash.uncommon.datasaving.Load;
 import com.robertx22.mine_and_slash.vanilla_mc.commands.CommandRefs;
+import com.robertx22.mine_and_slash.vanilla_mc.commands.suggestions.DatabaseSuggestions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.world.entity.player.Player;
@@ -26,6 +28,7 @@ public class GiveProfessionExp {
                                         .requires(e -> e.hasPermission(2))
                                         .then(argument("target", EntityArgument.player())
                                                 .then(argument("professionId", StringArgumentType.string()) // Changed argument type to string and name to professionId
+                                                        .suggests(new DatabaseSuggestions(ExileRegistryTypes.PROFESSION, null))
                                                         .then(argument("exp", IntegerArgumentType.integer())
                                                                 .executes(ctx -> run(EntityArgument.getPlayer(ctx, "target"),
                                                                         StringArgumentType.getString(ctx, "professionId"), // Get the professionId string

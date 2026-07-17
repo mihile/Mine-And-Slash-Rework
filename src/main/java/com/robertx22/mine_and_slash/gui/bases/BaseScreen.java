@@ -32,6 +32,10 @@ public class BaseScreen extends Screen {
     }
 
     @Override
+    protected void renderBlurredBackground(float partialTick) {
+    }
+
+    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 
         // todo make this less wack

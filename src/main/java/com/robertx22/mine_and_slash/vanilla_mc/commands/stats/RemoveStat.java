@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.robertx22.mine_and_slash.capability.entity.EntityData;
 import com.robertx22.mine_and_slash.uncommon.datasaving.Load;
 import com.robertx22.mine_and_slash.vanilla_mc.commands.CommandRefs;
+import com.robertx22.mine_and_slash.vanilla_mc.commands.suggestions.StatSuggestions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.world.entity.Entity;
@@ -26,6 +27,7 @@ public class RemoveStat {
                                                 .then(argument("scaling", StringArgumentType.string())
                                                         .suggests(new GiveStat.ModOrExact())
                                                         .then(argument("GUID", StringArgumentType.string())
+                                                                .suggests(new StatSuggestions())
                                                                 .executes(ctx -> {
                                                                     return run(EntityArgument.getPlayer(ctx, "target"), StringArgumentType
                                                                             .getString(ctx, "scaling"), StringArgumentType

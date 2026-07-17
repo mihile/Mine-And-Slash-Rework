@@ -32,15 +32,10 @@ import com.robertx22.mine_and_slash.database.data.spells.components.conditions.E
 import com.robertx22.mine_and_slash.database.data.spells.map_fields.MapField;
 import com.robertx22.mine_and_slash.database.data.stats.layers.StatLayers;
 import com.robertx22.mine_and_slash.database.data.stats.priority.StatPriority;
-import com.robertx22.mine_and_slash.gui.SocketTooltip;
 import com.robertx22.mine_and_slash.maps.MapEvents;
 import com.robertx22.mine_and_slash.mixin_ducks.tooltip.ItemTooltipsRegister;
 import com.robertx22.mine_and_slash.mmorpg.event_registers.CommonEvents;
-import com.robertx22.mine_and_slash.mmorpg.event_registers.GuiOverlays;
-import com.robertx22.mine_and_slash.mmorpg.init.ClientInit;
-import com.robertx22.mine_and_slash.mmorpg.registers.client.KeybindsRegister;
-import com.robertx22.mine_and_slash.mmorpg.registers.client.ContainerGuiRegisters;
-import com.robertx22.mine_and_slash.mmorpg.registers.client.RenderRegister;
+import com.robertx22.mine_and_slash.mmorpg.init.ClientRegistration;
 import com.robertx22.mine_and_slash.mmorpg.registers.client.S2CPacketRegister;
 import com.robertx22.mine_and_slash.mmorpg.registers.common.C2SPacketRegister;
 import com.robertx22.mine_and_slash.mmorpg.registers.common.SlashAttachments;
@@ -56,10 +51,6 @@ import com.robertx22.mine_and_slash.uncommon.interfaces.data_items.VanillaRariti
 import com.robertx22.test.test2.SchemaTest;
 import net.minecraft.ChatFormatting;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
@@ -157,47 +148,11 @@ public class MMORPG {
         StatEffect.init();
         StatCondition.loadclass();
 
-        ForgeEvents.registerForgeEvent(RegisterClientTooltipComponentFactoriesEvent.class, x -> {
-            x.register(SocketTooltip.SocketComponent.class, SocketTooltip::new);
-        });
-
         bus.addListener(SimpleChannel::registerPayloadHandlers);
 
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
-
-            NeatForgeConfig.register(modContainer);
-
-            modContainer.registerConfig(ModConfig.Type.CLIENT, ClientConfigs.clientSpec, NeatForgeConfig.defaultConfigName(ModConfig.Type.CLIENT, "mine_and_slash"));
-            bus.addListener(ClientInit::onInitializeClient);
-            bus.addListener(ContainerGuiRegisters::reg);
-
-            ForgeEvents.registerForgeEvent(RegisterGuiLayersEvent.class, GuiOverlays::registerOverlay);
-
-            ForgeEvents.registerForgeEvent(RegisterKeyMappingsEvent.class, x -> {
-                KeybindsRegister.register(x);
-            });
-
-            bus.addListener((Consumer<EntityRenderersEvent.RegisterRenderers>) x -> {
-                RenderRegister.regRenders(x);
-            });
-
-            // 클라이언트에서 플레이어 로그인 후 Attachment init 보장
-            // transient 필드(entity, player 참조)는 직렬화되지 않으므로 수동 주입이 필요합니다.
-            ForgeEvents.registerForgeEvent(
-                    net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent.LoggingIn.class,
-                    event -> {
-                        try {
-                            var p = event.getPlayer();
-                            if (p != null) {
-                                p.getData(com.robertx22.mine_and_slash.mmorpg.registers.common.SlashAttachments.ENTITY_DATA.get()).init(p);
-                                p.getData(com.robertx22.mine_and_slash.mmorpg.registers.common.SlashAttachments.PLAYER_DATA.get()).init(p);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
-
+            ClientRegistration.register(bus, modContainer);
         }
 
 

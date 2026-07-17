@@ -4,8 +4,10 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.robertx22.mine_and_slash.capability.player.PlayerData;
+import com.robertx22.mine_and_slash.database.registry.ExileRegistryTypes;
 import com.robertx22.mine_and_slash.uncommon.datasaving.Load;
 import com.robertx22.mine_and_slash.vanilla_mc.commands.CommandRefs;
+import com.robertx22.mine_and_slash.vanilla_mc.commands.suggestions.DatabaseSuggestions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
@@ -25,6 +27,7 @@ public class GivePerLvlProfessionExp {
                                         .requires(e -> e.hasPermission(2))
                                         .then(argument("target", EntityArgument.player())
                                                 .then(argument("professionId", StringArgumentType.string())
+                                                        .suggests(new DatabaseSuggestions(ExileRegistryTypes.PROFESSION, null))
                                                         .then(argument("exp", IntegerArgumentType.integer())
                                                                 .executes(ctx -> run(EntityArgument.getPlayer(ctx, "target"),
                                                                         StringArgumentType.getString(ctx, "professionId"),
